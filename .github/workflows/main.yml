@@ -18,9 +18,10 @@ jobs:
         python-version: ['3.5', '3.6', '3.7', '3.8']
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout reposistory
+      uses: actions/checkout@master
     - name: Checkout submodules
-      uses: textbook/git-checkout-submodule-action@2.1.1
+      run: git submodule update --init --recursive
     - name: Black Code Formatter
       uses: lgeiger/black-action@master
       with:
