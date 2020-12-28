@@ -37,5 +37,3 @@ class TempSetHeatingMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, 0xAA])
-
-

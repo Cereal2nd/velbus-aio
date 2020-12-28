@@ -61,5 +61,3 @@ class KwhStatusMessage(Message):
         :return: list
         """
         return self.channel
-
-

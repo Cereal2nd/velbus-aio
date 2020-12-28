@@ -130,5 +130,3 @@ class BlindStatusMessage(Message):
         :return: bool
         """
         return self.status == 0x02
-
-

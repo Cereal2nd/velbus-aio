@@ -57,5 +57,3 @@ class CounterStatusMessage(Message):
         :return: list
         """
         return self.channel
-
-

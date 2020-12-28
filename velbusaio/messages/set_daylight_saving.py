@@ -52,5 +52,3 @@ class SetDaylightSaving(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self._ds])
-
-

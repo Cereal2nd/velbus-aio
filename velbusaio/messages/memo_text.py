@@ -37,5 +37,3 @@ class MemoTextMessage(Message):
         while len(self.memo_text) < 5:
             self.memo_text += chr(0)
         return bytes([COMMAND_CODE, 0x00, self.start]) + bytes(self.memo_text, "utf-8")
-
-

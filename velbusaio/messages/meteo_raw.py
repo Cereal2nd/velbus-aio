@@ -44,5 +44,3 @@ class MeteoRawMessage(Message):
         json_dict["light"] = self.light
         json_dict["wind"] = self.wind
         return json.dumps(json_dict)
-
-

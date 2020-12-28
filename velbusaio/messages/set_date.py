@@ -68,5 +68,3 @@ class SetDate(Message):
                 (self._year & 0x00FF),
             ]
         )
-
-

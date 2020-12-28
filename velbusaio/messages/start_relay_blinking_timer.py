@@ -45,5 +45,3 @@ class StartRelayBlinkingTimerMessage(Message):
             bytes([COMMAND_CODE, self.channels_to_byte(self.relay_channels)])
             + struct.pack(">L", self.delay_time)[-3:]
         )
-
-

@@ -32,5 +32,3 @@ class ReceiveBufferFullMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE])
-
-

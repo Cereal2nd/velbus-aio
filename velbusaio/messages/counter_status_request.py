@@ -32,5 +32,3 @@ class CounterStatusRequestMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, 0x0F, 0x00])
-
-

@@ -44,5 +44,3 @@ class UpdateLedStatusMessage(Message):
                 self.channels_to_byte(self.led_fast_blinking),
             ]
         )
-
-

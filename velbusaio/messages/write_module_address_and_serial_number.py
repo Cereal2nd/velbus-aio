@@ -54,5 +54,3 @@ class WriteModuleAddressAndSerialNumberMessage(Message):
             + chr(self.module_address)
             + struct.pack(">L", self.new_serial)[2:]
         )
-
-

@@ -67,5 +67,3 @@ class PushButtonStatusMessage(Message):
                 self.channels_to_byte(self.closed_long),
             ]
         )
-
-

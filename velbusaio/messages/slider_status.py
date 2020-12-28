@@ -62,5 +62,3 @@ class SliderStatusMessage(Message):
                 self.slider_long_pressed,
             ]
         )
-
-

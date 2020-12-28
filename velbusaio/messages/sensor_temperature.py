@@ -47,5 +47,3 @@ class SensorTemperatureMessage(Message):
         json_dict["min"] = self.min
         json_dict["max"] = self.max
         return json.dumps(json_dict)
-
-

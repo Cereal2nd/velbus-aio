@@ -38,5 +38,3 @@ class SwitchToDayMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, 0x00, 0x00])
-
-

@@ -43,5 +43,3 @@ class BusErrorCounterStatusMessage(Message):
                 self.bus_off_counter,
             ]
         )
-
-

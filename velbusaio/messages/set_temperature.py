@@ -36,5 +36,3 @@ class SetTemperatureMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, int(self.temp_type), int(self.temp)])
-
-

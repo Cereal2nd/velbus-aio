@@ -61,5 +61,3 @@ class ModuleSubTypeMessage(Message):
         json_dict["sub_3"] = self.sub_address_3
         json_dict["sub_4"] = self.sub_address_4
         return json.dumps(json_dict)
-
-

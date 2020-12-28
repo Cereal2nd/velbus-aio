@@ -14,6 +14,7 @@ from velbusaio.message import Message
 
 _protocol = None
 
+
 async def domain():
     ctx = ssl._create_unverified_context()
     _transport, _protocol = await loop.create_connection(
@@ -34,6 +35,7 @@ def ask_exit():
     for task in asyncio.Task.all_tasks():
         print(task)
         task.cancel()
+
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logging.getLogger("asyncio").setLevel(logging.DEBUG)
