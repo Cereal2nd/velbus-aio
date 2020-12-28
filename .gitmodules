@@ -1,0 +1,4 @@
+[submodule "velbusaio/moduleprotocol"]
+	path = velbusaio/moduleprotocol
+	url = https://github.com/StefCoene/moduleprotocol.git
+	branch = master
