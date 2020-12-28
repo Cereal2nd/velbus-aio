@@ -27,5 +27,3 @@ class BusErrorStatusRequestMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE])
-
-

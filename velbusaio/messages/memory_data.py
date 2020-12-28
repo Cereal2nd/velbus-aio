@@ -48,5 +48,3 @@ class MemoryDataMessage(Message):
         json_dict["low_addr"] = self.low_address
         json_dict["data"] = self.data
         return json.dumps(json_dict)
-
-

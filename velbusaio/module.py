@@ -28,7 +28,7 @@ class Module(object):
         self._type = module_type
         self._data = module_data
         self._protocol = protocol
-        self._log = logging.getLogger('velbus-module')
+        self._log = logging.getLogger("velbus-module")
         self._log.setLevel(logging.DEBUG)
 
         self._name = {}
@@ -44,7 +44,7 @@ class Module(object):
 
         self._loaded_callbacks = []
         self.loaded = False
-        
+
         self._log.info("Found Module {} @ {} ".format(self._type, self._address))
 
     def get_module_name(self):

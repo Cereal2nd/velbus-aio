@@ -32,5 +32,3 @@ class SensorSettingsRequestMessage(Message):
         :return: bytes
         """
         return bytes([])
-
-

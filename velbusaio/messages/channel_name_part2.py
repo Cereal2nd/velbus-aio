@@ -86,5 +86,3 @@ class ChannelNamePart2Message3(ChannelNamePart2Message):
         self.set_attributes(priority, address, rtr)
         self.channel = (data[0] >> 1) & 0x03
         self.name = "".join([chr(x) for x in data[1:]])
-
-

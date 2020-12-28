@@ -142,5 +142,3 @@ class DimmerStatusMessage(Message):
             bytes([COMMAND_CODE, self.dimmer_mode, self.dimmer_state, self.led_status])
             + struct.pack(">L", self.delay_time)[-3:]
         )
-
-

@@ -50,5 +50,3 @@ class SwitchRelayOffMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self.channels_to_byte(self.relay_channels)])
-
-

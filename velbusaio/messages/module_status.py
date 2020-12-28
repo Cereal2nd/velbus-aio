@@ -133,5 +133,3 @@ class ModuleStatusPirMessage(Message):
         :return: bytes
         """
         raise NotImplementedError
-
-

@@ -34,5 +34,3 @@ class ModuleStatusRequestMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self.channels_to_byte(self.channels)])
-
-

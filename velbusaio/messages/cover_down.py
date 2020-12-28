@@ -114,5 +114,3 @@ class CoverDownMessage2(Message):
             tmp = 0x0C
 
         return bytes([COMMAND_CODE, tmp]) + struct.pack(">L", self.delay_time)[-3:]
-
-

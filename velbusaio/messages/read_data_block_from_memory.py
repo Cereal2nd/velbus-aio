@@ -35,5 +35,3 @@ class ReadDataBlockFromMemoryMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self.high_address, self.low_address])
-
-

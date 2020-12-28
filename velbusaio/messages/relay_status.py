@@ -142,5 +142,3 @@ class RelayStatusMessage(Message):
             )
             + struct.pack(">L", self.delay_time)[-3:]
         )
-
-

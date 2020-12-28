@@ -60,5 +60,3 @@ class SetRealtimeClock(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self._wday, self._hour, self._min])
-
-

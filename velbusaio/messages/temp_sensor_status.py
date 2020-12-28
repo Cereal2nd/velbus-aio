@@ -109,5 +109,3 @@ class TempSensorStatusMessage(Message):
         json_dict["target_temp"] = self.target_temp
         json_dict["sleep_timer"] = self.sleep_timer
         return json.dumps(json_dict)
-
-

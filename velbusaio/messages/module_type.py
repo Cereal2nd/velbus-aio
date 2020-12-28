@@ -79,5 +79,3 @@ class ModuleTypeMessage(Message):
                 self.build_week,
             ]
         )
-
-

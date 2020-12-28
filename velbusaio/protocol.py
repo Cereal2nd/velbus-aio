@@ -48,7 +48,9 @@ class VelbusProtocol(asyncio.Protocol):
         await self._ready.wait()
         while self._send_queue and self._ready:
             data = await self._send_queue.get()
-            self.logger.debug("SENDING message: {} (qsize={})".format(data, self._send_queue.qsize()))
+            self.logger.debug(
+                "SENDING message: {} (qsize={})".format(data, self._send_queue.qsize())
+            )
             self._transport.write(data)
             await asyncio.sleep(0.1)
 
@@ -59,7 +61,11 @@ class VelbusProtocol(asyncio.Protocol):
             await self._waiter
             while len(self._recv_queue) and self._ready:
                 data = self._recv_queue.popleft()
-                self.logger.debug("RECEIVING message: {} (qsize={})".format(data, len(self._recv_queue)))
+                self.logger.debug(
+                    "RECEIVING message: {} (qsize={})".format(
+                        data, len(self._recv_queue)
+                    )
+                )
                 if self._transport and self._ready:
                     await self._handler.handle(data)
 

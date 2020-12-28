@@ -73,5 +73,3 @@ class ChannelNameRequestMessage2(ChannelNameRequestMessage):
         if 2 in self.channels:
             tmp += 0x0C
         return bytes([COMMAND_CODE, tmp])
-
-

@@ -62,5 +62,3 @@ class RestoreDimmerMessage(Message):
             )
             + self.dimmer_transitiontime.to_bytes(2, byteorder="big", signed=False)
         )
-
-

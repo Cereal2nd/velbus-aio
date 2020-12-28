@@ -26,5 +26,3 @@ class InterfaceStatusRequestMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE])
-
-
