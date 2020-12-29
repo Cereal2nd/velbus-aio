@@ -11,7 +11,8 @@ from velbusaio.message import Message
 from velbusaio.module import Module
 from velbus.messages.module_type_request import ModuleTypeRequestMessage
 
-class Velbus():
+
+class Velbus:
     def __init__(self, ip, port, ssl=False):
         self._log = logging.getLogger("velbus")
         self._ip = ip
@@ -32,7 +33,7 @@ class Velbus():
             await self._modules[addr].load()
 
     def get_modules(self):
-        return self._modules    
+        return self._modules
 
     def get_module(self, addr):
         if addr in self._modules.keys():
@@ -48,7 +49,7 @@ class Velbus():
         if self._ssl:
             ctx = ssl._create_unverified_context()
         else:
-            ctx=None
+            ctx = None
         self._reader, self._writer = await asyncio.open_connection(
             self._ip, self._port, ssl=ctx
         )
@@ -93,7 +94,7 @@ class Velbus():
 
 
 async def main():
-    v = Velbus('192.168.1.9', 27015, True)
+    v = Velbus("192.168.1.9", 27015, True)
     await v.connect()
     print("Connect finished")
     await v.scan()
