@@ -46,7 +46,7 @@ class PacketHandler:
                 message.populate(priority, address, rtr, data[5:-2])
                 # send the message to the modules
                 (self._velbus.get_module(msg.address)).on_message(message)
-	
+
     def _perByte(self, cmsg, msg):
         result = dict()
         for num, byte in enumerate(msg.data):

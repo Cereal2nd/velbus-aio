@@ -39,7 +39,9 @@ from velbusaio.messages.module_status import ModuleStatusMessage2
 from velbusaio.messages.module_type import ModuleTypeMessage
 from velbusaio.messages.module_type_request import ModuleTypeRequestMessage
 from velbusaio.messages.push_button_status import PushButtonStatusMessage
-from velbusaio.messages.read_data_block_from_memory import ReadDataBlockFromMemoryMessage
+from velbusaio.messages.read_data_block_from_memory import (
+    ReadDataBlockFromMemoryMessage,
+)
 from velbusaio.messages.read_data_from_memory import ReadDataFromMemoryMessage
 from velbusaio.messages.receive_buffer_full import ReceiveBufferFullMessage
 from velbusaio.messages.receive_ready import ReceiveReadyMessage

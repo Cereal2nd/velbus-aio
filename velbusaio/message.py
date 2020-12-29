@@ -3,10 +3,12 @@ import base64
 from velbusaio.helpers import checksum
 from velbusaio.const import PRIORITY_LOW, PRIORITY_HIGH, STX, ETX
 
+
 class ParserError(Exception):
     """
     Error when invalid message is received
     """
+
     pass
 
 
