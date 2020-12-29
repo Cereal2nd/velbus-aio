@@ -1,7 +1,8 @@
 """
 :author: Thomas Delaet <thomas@delaet.org>
 """
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 import json
 
 COMMAND_CODE = 0xED
@@ -25,7 +26,6 @@ class ModuleStatusMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 4)
@@ -60,7 +60,6 @@ class ModuleStatusMessage2(Message):
         self.programenabled = []
 
     def populate(self, priority, address, rtr, data):
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 6)
@@ -113,7 +112,6 @@ class ModuleStatusPirMessage(Message):
         self.light_value = 0
 
     def populate(self, priority, address, rtr, data):
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 7)
@@ -133,3 +131,32 @@ class ModuleStatusPirMessage(Message):
         :return: bytes
         """
         raise NotImplementedError
+
+
+register_command(COMMAND_CODE, ModuleStatusMessage)
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB8PBU")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB6PBN")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB2PBN")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB6PBB")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGP1")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBEL1")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGP1-2")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGP2")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBEL2")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGP2-2")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGP4")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBEL4")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGP4-2")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGPO")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "SUB_VMBGPO")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGPOD")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "SUB_VMBGPOD")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBELO")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "SUB_VMBELO")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB7IN")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB4DC")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBDMI")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBDMI-R")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBDME")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB1RYS")
+register_command(COMMAND_CODE, ModuleStatusPirMessage, "VMBIRO")

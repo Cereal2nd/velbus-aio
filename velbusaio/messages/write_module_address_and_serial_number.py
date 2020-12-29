@@ -2,7 +2,8 @@
 :author: Thomas Delaet <thomas@delaet.org>
 """
 import struct
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 
 COMMAND_CODE = 0x6A
@@ -32,7 +33,6 @@ class WriteModuleAddressAndSerialNumberMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_firmware_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 6)
@@ -54,3 +54,6 @@ class WriteModuleAddressAndSerialNumberMessage(Message):
             + chr(self.module_address)
             + struct.pack(">L", self.new_serial)[2:]
         )
+
+
+register_command(COMMAND_CODE, WriteModuleAddressAndSerialNumberMessage)

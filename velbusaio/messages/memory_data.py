@@ -2,7 +2,8 @@
 :author: Thomas Delaet <thomas@delaet.org>
 """
 import json
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xFE
 
@@ -24,7 +25,6 @@ class MemoryDataMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 3)
@@ -48,3 +48,6 @@ class MemoryDataMessage(Message):
         json_dict["low_addr"] = self.low_address
         json_dict["data"] = self.data
         return json.dumps(json_dict)
+
+
+register_command(COMMAND_CODE, MemoryDataMessage)

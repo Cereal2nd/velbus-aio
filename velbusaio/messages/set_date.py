@@ -3,7 +3,8 @@
 """
 import json
 import logging
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 import time
 
 COMMAND_CODE = 0xB7
@@ -36,7 +37,6 @@ class SetDate(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 4)
@@ -68,3 +68,6 @@ class SetDate(Message):
                 (self._year & 0x00FF),
             ]
         )
+
+
+register_command(COMMAND_CODE, SetDate)

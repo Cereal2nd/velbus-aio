@@ -3,7 +3,8 @@
 """
 import json
 import logging
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0x07
 
@@ -32,7 +33,6 @@ class SetDimmerMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_high_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 4)
@@ -67,3 +67,10 @@ class SetDimmerMessage(Message):
             )
             + self.dimmer_transitiontime.to_bytes(2, byteorder="big", signed=False)
         )
+
+
+register_command(COMMAND_CODE, SetDimmerMessage, "VMBDME")
+register_command(COMMAND_CODE, SetDimmerMessage, "VMB4DC")
+register_command(COMMAND_CODE, SetDimmerMessage, "VMBDMI")
+register_command(COMMAND_CODE, SetDimmerMessage, "VMBDMI-R")
+register_command(COMMAND_CODE, SetDimmerMessage, "VMB1LED")

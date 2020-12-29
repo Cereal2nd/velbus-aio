@@ -3,7 +3,8 @@
 """
 import json
 import logging
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0x02
 
@@ -30,7 +31,6 @@ class SwitchRelayOnMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_high_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 1)
@@ -50,3 +50,6 @@ class SwitchRelayOnMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self.channels_to_byte(self.relay_channels)])
+
+
+register_command(COMMAND_CODE, SwitchRelayOnMessage)

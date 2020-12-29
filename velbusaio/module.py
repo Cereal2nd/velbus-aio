@@ -47,25 +47,26 @@ class Module(object):
 
         self._log.info("Found Module {} @ {} ".format(self._type, self._address))
 
+    def get_addresses(self):
+        res = list()
+        res.append(self._address)
+        for addr in self._sub_address.values():
+            res.append(addr)
+        return res
+
+    def get_type(self):
+        return self._type
+
     def on_message(self, message):
         """
         Process received message
         """
-        # only if the message is send to this module handle it
-        if message.address not in self.get_module_addresses():
-            return
         # handle the messages
-        if isinstance(message, ChannelNamePart1Message) or isinstance(
-            message, ChannelNamePart1Message2
-        ):
+        if message.msgtype == "F0":
             self._process_channel_name_message(1, message)
-        elif isinstance(message, ChannelNamePart2Message) or isinstance(
-            message, ChannelNamePart2Message2
-        ):
+        elif message.msgtype == "F1":
             self._process_channel_name_message(2, message)
-        elif isinstance(message, ChannelNamePart3Message) or isinstance(
-            message, ChannelNamePart3Message2
-        ):
+        elif message.msgtype == "F2":
             self._process_channel_name_message(3, message)
         elif isinstance(message, MemoryDataMessage):
             self._process_memory_data_message(message)

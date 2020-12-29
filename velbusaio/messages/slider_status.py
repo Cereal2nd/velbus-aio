@@ -2,7 +2,8 @@
 :author: Frank van Breugel
 """
 import json
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0x0F
 
@@ -24,7 +25,6 @@ class SliderStatusMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_high_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 3)
@@ -62,3 +62,10 @@ class SliderStatusMessage(Message):
                 self.slider_long_pressed,
             ]
         )
+
+
+register_command(COMMAND_CODE, SliderStatusMessage, "VMBDME")
+register_command(COMMAND_CODE, SliderStatusMessage, "VMB4DC")
+register_command(COMMAND_CODE, SliderStatusMessage, "VMBDMI")
+register_command(COMMAND_CODE, SliderStatusMessage, "VMBDMI-R")
+register_command(COMMAND_CODE, SliderStatusMessage, "VMB1LED")

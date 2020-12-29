@@ -1,7 +1,8 @@
 """
 :author: Thomas Delaet <thomas@delaet.org>
 """
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xFD
 
@@ -22,7 +23,6 @@ class ReadDataFromMemoryMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 2)
@@ -35,3 +35,6 @@ class ReadDataFromMemoryMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self.high_address, self.low_address])
+
+
+register_command(COMMAND_CODE, ReadDataFromMemoryMessage)

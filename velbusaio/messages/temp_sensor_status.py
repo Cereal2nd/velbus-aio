@@ -2,7 +2,8 @@
 :author: Maikel Punie <maikel.punie@gmail.com>
 """
 import json
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xEA
 DSTATUS = {0: "run", 1: "manual", 2: "sleep", 4: "disable"}
@@ -60,7 +61,6 @@ class TempSensorStatusMessage(Message):
         -DB7-8  sleep timer     = 0=off >0=x min
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 7)
         self.set_attributes(priority, address, rtr)
@@ -109,3 +109,6 @@ class TempSensorStatusMessage(Message):
         json_dict["target_temp"] = self.target_temp
         json_dict["sleep_timer"] = self.sleep_timer
         return json.dumps(json_dict)
+
+
+register_command(COMMAND_CODE, TempSensorStatusMessage)

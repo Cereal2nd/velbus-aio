@@ -1,7 +1,8 @@
 """
 :author: Thomas Delaet <thomas@delaet.org>
 """
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xF4
 
@@ -23,7 +24,6 @@ class UpdateLedStatusMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 3)
@@ -44,3 +44,6 @@ class UpdateLedStatusMessage(Message):
                 self.channels_to_byte(self.led_fast_blinking),
             ]
         )
+
+
+register_command(COMMAND_CODE, UpdateLedStatusMessage)

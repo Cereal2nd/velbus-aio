@@ -2,8 +2,8 @@
 :author: Thomas Delaet <thomas@delaet.org>
 """
 import struct
-from velbus.message import Message
-from velbus.module_registry import MODULE_DIRECTORY
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 import json
 
 COMMAND_CODE = 0xB0
@@ -31,15 +31,12 @@ class ModuleSubTypeMessage(Message):
         """
         :return: str
         """
-        if self.module_type in MODULE_DIRECTORY.keys():
-            return MODULE_DIRECTORY[self.module_type]
         return "Unknown"
 
     def populate(self, priority, address, rtr, data):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         # self.needs_data(data, 6)
@@ -61,3 +58,6 @@ class ModuleSubTypeMessage(Message):
         json_dict["sub_3"] = self.sub_address_3
         json_dict["sub_4"] = self.sub_address_4
         return json.dumps(json_dict)
+
+
+register_command(COMMAND_CODE, ModuleSubTypeMessage)

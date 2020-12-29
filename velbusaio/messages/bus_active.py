@@ -1,7 +1,8 @@
 """
 :author: Thomas Delaet <thomas@delaet.org>
 """
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0x0A
 
@@ -19,7 +20,6 @@ class BusActiveMessage(Message):
         self.set_no_rtr()
 
     def populate(self, priority, address, rtr, data):
-        assert isinstance(data, bytes)
         self.needs_high_priority(priority)
         self.needs_no_rtr(rtr)
         self.set_attributes(priority, address, rtr)
@@ -30,3 +30,6 @@ class BusActiveMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE])
+
+
+register_command(COMMAND_CODE, BusActiveMessage)

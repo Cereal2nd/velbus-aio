@@ -2,7 +2,8 @@
 :author: Frank van Breugel
 """
 import json
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 
 COMMAND_CODE = 0x11
@@ -29,7 +30,6 @@ class RestoreDimmerMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_high_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 1)
@@ -62,3 +62,6 @@ class RestoreDimmerMessage(Message):
             )
             + self.dimmer_transitiontime.to_bytes(2, byteorder="big", signed=False)
         )
+
+
+register_command(COMMAND_CODE, RestoreDimmerMessage)

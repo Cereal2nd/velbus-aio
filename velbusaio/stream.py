@@ -7,15 +7,13 @@ import asyncio
 import ssl
 from velbusaio.parser import VelbusParser
 from velbusaio.handler import PacketHandler
-from velbusaio.const import PRIORITY_LOW
 from velbusaio.message import Message
 from velbusaio.module import Module
+from velbus.messages.module_type_request import ModuleTypeRequestMessage
 
-writer = None
-
-
-class Velbus:
+class Velbus():
     def __init__(self, ip, port, ssl=False):
+        self._log = logging.getLogger("velbus")
         self._ip = ip
         self._port = port
         self._ssl = ssl
@@ -34,27 +32,28 @@ class Velbus:
             await self._modules[addr].load()
 
     def get_modules(self):
-        return self._modules
+        return self._modules    
+
+    def get_module(self, addr):
+        if addr in self._modules.keys():
+            return self._modules[addr]
+        return None
 
     def get_channels(self, addr):
         if addr in self._modules:
             return self._modules.get_channels()
         return None
 
-    def get_module(self, addr):
-        if msg.addr in self._modules.keys():
-            return self._modules[msg.addr]
-        return None
-
     async def connect(self):
         if self._ssl:
             ctx = ssl._create_unverified_context()
         else:
-            ctx = None
+            ctx=None
         self._reader, self._writer = await asyncio.open_connection(
             self._ip, self._port, ssl=ctx
         )
-        asyncio.Task(self.read())
+        asyncio.Task(self._socket_read_task())
+        asyncio.Task(self._parser_task())
 
     async def modules_loaded(self):
         tsk = asyncio.Task(self._check_if_modules_are_loaded())
@@ -74,28 +73,27 @@ class Velbus:
 
     async def scan(self):
         for addr in range(0, 255):
-            msg = Message()
-            msg.priority = PRIORITY_LOW
-            msg.address = addr
-            msg.rtr = True
+            msg = ModuleTypeRequestMessage(addr)
             await self.send(msg)
 
     async def send(self, msg):
-        assert isinstance(msg, Message)
-        self._writer.write(msg.build())
+        self._log.debug("SENDING message: {}".format(msg))
+        self._writer.write(msg.to_binary())
         await asyncio.sleep(0.1)
 
-    async def read(self):
+    async def _socket_read_task(self):
         while True:
-            data = await self._reader.read(100)
+            data = await self._reader.read(10)
             self._parser.feed(data)
-            p = await self._parser._next()
-            print(p)
+
+    async def _parser_task(self):
+        while True:
+            p = await self._parser.waitForPacket()
             await self._handler.handle(p)
 
 
 async def main():
-    v = Velbus("192.168.1.9", 27015, True)
+    v = Velbus('192.168.1.9', 27015, True)
     await v.connect()
     print("Connect finished")
     await v.scan()
@@ -107,4 +105,4 @@ async def main():
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logging.getLogger("asyncio").setLevel(logging.DEBUG)
-asyncio.run(main(), debug=True)
+asyncio.run(main(), debug=False)

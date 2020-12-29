@@ -2,7 +2,8 @@
 :author: Thomas Delaet <thomas@delaet.org>
 """
 import json
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0x00
 
@@ -24,7 +25,6 @@ class PushButtonStatusMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_high_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 3)
@@ -67,3 +67,6 @@ class PushButtonStatusMessage(Message):
                 self.channels_to_byte(self.closed_long),
             ]
         )
+
+
+register_command(COMMAND_CODE, PushButtonStatusMessage)

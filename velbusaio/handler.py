@@ -4,7 +4,9 @@ import json
 import re
 from velbusaio.message import Message
 from velbusaio.helpers import keys_exists, h2
+from velbusaio.command_registry import commandRegistry
 from velbusaio.const import *
+from velbusaio.messages import *
 
 
 class PacketHandler:
@@ -20,32 +22,31 @@ class PacketHandler:
 
     async def handle(self, data):
         self._log.info("Msg received {}".format(data))
-        msg = Message()
-        msg.fromData(data)
-
-        # handle based on msgtype
-        if msg.rtr:
-            self._log.debug("scan")
-        elif msg.msgtype == 0xFF:
-            await self._handleModuleType(msg)
-        # from this point onwards we should know the module
-        # if not (yet) then ddo not handle the packet
-        if msg.address not in self._velbus.get_modules():
-            self._log.warning(
-                "Module not found (yet): {} !!!!!!!!!!!".format(msg.address)
-            )
+        priority = data[1]
+        address = data[2]
+        rtr = data[3] & RTR == RTR
+        data_size = data[3] & 0x0F
+        if data_size < 1:
             return
-        # handle the global packets
-        if msg.msgtype == 0xB0:
-            await self._handleModuleSubType(msg)
-        elif msg.msgtype == 0xD8:
-            self._log.debug("Realtime clock status => ignore")
-        elif msg.msgtype == 0xB7:
-            self._log.debug("Date sync => ignore")
-        # else:
-        #    self._log.debug("HAND OFFF")
-        del msg
-
+        if data[4] == 0xFF:
+            message = ModuleTypeMessage()
+            message.populate(priority, address, rtr, data[5:-2])
+            await self._handleModuleType(message)
+        elif data[4] == 0xB0:
+            message = ModuleSubTypeMessage()
+            message.populate(priority, address, rtr, data[5:-2])
+            await self._handleModuleSubType(message)
+        # TODO handle global messages
+        elif address in self._velbus.get_modules():
+            command_value = data[4]
+            module_type = self._velbus.get_module(address).get_type()
+            if commandRegistry.has_command(command_value, module_type):
+                command = commandRegistry.get_command(command_value, module_type)
+                message = command()
+                message.populate(priority, address, rtr, data[5:-2])
+                # send the message to the modules
+                (self._velbus.get_module(msg.address)).on_message(message)
+	
     def _perByte(self, cmsg, msg):
         result = dict()
         for num, byte in enumerate(msg.data):
@@ -118,12 +119,12 @@ class PacketHandler:
     async def _handleModuleType(self, msg):
         self._log.debug("Module type: answer to a Scan")
         # load the module data
-        d = keys_exists(self.pdata, "ModuleTypes", h2(msg.data[0]))
+        d = keys_exists(self.pdata, "ModuleTypes", h2(msg.module_type))
         if not d:
-            self._log.warning("Module not recognized: {}".format(msg.data[0]))
+            self._log.warning("Module not recognized: {}".format(msg.module_type))
             return
         # create the module
-        await self._velbus.add_module(msg.address, msg.data[0], d)
+        await self._velbus.add_module(msg.address, msg.module_type, d)
 
     async def _handleModuleSubType(self, msg):
         self._log.debug("Module subtype: answer to a Scan")
