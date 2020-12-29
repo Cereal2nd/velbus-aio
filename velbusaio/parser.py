@@ -1,0 +1,132 @@
+"""
+:author: Maikel Punie <maikel.punie@gmail.com>
+"""
+import asyncio, logging
+from collections import deque
+import itertools
+from velbusaio.handler import PacketHandler
+from velbusaio.helpers import checksum
+from velbusaio.const import (
+    STX,
+    ETX,
+    HEADER_LENGTH,
+    MIN_PACKET_LENGTH,
+    MAX_DATA_AMOUNT,
+    PRIORITIES,
+    LENGTH_MASK,
+    RTR,
+)
+
+
+class VelbusParser:
+    """
+    Transform Velbus message from wire format to Message object
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.logger = logging.getLogger("velbus-parser")
+        self.buffer = deque(maxlen=10000)
+
+    def feed(self, data):
+        """
+        Overrided asyncio.Protocol
+        """
+        self.buffer.extend(bytearray(data))
+
+    async def _next(self):
+        packet = None
+        has_valid_packet = self.__has_valid_packet_waiting()
+        while not has_valid_packet:
+            if len(self.buffer) > HEADER_LENGTH and self.__has_packet_length_waiting():
+                self.__realign_buffer()
+                has_valid_packet = self.__has_valid_packet_waiting()
+
+        if has_valid_packet:
+            packet = self.__extract_packet()
+        return packet
+
+    def __has_valid_packet_waiting(self):
+        """
+        Checks whether or not the parser has a valid packet in its buffer.
+        :return: A boolean indicating whether or not the parser has a valid packet in its buffer.
+        """
+        if not self.__has_valid_header_waiting():
+            return False
+        else:
+            if len(self.buffer) < MIN_PACKET_LENGTH:
+                return False
+            return self.__has_packet_length_waiting() or False
+        bytes_to_check = bytearray(
+            itertools.islice(self.buffer, 0, 4 + self.__curr_packet_body_length())
+        )
+        checksum_valid = self.buffer[(self.__curr_packet_length() - 2)] == checksum(
+            bytes_to_check
+        )
+        end_valid = self.buffer[(self.__curr_packet_length() - 1)] == ETX
+        return checksum_valid and end_valid
+
+    def __has_valid_header_waiting(self):
+        """
+        Checks whether or not the parser has a valid packet header waiting.
+        :return: A boolean indicating whether or not the parser has a valid packet header waiting.
+        """
+        if len(self.buffer) < HEADER_LENGTH:
+            return False
+        start_valid = self.buffer[0] == STX
+        bodysize_valid = self.__curr_packet_body_length() <= MAX_DATA_AMOUNT
+        priority_valid = self.buffer[1] in PRIORITIES
+        return start_valid and bodysize_valid and priority_valid
+
+    def __has_packet_length_waiting(self):
+        """
+        Checks whether the current packet has the full length's worth of data waiting in the buffer.
+        This should only be called when __has_valid_header_waiting() returns True.
+        """
+        return len(self.buffer) >= self.__curr_packet_length()
+
+    def __curr_packet_length(self):
+        """
+        Gets the current waiting packet's total length.
+        This should only be called when __has_valid_header_waiting() returns True.
+        :return: The current waiting packet's total length.
+        """
+        return MIN_PACKET_LENGTH + self.__curr_packet_body_length()
+
+    def __curr_packet_body_length(self):
+        """
+        Gets the current waiting packet's body length.
+        This should only be called when __has_valid_header_waiting() returns True.
+        :return: The current waiting packet's body length.
+        """
+        return self.buffer[3] & LENGTH_MASK
+
+    def __extract_packet(self):
+        """
+        Extracts a packet from the buffer and shifts it.
+        Make sure this is only called after __has_valid_packet_waiting() return True.
+        :return: A bytearray with the currently waiting packet.
+        """
+        length = self.__curr_packet_length()
+        packet = bytearray(itertools.islice(self.buffer, 0, length))
+        self.__shift_buffer(length)
+        return packet
+
+    def __realign_buffer(self):
+        """
+        Realigns buffer by shifting the queue until the next STX or until the buffer runs out.
+        """
+        amount = 1
+        while amount < len(self.buffer) and self.buffer[amount] != STX:
+            amount += 1
+
+        self.__shift_buffer(amount)
+
+    def __shift_buffer(self, amount):
+        """
+        Shifts the buffer by the specified amount.
+        :param amount: The amount of bytes that the buffer needs to be shifted.
+        """
+        assert isinstance(amount, int)
+        for _ in itertools.repeat(None, amount):
+            self.buffer.popleft()

@@ -1,5 +1,6 @@
 import logging
 import uuid
+from velbusaio.helpers import checksum
 from velbusaio.const import *
 
 
@@ -20,6 +21,20 @@ class Message(object):
     def __init__(self):
         self.uuid = uuid.uuid4()
         pass
+
+    def build(self):
+        if self.rtr:
+            rtr_and_size = RTR | len(self.data)
+        else:
+            rtr_and_size = len(self.data)
+        header = bytearray([STX, self.priority, self.address, rtr_and_size])
+        _checksum = checksum(header + self.data)
+        return (
+            header
+            + self.data
+            + bytearray.fromhex("{:02x}".format(_checksum))
+            + bytearray([ETX])
+        )
 
     def fromData(self, data):
         assert data

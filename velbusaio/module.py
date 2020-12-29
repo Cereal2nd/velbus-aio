@@ -23,11 +23,11 @@ class Module(object):
     Abstract class for Velbus hardware modules.
     """
 
-    def __init__(self, module_address, module_type, module_data, protocol):
+    def __init__(self, module_address, module_type, module_data, writer):
         self._address = module_address
         self._type = module_type
         self._data = module_data
-        self._protocol = protocol
+        self._writer = writer
         self._log = logging.getLogger("velbus-module")
         self._log.setLevel(logging.DEBUG)
 
@@ -46,69 +46,6 @@ class Module(object):
         self.loaded = False
 
         self._log.info("Found Module {} @ {} ".format(self._type, self._address))
-
-    def get_module_name(self):
-        """
-        Returns the module model name
-
-        :return: str
-        """
-        if isinstance(self._name, str):
-            return self._name
-        return self._model_name
-
-    def get_module_address(self):
-        """
-        Returns the module address
-
-        :return: int
-        """
-        return self._address
-
-    def get_module_addresses(self):
-        """
-        Returns the module addresses
-        This will be the master and all subaddresses
-
-        :return: list
-        """
-        return [self._address] + list(self._sub_address.values())
-
-    def get_name(self, channel):
-        """
-        Get name for one of the channels
-
-        :return: str
-        """
-        return self._channel[channel].get_name()
-
-    def get_module_type_name(self):
-        return self._model_name
-
-    def get_type(self):
-        return self._type
-
-    def get_channels(self):
-        return self._channels
-
-    def get_categories(self, channel):
-        """
-        Get type of functionality of channel
-
-        :return: str
-        """
-        return []
-
-    def get_addressChannel_from_channel(self, channel):
-        """
-        Get the address and channel
-
-        :return: tuple(address, channel)
-        """
-        if len(self._sub_address) == 0:
-            return int(channel)
-        if int(channel) < 9:
-            return self._address
 
     def on_message(self, message):
         """
@@ -139,6 +76,9 @@ class Module(object):
         else:
             self._on_message(message)
 
+    def get_channels(self):
+        return self._channels
+
     def _on_message(self, message):
         pass
 
@@ -157,7 +97,6 @@ class Module(object):
         self._is_loading = True
         # load default channels
         self._load_default_channels()
-        print(self._channels)
         # load the module status
         await self._request_module_status()
         # load the data from memory ( the stuff that we need)
@@ -291,11 +230,10 @@ class Module(object):
     async def _request_module_status(self):
         # request the module status (if available for this module
         if keys_exists(self._data, "Messages", "FA"):
-            for chan in self._channels:
-                msg = Message()
-                msg.address = self._address
-                msg.data = bytearray([0xFA, int(chan)])
-                await self._protocol.send(msg)
+            msg = Message()
+            msg.address = self._address
+            msg.data = bytearray([0xFA, 0xFF])
+            await self._writer(msg)
         else:
             self._log.info("No FA message defined")
 
@@ -307,13 +245,13 @@ class Module(object):
             msg = Message()
             msg.address = self._address
             msg.data = bytearray([0xEF, 0xFF])
-            await self._protocol.send(msg)
+            await self._writer(msg)
         else:
             for chan in self._channels:
                 msg = Message()
                 msg.address = self._address
                 msg.data = bytearray([0xEF, int(chan)])
-                await self._protocol.send(msg)
+                await self._writer(msg)
 
     async def _load_memory(self):
         if "Memory" not in self._data:
@@ -328,7 +266,7 @@ class Module(object):
                     message = ReadDataFromMemoryMessage(self._address)
                     message.high_address = addr[0]
                     message.low_address = addr[1]
-                    await self._protocol.send(message)
+                    await self._writer(message)
 
     def _load_default_channels(self):
         if "Channels" not in self._data:
