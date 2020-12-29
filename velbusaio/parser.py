@@ -29,24 +29,27 @@ class VelbusParser:
         self.buffer = deque(maxlen=10000)
 
     def feed(self, data):
-        """
-        Overrided asyncio.Protocol
-        """
         self.buffer.extend(bytearray(data))
 
     async def _next(self):
         packet = None
-        has_valid_packet = self.__has_valid_packet_waiting()
+        has_valid_packet = self._has_valid_packet_waiting()
         while not has_valid_packet:
             if len(self.buffer) > HEADER_LENGTH and self.__has_packet_length_waiting():
                 self.__realign_buffer()
-                has_valid_packet = self.__has_valid_packet_waiting()
+                has_valid_packet = self._has_valid_packet_waiting()
+            await asyncio.sleep(1)
 
         if has_valid_packet:
-            packet = self.__extract_packet()
+            packet = self._extract_packet()
         return packet
 
-    def __has_valid_packet_waiting(self):
+    async def waitForPacket(self):
+        while not self._has_valid_packet_waiting():
+            await asyncio.sleep(0.1)
+        return self._extract_packet()
+
+    def _has_valid_packet_waiting(self):
         """
         Checks whether or not the parser has a valid packet in its buffer.
         :return: A boolean indicating whether or not the parser has a valid packet in its buffer.
@@ -101,7 +104,7 @@ class VelbusParser:
         """
         return self.buffer[3] & LENGTH_MASK
 
-    def __extract_packet(self):
+    def _extract_packet(self):
         """
         Extracts a packet from the buffer and shifts it.
         Make sure this is only called after __has_valid_packet_waiting() return True.

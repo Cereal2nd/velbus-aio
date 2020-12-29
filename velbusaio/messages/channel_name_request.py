@@ -3,7 +3,8 @@
 """
 import json
 
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xEF
 
@@ -23,7 +24,6 @@ class ChannelNameRequestMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 1)
@@ -55,7 +55,6 @@ class ChannelNameRequestMessage2(ChannelNameRequestMessage):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 1)
@@ -73,3 +72,6 @@ class ChannelNameRequestMessage2(ChannelNameRequestMessage):
         if 2 in self.channels:
             tmp += 0x0C
         return bytes([COMMAND_CODE, tmp])
+
+
+register_command(COMMAND_CODE, ChannelNameRequestMessage)

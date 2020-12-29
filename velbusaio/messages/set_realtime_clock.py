@@ -3,7 +3,8 @@
 """
 import json
 import logging
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 import time
 
 COMMAND_CODE = 0xD8
@@ -36,7 +37,6 @@ class SetRealtimeClock(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 3)
@@ -60,3 +60,6 @@ class SetRealtimeClock(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self._wday, self._hour, self._min])
+
+
+register_command(COMMAND_CODE, SetRealtimeClock)

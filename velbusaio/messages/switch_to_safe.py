@@ -2,7 +2,8 @@
 :author: Thomas Delaet <thomas@delaet.org>
 """
 import json
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xDE
 
@@ -38,3 +39,6 @@ class SwitchToSafeMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, 0x00, 0x00])
+
+
+register_command(COMMAND_CODE, SwitchToSafeMessage)

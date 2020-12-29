@@ -3,7 +3,8 @@
 """
 import struct
 import json
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xFB
 
@@ -51,7 +52,6 @@ class RelayStatusMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 7)
@@ -142,3 +142,6 @@ class RelayStatusMessage(Message):
             )
             + struct.pack(">L", self.delay_time)[-3:]
         )
+
+
+register_command(COMMAND_CODE, RelayStatusMessage)

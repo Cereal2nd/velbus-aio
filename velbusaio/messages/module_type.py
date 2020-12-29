@@ -2,8 +2,8 @@
 :author: Thomas Delaet <thomas@delaet.org>
 """
 import struct
-from velbus.message import Message
-from velbus.module_registry import MODULE_DIRECTORY
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xFF
 MODULES_WITHOUT_SERIAL = {
@@ -44,15 +44,12 @@ class ModuleTypeMessage(Message):
         """
         :return: str
         """
-        if self.module_type in MODULE_DIRECTORY.keys():
-            return MODULE_DIRECTORY[self.module_type]
         return "Unknown"
 
     def populate(self, priority, address, rtr, data):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 4)
@@ -79,3 +76,6 @@ class ModuleTypeMessage(Message):
                 self.build_week,
             ]
         )
+
+
+register_command(COMMAND_CODE, ModuleTypeMessage)

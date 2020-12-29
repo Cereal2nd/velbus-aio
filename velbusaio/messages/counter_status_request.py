@@ -1,7 +1,8 @@
 """
 :author: Maikel Punie <maikel.punie@gmail.com>
 """
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xBD
 
@@ -21,7 +22,6 @@ class CounterStatusRequestMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 1)
@@ -32,3 +32,6 @@ class CounterStatusRequestMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, 0x0F, 0x00])
+
+
+register_command(COMMAND_CODE, CounterStatusRequestMessage, "VMB7IN")

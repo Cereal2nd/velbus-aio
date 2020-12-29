@@ -2,7 +2,8 @@
 :author: Thomas Delaet <thomas@delaet.org>
 """
 import struct
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0x03
 
@@ -29,7 +30,6 @@ class StartRelayTimerMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_high_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 4)
@@ -45,3 +45,6 @@ class StartRelayTimerMessage(Message):
             bytes([COMMAND_CODE, self.channels_to_byte(self.relay_channels)])
             + struct.pack(">L", self.delay_time)[-3:]
         )
+
+
+register_command(COMMAND_CODE, StartRelayTimerMessage)

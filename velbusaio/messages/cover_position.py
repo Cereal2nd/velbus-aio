@@ -3,7 +3,8 @@
 """
 import json
 import struct
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 
 COMMAND_CODE = 0x1C
@@ -25,7 +26,6 @@ class CoverPosMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_high_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 4)
@@ -74,7 +74,6 @@ class CoverUpMessage2(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_high_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 4)
@@ -111,3 +110,8 @@ class CoverUpMessage2(Message):
         else:
             tmp = 0x0C
         return bytes([COMMAND_CODE, tmp]) + struct.pack(">L", self.delay_time)[-3:]
+
+
+register_command(COMMAND_CODE, CoverPosMessage, "VMB1BLE")
+register_command(COMMAND_CODE, CoverPosMessage, "VMB2BLE")
+register_command(COMMAND_CODE, CoverPosMessage, "VMB1BLS")

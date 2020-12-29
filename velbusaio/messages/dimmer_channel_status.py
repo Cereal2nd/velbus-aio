@@ -3,7 +3,8 @@
 """
 import struct
 import json
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xB8
 
@@ -45,7 +46,6 @@ class DimmerChannelStatusMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 7)
@@ -115,3 +115,8 @@ class DimmerChannelStatusMessage(Message):
             )
             + struct.pack(">L", self.delay_time)[-3:]
         )
+
+
+register_command(COMMAND_CODE, DimmerChannelStatusMessage, "VMB4DC")
+register_command(COMMAND_CODE, DimmerChannelStatusMessage, "VMBDMI")
+register_command(COMMAND_CODE, DimmerChannelStatusMessage, "VMBDMI-R")

@@ -2,7 +2,8 @@
 :author: Maikel Punie <maikel.punie@gmail.com>
 """
 import json
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xBE
 
@@ -30,7 +31,6 @@ class CounterStatusMessage(Message):
         -DB6-7                = ms/pulse
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 7)
         self.set_attributes(priority, address, rtr)
@@ -57,3 +57,6 @@ class CounterStatusMessage(Message):
         :return: list
         """
         return self.channel
+
+
+register_command(COMMAND_CODE, CounterStatusMessage, "VMB7IN")

@@ -1,7 +1,8 @@
 """
 :author: Maikel Punie <maikel.punie@gmail.com>
 """
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xE4
 
@@ -22,7 +23,6 @@ class SetTemperatureMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 1)
@@ -36,3 +36,6 @@ class SetTemperatureMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, int(self.temp_type), int(self.temp)])
+
+
+register_command(COMMAND_CODE, SetTemperatureMessage)

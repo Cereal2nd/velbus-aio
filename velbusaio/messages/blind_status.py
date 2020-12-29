@@ -2,7 +2,8 @@
 :author: Tom Dupré <gitd8400@gmail.com>
 """
 import json
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xEC
 DSTATUS = {0: "off", 1: "up", 2: "down"}
@@ -26,7 +27,6 @@ class BlindStatusNgMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 7)
@@ -94,7 +94,6 @@ class BlindStatusMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 7)
@@ -130,3 +129,10 @@ class BlindStatusMessage(Message):
         :return: bool
         """
         return self.status == 0x02
+
+
+register_command(COMMAND_CODE, BlindStatusNgMessage, "VMB1BLE")
+register_command(COMMAND_CODE, BlindStatusNgMessage, "VMB2BLE")
+register_command(COMMAND_CODE, BlindStatusNgMessage, "VMB1BLS")
+register_command(COMMAND_CODE, BlindStatusMessage, "VMB1BL")
+register_command(COMMAND_CODE, BlindStatusMessage, "VMB2BL")

@@ -3,7 +3,8 @@
 """
 import json
 import logging
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xE0
 
@@ -37,3 +38,6 @@ class TempSetHeatingMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, 0xAA])
+
+
+register_command(COMMAND_CODE, TempSetHeatingMessage)

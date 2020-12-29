@@ -1,7 +1,8 @@
 """
 :author: Maikel Punie <maikel.punie@gmail.com>
 """
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xAC
 
@@ -22,7 +23,6 @@ class MemoTextMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 7)
@@ -37,3 +37,6 @@ class MemoTextMessage(Message):
         while len(self.memo_text) < 5:
             self.memo_text += chr(0)
         return bytes([COMMAND_CODE, 0x00, self.start]) + bytes(self.memo_text, "utf-8")
+
+
+register_command(COMMAND_CODE, MemoTextMessage)

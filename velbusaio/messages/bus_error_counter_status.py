@@ -1,7 +1,8 @@
 """
 :author: Thomas Delaet <thomas@delaet.org>
 """
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xDA
 
@@ -23,7 +24,6 @@ class BusErrorCounterStatusMessage(Message):
         """
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 3)
@@ -43,3 +43,6 @@ class BusErrorCounterStatusMessage(Message):
                 self.bus_off_counter,
             ]
         )
+
+
+register_command(COMMAND_CODE, BusErrorCounterStatusMessage)

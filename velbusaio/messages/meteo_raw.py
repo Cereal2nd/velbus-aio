@@ -2,7 +2,8 @@
 :author: Maikel Punie <maikel.punie@gmail.com>
 """
 import json
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0xA9
 
@@ -27,7 +28,6 @@ class MeteoRawMessage(Message):
             5 + 6   = max temp
         :return: None
         """
-        assert isinstance(data, bytes)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 6)
         self.set_attributes(priority, address, rtr)
@@ -44,3 +44,6 @@ class MeteoRawMessage(Message):
         json_dict["light"] = self.light
         json_dict["wind"] = self.wind
         return json.dumps(json_dict)
+
+
+register_command(COMMAND_CODE, MeteoRawMessage, "VMBMETEO")

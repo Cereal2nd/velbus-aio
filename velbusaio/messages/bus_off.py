@@ -1,7 +1,8 @@
 """
 :author: Thomas Delaet <thomas@delaet.org>
 """
-from velbus.message import Message
+from velbusaio.message import Message
+from velbusaio.command_registry import register_command
 
 COMMAND_CODE = 0x09
 
@@ -26,3 +27,6 @@ class BusOffMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE])
+
+
+register_command(COMMAND_CODE, BusOffMessage)
