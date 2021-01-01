@@ -34,7 +34,9 @@ class ChannelNameRequestMessage(Message):
         """
         :return: bytes
         """
-        return bytes([COMMAND_CODE, self.channels_to_byte(self.channels)])
+        if isinstance(self.channels, list):
+            return bytes([0xEF, self.channels_to_byte(self.channels)])
+        return bytes([0xEF, 0xFF])
 
     def to_json(self):
         """

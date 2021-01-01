@@ -31,7 +31,6 @@ class CoverDownMessage(Message):
         self.needs_data(data, 4)
         self.set_attributes(priority, address, rtr)
         self.channel = self.byte_to_channel(data[0])
-        self.needs_valid_channel(self.channel, 2)
         (self.delay_time,) = struct.unpack(">L", bytes([0]) + data[1:])
 
     def to_json(self):
@@ -85,7 +84,6 @@ class CoverDownMessage2(Message):
         # so shift 1 bit to the right + and with 03
         tmp = (data[0] >> 1) & 0x03
         self.channel = self.byte_to_channel(tmp)
-        self.needs_valid_channel(self.channel, 2)
         (self.delay_time,) = struct.unpack(">L", bytes([0]) + data[1:])
 
     def to_json(self):

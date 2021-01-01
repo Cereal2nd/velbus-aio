@@ -32,7 +32,6 @@ class BlindStatusNgMessage(Message):
         self.needs_data(data, 7)
         self.set_attributes(priority, address, rtr)
         self.channel = self.byte_to_channel(data[0])
-        self.needs_valid_channel(self.channel, 5)
         self.timeout = data[1]  # Omzetter seconden ????
         self.status = data[2]
         self.position = data[4]
@@ -103,7 +102,6 @@ class BlindStatusMessage(Message):
         # so shift 1 bit to the right + and with 03
         tmp = (data[0] >> 1) & 0x03
         self.channel = self.byte_to_channel(tmp)
-        self.needs_valid_channel(self.channel, 5)
         self.timeout = data[1]  # Omzetter seconden ????
         # 2 bits per channel used
         self.status = data[2] >> ((self.channel - 1) * 2)
