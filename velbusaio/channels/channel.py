@@ -22,9 +22,14 @@ class Channel:
         return self._name
 
     def set_name_part(self, part, name):
-        self._nameParts[int(part)] = name
-        if int(part) == 3:
-            self._generate_name()
+        try:
+            self._nameParts[int(part)] = name
+            if int(part) == 3:
+                self._generate_name()
+        except Exception:
+            print("++++++++++++++++++++++++++++++++++++++")
+            print(part)
+            print(self._nameParts)
 
     def _generate_name(self):
         assert len(self._nameParts) == 3

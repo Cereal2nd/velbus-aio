@@ -51,7 +51,6 @@ class DimmerChannelStatusMessage(Message):
         self.needs_data(data, 7)
         self.set_attributes(priority, address, rtr)
         self.channel = self.byte_to_channel(data[0])
-        self.needs_valid_channel(self.channel, 5)
         self.disable_inhibit_forced = data[1]
         self.dimmer_state = int.from_bytes([data[2]], byteorder="big", signed=False)
         self.led_status = data[3]

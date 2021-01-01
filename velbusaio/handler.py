@@ -21,7 +21,6 @@ class PacketHandler:
             self.pdata = json.load(fl)
 
     async def handle(self, data):
-        self._log.info("Msg received {}".format(data))
         priority = data[1]
         address = data[2]
         rtr = data[3] & RTR == RTR
@@ -29,23 +28,24 @@ class PacketHandler:
         if data_size < 1:
             return
         if data[4] == 0xFF:
-            message = ModuleTypeMessage()
-            message.populate(priority, address, rtr, data[5:-2])
-            await self._handleModuleType(message)
+            msg = ModuleTypeMessage()
+            msg.populate(priority, address, rtr, data[5:-2])
+            await self._handleModuleType(msg)
         elif data[4] == 0xB0:
-            message = ModuleSubTypeMessage()
-            message.populate(priority, address, rtr, data[5:-2])
-            await self._handleModuleSubType(message)
+            msg = ModuleSubTypeMessage()
+            msg.populate(priority, address, rtr, data[5:-2])
+            await self._handleModuleSubType(msg)
         # TODO handle global messages
         elif address in self._velbus.get_modules():
             command_value = data[4]
             module_type = self._velbus.get_module(address).get_type()
             if commandRegistry.has_command(command_value, module_type):
                 command = commandRegistry.get_command(command_value, module_type)
-                message = command()
-                message.populate(priority, address, rtr, data[5:-2])
+                msg = command()
+                msg.populate(priority, address, rtr, data[5:-2])
+                self._log.debug("Msg received {}".format(msg))
                 # send the message to the modules
-                (self._velbus.get_module(msg.address)).on_message(message)
+                (self._velbus.get_module(msg.address)).on_message(msg)
 
     def _perByte(self, cmsg, msg):
         result = dict()
@@ -92,32 +92,7 @@ class PacketHandler:
                 self._log.error("UNKNOWN convert requested: {}".format(todo["Convert"]))
         return result
 
-    async def _loadModule(self, addr, mtype):
-        self._log.info("LOADING MODULE {}".format(addr))
-        # request the module status (if available for this module
-        if keys_exists(self.pdata, "ModuleTypes", h2(mtype), "Messages", "FA"):
-            for chan in self._velbus.get_channels(addr):
-                msg = Message()
-                msg.address = addr
-                msg.data = bytearray([0xFA, int(chan)])
-                await self._writer(msg)
-        # request the module channel names
-        d = keys_exists(self.pdata, "ModuleTypes", h2(mtype), "AllChannelStatus")
-        if d:
-            # some self.modules support FF for all channels
-            msg = Message()
-            msg.address = addr
-            msg.data = bytearray([0xEF, 0xFF])
-            await self._writer(msg)
-        else:
-            for chan in list(self.modules[addr]["channels"]):
-                msg = Message()
-                msg.address = addr
-                msg.data = bytearray([0xEF, int(chan)])
-                await self._writer(msg)
-
     async def _handleModuleType(self, msg):
-        self._log.debug("Module type: answer to a Scan")
         # load the module data
         d = keys_exists(self.pdata, "ModuleTypes", h2(msg.module_type))
         if not d:
@@ -127,17 +102,24 @@ class PacketHandler:
         await self._velbus.add_module(msg.address, msg.module_type, d)
 
     async def _handleModuleSubType(self, msg):
-        self._log.debug("Module subtype: answer to a Scan")
-        if msg.address not in self.modules:
+        if msg.address not in self._velbus.get_modules():
             return
-        # remove moduletype, high serial, low serial
-        del msg.data[0:3]
-        # store all subaddresses
-        # and link back to the main module
-        for num, subAddr in enumerate(msg.data):
-            if subAddr == 0xFF:
-                continue
-            await self._velbus.add_module(msg.address, msg.data[0], None, subAddr, num)
+        if msg.sub_address_1 != 0xFF:
+            await self._velbus.add_module(
+                msg.address, msg.module_type, None, msg.sub_address_1, 1
+            )
+        if msg.sub_address_2 != 0xFF:
+            await self._velbus.add_module(
+                msg.address, msg.module_type, None, msg.sub_address_2, 2
+            )
+        if msg.sub_address_3 != 0xFF:
+            await self._velbus.add_module(
+                msg.address, msg.module_type, None, msg.sub_address_3, 3
+            )
+        if msg.sub_address_4 != 0xFF:
+            await self._velbus.add_module(
+                msg.address, msg.module_type, None, msg.sub_address_4, 4
+            )
 
     def _channelConvert(self, module, channel, ctype):
         d = keys_exists(self.pdata, "ModuleTypes", h2(module), "ChannelNumbers", ctype)

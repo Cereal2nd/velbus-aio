@@ -63,7 +63,6 @@ class DimmerStatusMessage(Message):
         self.dimmer_mode = data[0]
         self.channel = 1
         self.dimmer_state = int.from_bytes([data[1]], byteorder="big", signed=False)
-        self.needs_valid_channel(self.channel, 1)
         self.led_status = data[2]
         (self.delay_time,) = struct.unpack(">L", bytes([0]) + data[4:])
         self.dimmer_config = data[6]

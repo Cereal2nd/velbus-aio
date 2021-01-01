@@ -3,6 +3,7 @@ import string
 import struct
 import re
 import sys
+from velbusaio.const import PRIORITY_LOW
 from velbusaio.helpers import keys_exists
 from velbusaio.message import Message
 from velbusaio.messages.read_data_from_memory import ReadDataFromMemoryMessage
@@ -15,6 +16,8 @@ from velbusaio.messages.channel_name_part3 import ChannelNamePart3Message
 from velbusaio.messages.channel_name_part3 import ChannelNamePart3Message2
 from velbusaio.messages.module_type import ModuleTypeMessage
 from velbusaio.messages.module_subtype import ModuleSubTypeMessage
+from velbusaio.messages.module_status_request import ModuleStatusRequestMessage
+from velbusaio.messages.channel_name_request import ChannelNameRequestMessage
 from velbusaio.channels.channel import *
 
 
@@ -39,10 +42,8 @@ class Module(object):
         self.build_week = 0
         self._is_loading = False
 
-        self._channel_data = {}
         self._channels = {}
 
-        self._loaded_callbacks = []
         self.loaded = False
 
         self._log.info("Found Module {} @ {} ".format(self._type, self._address))
@@ -62,13 +63,20 @@ class Module(object):
         Process received message
         """
         # handle the messages
-        if message.msgtype == "F0":
+        if isinstance(message, ChannelNamePart1Message) or isinstance(
+            message, ChannelNamePart1Message2
+        ):
             self._process_channel_name_message(1, message)
-        elif message.msgtype == "F1":
+        elif isinstance(message, ChannelNamePart2Message) or isinstance(
+            message, ChannelNamePart2Message2
+        ):
             self._process_channel_name_message(2, message)
-        elif message.msgtype == "F2":
+        elif isinstance(message, ChannelNamePart3Message) or isinstance(
+            message, ChannelNamePart3Message2
+        ):
             self._process_channel_name_message(3, message)
         elif isinstance(message, MemoryDataMessage):
+            print(message)
             self._process_memory_data_message(message)
         elif isinstance(message, ModuleTypeMessage):
             self._process_module_type_message(message)
@@ -98,10 +106,10 @@ class Module(object):
         self._is_loading = True
         # load default channels
         self._load_default_channels()
+        # load the data from memory ( the stuff that we need)
+        await self._load_memory()
         # load the module status
         await self._request_module_status()
-        # load the data from memory ( the stuff that we need)
-        # await self._load_memory()
         # load the channel names
         await self._request_channel_name()
         # load the module specific stuff
@@ -116,7 +124,9 @@ class Module(object):
 
         :return: int
         """
-        raise NotImplementedError
+        if not len(self._channels):
+            return 0
+        return max(self._channels.keys())
 
     def light_is_buttonled(self, channel):
         return False
@@ -170,6 +180,7 @@ class Module(object):
         )
         try:
             mdata = self._data["Memory"]["1"]["Address"][addr]
+            print(mdata)
             if "ModuleName" in mdata and isinstance(self._name, dict):
                 # if self._name is a dict we are still loading
                 # if its a string it was already complete
@@ -179,6 +190,7 @@ class Module(object):
                 else:
                     char = mdata["ModuleName"].split(":")[0]
                     self._name[int(char)] = chr(message.data)
+                    print("{} == {}".format(int(char), chr(message.data)))
             elif "Match" in mdata:
                 for chan, cData in self._handle_match(
                     mdata["Match"], message.data
@@ -186,17 +198,14 @@ class Module(object):
                     data = cData.copy()
                     self._channels[chan].update(data)
         except KeyError:
+            print("KEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEY")
             pass
 
     def _process_channel_name_message(self, part, message):
         channel = int(message.channel)
         # some modules need a remap of the channel number
-        if (
-            channel not in self._channels
-            and "ChannelNumbers" in self._data
-            and "Name" in self._data["ChannelNumbers"]
-            and "Map" in self._data["ChannelNumbers"]["Name"]
-            and "{:02X}".format(channel) in self._data["ChannelNumbers"]["Name"]["Map"]
+        if keys_exists(
+            self._data, "ChannelNumbers", "Name", "Map", "{:02X}".format(channel)
         ):
             channel = int(
                 self._data["ChannelNumbers"]["Name"]["Map"]["{:02X}".format(channel)]
@@ -216,43 +225,39 @@ class Module(object):
         """
         Check if all name messages have been received
         """
+        # if we are loaded, just return
         if self.loaded:
             return True
+        # the name should be loaded
+        if isinstance(self._name, dict):
+            return False
+        # all channel names should be loaded
         for chan in self._channels.values():
             if not chan.is_loaded():
                 return False
         # set that  we finished the module loading
         self.loaded = True
-        for callback in self._loaded_callbacks:
-            callback()
-        self._loaded_callbacks = []
         return True
 
     async def _request_module_status(self):
         # request the module status (if available for this module
-        if keys_exists(self._data, "Messages", "FA"):
-            msg = Message()
-            msg.address = self._address
-            msg.data = bytearray([0xFA, 0xFF])
-            await self._writer(msg)
-        else:
-            self._log.info("No FA message defined")
+        msg = ModuleStatusRequestMessage(self._address)
+        msg.channels = list(range(1, 9))
+        await self._writer(msg)
 
     async def _request_channel_name(self):
+        self._log.debug("Requesting channel names")
         # request the module channel names
-        d = keys_exists(self._data, "AllChannelStatus")
-        if d:
-            # some self.modules support FF for all channels
-            msg = Message()
-            msg.address = self._address
-            msg.data = bytearray([0xEF, 0xFF])
+        if keys_exists(self._data, "AllChannelStatus"):
+            msg = ChannelNameRequestMessage(self._address)
+            msg.priority = PRIORITY_LOW
+            msg.channels = 0xFF
             await self._writer(msg)
         else:
-            for chan in self._channels:
-                msg = Message()
-                msg.address = self._address
-                msg.data = bytearray([0xEF, int(chan)])
-                await self._writer(msg)
+            msg = ChannelNameRequestMessage(self._address)
+            msg.priority = PRIORITY_LOW
+            msg.channels = list(range(1, (self.number_of_channels() + 1)))
+            await self._writer(msg)
 
     async def _load_memory(self):
         if "Memory" not in self._data:
@@ -264,10 +269,11 @@ class Module(object):
                     addr = struct.unpack(
                         ">BB", struct.pack(">h", int("0x" + addrAddr, 0))
                     )
-                    message = ReadDataFromMemoryMessage(self._address)
-                    message.high_address = addr[0]
-                    message.low_address = addr[1]
-                    await self._writer(message)
+                    msg = ReadDataFromMemoryMessage(self._address)
+                    msg.priority = PRIORITY_LOW
+                    msg.high_address = addr[0]
+                    msg.low_address = addr[1]
+                    await self._writer(msg)
 
     def _load_default_channels(self):
         if "Channels" not in self._data:

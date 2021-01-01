@@ -1,7 +1,13 @@
 import json
-import base64
 from velbusaio.helpers import checksum
-from velbusaio.const import PRIORITY_LOW, PRIORITY_HIGH, STX, ETX
+from velbusaio.const import (
+    PRIORITY_LOW,
+    PRIORITY_HIGH,
+    PRIORITY_FIRMWARE,
+    STX,
+    ETX,
+    RTR,
+)
 
 
 class ParserError(Exception):
@@ -9,19 +15,17 @@ class ParserError(Exception):
     Error when invalid message is received
     """
 
-    pass
 
-
-class Message(object):
+class Message:
     """
     Base Velbus message
     """
 
     def __init__(self, address=None):
-        self.priority = None
+        self.priority = PRIORITY_LOW
         self.address = None
         self.rtr = False
-        self.wait_after_send = 100
+        self.data = bytearray()
         self.set_defaults(address)
 
     def set_attributes(self, priority, address, rtr):
@@ -31,7 +35,7 @@ class Message(object):
         assert isinstance(priority, int)
         assert isinstance(address, int)
         assert isinstance(rtr, bool)
-        assert priority == PRIORITY_HIGH or priority == PRIORITY_LOW
+        assert priority in (PRIORITY_HIGH, PRIORITY_LOW)
         self.priority = priority
         self.address = address
         self.rtr = rtr
@@ -64,15 +68,19 @@ class Message(object):
         self.address = address
 
     def to_binary(self):
+        """
+        :return: bytes
+        """
+        data_bytes = self.data_to_binary()
         if self.rtr:
-            rtr_and_size = RTR | len(self.data)
+            rtr_and_size = RTR | len(data_bytes)
         else:
-            rtr_and_size = len(self.data)
+            rtr_and_size = len(data_bytes)
         header = bytearray([STX, self.priority, self.address, rtr_and_size])
-        _checksum = checksum(header + self.data)
+        _checksum = checksum(header + data_bytes)
         return (
             header
-            + self.data
+            + data_bytes
             + bytearray.fromhex("{:02x}".format(_checksum))
             + bytearray([ETX])
         )
@@ -143,15 +151,6 @@ class Message(object):
         channels = self.byte_to_channels(byte)
         self.needs_one_channel(channels)
         return channels[0]
-
-    def needs_valid_channel(self, channel, maximum):
-        """
-        :return: None
-        """
-        assert isinstance(channel, int)
-        assert isinstance(maximum, int)
-        if channel < 1 and channel > maximum:
-            self.parser_error("needs valid channel in channel byte")
 
     def parser_error(self, message):
         """

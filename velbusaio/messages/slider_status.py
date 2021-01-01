@@ -30,7 +30,6 @@ class SliderStatusMessage(Message):
         self.needs_data(data, 3)
         self.set_attributes(priority, address, rtr)
         self.channel = self.byte_to_channel(data[0])
-        self.needs_valid_channel(self.channel, 5)
         self.slider_state = int.from_bytes([data[1]], byteorder="big")
         self.slider_long_pressed = data[2]
 

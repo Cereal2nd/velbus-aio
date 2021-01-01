@@ -31,7 +31,6 @@ class CoverOffMessage(Message):
         self.needs_data(data, 1)
         self.set_attributes(priority, address, rtr)
         self.channel = self.byte_to_channel(data[0])
-        self.needs_valid_channel(self.channel, 2)
 
     def to_json(self):
         """
