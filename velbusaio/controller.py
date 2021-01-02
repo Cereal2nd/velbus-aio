@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+Main interface for the velbusaio lib
+"""
+
 import logging
-import sys
 import asyncio
 import ssl
 from velbusaio.parser import VelbusParser
@@ -12,6 +15,9 @@ from velbusaio.messages.module_type_request import ModuleTypeRequestMessage
 
 
 class Velbus:
+    """
+    A velbus controller
+    """
     def __init__(self, ip, port, useSsl=False):
         self._log = logging.getLogger("velbus")
         self._ip = ip
@@ -25,6 +31,9 @@ class Velbus:
         self._send_queue = asyncio.Queue()
 
     async def add_module(self, addr, typ, data, sub_addr=None, sub_num=None):
+        """
+        Add a founc module to the module cache
+        """
         if typ in [63, 64]:
             # ignore signum and usbip module
             return
@@ -36,19 +45,31 @@ class Velbus:
             await self._modules[addr].load()
 
     def get_modules(self):
+        """
+        Return the module cache
+        """
         return self._modules
 
     def get_module(self, addr):
+        """
+        Get a module on an address
+        """
         if addr in self._modules.keys():
             return self._modules[addr]
         return None
 
     def get_channels(self, addr):
+        """
+        Get the channels for an address
+        """
         if addr in self._modules:
-            return (self._modules).get_channels()
+            return (self._modules[addr]).get_channels()
         return None
 
     async def connect(self):
+        """
+        Connect to the bus and load all the data
+        """
         # connect to the bus
         if self._ssl:
             ctx = ssl._create_unverified_context()
@@ -73,6 +94,9 @@ class Velbus:
         await tsk
 
     async def _check_if_modules_are_loaded(self):
+        """
+        Task to wait until modules are loaded
+        """
         while True:
             mods_loaded = 0
             for mod in (self.get_modules()).values():
@@ -88,9 +112,15 @@ class Velbus:
             await asyncio.sleep(20)
 
     async def send(self, msg):
+        """
+        Send a packet
+        """
         await self._send_queue.put(msg)
 
     async def _socket_send_task(self):
+        """
+        Task to send the packet from the queue to the bus
+        """
         while self._send_queue:
             msg = await self._send_queue.get()
             self._log.debug("SENDING message: {}".format(msg))
@@ -98,24 +128,17 @@ class Velbus:
             await asyncio.sleep(0.2)
 
     async def _socket_read_task(self):
+        """
+        Task to read from a socket and push into a queue
+        """
         while True:
             data = await self._reader.read(10)
             self._parser.feed(data)
 
     async def _parser_task(self):
+        """
+        Task to parser the received queue
+        """
         while True:
-            packet = await self._parser.waitForPacket()
+            packet = await self._parser.wait_for_packet()
             await self._handler.handle(packet)
-
-
-async def main():
-    velbus = Velbus("192.168.1.9", 27015, True)
-    await velbus.connect()
-    for mod in (velbus.get_modules()).values():
-        print(mod.__dict__)
-        print("")
-
-
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-logging.getLogger("asyncio").setLevel(logging.DEBUG)
-asyncio.run(main(), debug=False)
