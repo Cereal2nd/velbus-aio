@@ -1,3 +1,7 @@
+"""
+Author: Maikel Punie <maikel.punie@gmail.com>
+"""
+
 PRIORITY_HIGH = 0xF8
 PRIORITY_FIRMWARE = 0xF9
 PRIORITY_LOW = 0xFB
