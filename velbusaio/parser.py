@@ -1,10 +1,10 @@
 """
 :author: Maikel Punie <maikel.punie@gmail.com>
 """
-import asyncio, logging
+import asyncio
+import logging
 from collections import deque
 import itertools
-from velbusaio.handler import PacketHandler
 from velbusaio.helpers import checksum
 from velbusaio.const import (
     STX,
@@ -14,7 +14,6 @@ from velbusaio.const import (
     MAX_DATA_AMOUNT,
     PRIORITIES,
     LENGTH_MASK,
-    RTR,
 )
 
 
@@ -29,22 +28,28 @@ class VelbusParser:
         self.buffer = deque(maxlen=10000)
 
     def feed(self, data):
+        """
+        Feed received data in the buffer
+        """
         self.buffer.extend(bytearray(data))
 
-    async def _next(self):
-        packet = None
-        has_valid_packet = self._has_valid_packet_waiting()
-        while not has_valid_packet:
-            if len(self.buffer) > HEADER_LENGTH and self.__has_packet_length_waiting():
-                self.__realign_buffer()
-                has_valid_packet = self._has_valid_packet_waiting()
-            await asyncio.sleep(1)
+    #async def _next(self):
+    #    packet = None
+    #    has_valid_packet = self._has_valid_packet_waiting()
+    #    while not has_valid_packet:
+    #        if len(self.buffer) > HEADER_LENGTH and self.__has_packet_length_waiting():
+    #            self.__realign_buffer()
+    #            has_valid_packet = self._has_valid_packet_waiting()
+    #        await asyncio.sleep(1)
+    #
+    #    if has_valid_packet:
+    #        packet = self._extract_packet()
+    #    return packet
 
-        if has_valid_packet:
-            packet = self._extract_packet()
-        return packet
-
-    async def waitForPacket(self):
+    async def wait_for_packet(self):
+        """
+        Wait for a valid apcket
+        """
         while not self._has_valid_packet_waiting():
             await asyncio.sleep(0.1)
         return self._extract_packet()
@@ -53,21 +58,21 @@ class VelbusParser:
         """
         Checks whether or not the parser has a valid packet in its buffer.
         :return: A boolean indicating whether or not the parser has a valid packet in its buffer.
+        TODO Fix
         """
         if not self.__has_valid_header_waiting():
             return False
-        else:
-            if len(self.buffer) < MIN_PACKET_LENGTH:
-                return False
-            return self.__has_packet_length_waiting() or False
-        bytes_to_check = bytearray(
-            itertools.islice(self.buffer, 0, 4 + self.__curr_packet_body_length())
-        )
-        checksum_valid = self.buffer[(self.__curr_packet_length() - 2)] == checksum(
-            bytes_to_check
-        )
-        end_valid = self.buffer[(self.__curr_packet_length() - 1)] == ETX
-        return checksum_valid and end_valid
+        if len(self.buffer) < MIN_PACKET_LENGTH:
+            return False
+        return self.__has_packet_length_waiting() or False
+        #bytes_to_check = bytearray(
+        #    itertools.islice(self.buffer, 0, 4 + self.__curr_packet_body_length())
+        #)
+        #checksum_valid = self.buffer[(self.__curr_packet_length() - 2)] == checksum(
+        #    bytes_to_check
+        #)
+        #end_valid = self.buffer[(self.__curr_packet_length() - 1)] == ETX
+        #return checksum_valid and end_valid
 
     def __has_valid_header_waiting(self):
         """
