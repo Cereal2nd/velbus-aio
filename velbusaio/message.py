@@ -1,3 +1,7 @@
+"""
+The velbus abstract message class
+"""
+
 import json
 from velbusaio.helpers import checksum
 from velbusaio.const import (

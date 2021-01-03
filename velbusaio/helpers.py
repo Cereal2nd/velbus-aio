@@ -1,6 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
+"""
+Helper functions
+"""
 
 def keys_exists(element, *keys):
     """
@@ -36,4 +36,54 @@ def checksum(arr):
 
 
 def h2(inp):
+    """
+    Format as hex upercase
+    """
     return format(inp, "02x").upper()
+
+def handle_match(self, match_dict, data):
+    """
+    Handle memory match from the module data
+    """
+    match_result = {}
+    binary_data = "{:08b}".format(int(data))
+    for _num, match_data in match_dict.items():
+        tmp = {}
+    for match, res in match_data.items():
+        if re.fullmatch(match[1:], binary_data):
+            res2 = res.copy()
+            res2["Data"] = int(data)
+            tmp.update(res2)
+    match_result[_num] = tmp
+    result = {}
+    for res in match_result.values():
+        if "Channel" in res:
+            result[int(res["Channel"])] = {}
+            if (
+                "SubName" in res
+                and "Value" in res
+                and res["Value"] != "PulsePerUnits"
+            ):
+                result[int(res["Channel"])] = {res["SubName"]: res["Value"]}
+            else:
+                # Very specifick for vmb7in
+                # a = bit 0 to 5 = 0 to 63
+                # b = a * 100
+                multi = (data & 0x3F) * 100
+                # c = bit 6 + 7
+                #   00 = x1
+                #   01 = x2,5
+                #   10 = x0.05
+                #   11 = x0.01
+                # d = b * c
+                if data >> 5 == 3:
+                    val = multi * 0.01
+                elif data >> 5 == 2:
+                    val = multi * 0.05
+                elif data >> 5 == 1:
+                    val = multi * 2.5
+                else:
+                    val = multi
+                result[int(res["Channel"])] = {res["Value"]: val}
+    return result
+
