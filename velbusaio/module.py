@@ -91,7 +91,6 @@ class Module:
         elif isinstance(message, (ChannelNamePart3Message, ChannelNamePart3Message2)):
             self._process_channel_name_message(3, message)
         elif isinstance(message, MemoryDataMessage):
-            print(message)
             self._process_memory_data_message(message)
         elif isinstance(message, ModuleTypeMessage):
             self._process_module_type_message(message)
