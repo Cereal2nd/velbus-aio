@@ -1,11 +1,13 @@
+"""
+This represents a velbus module
+"""
+
 import logging
-import string
 import struct
 import re
 import sys
 from velbusaio.const import PRIORITY_LOW
-from velbusaio.helpers import keys_exists
-from velbusaio.message import Message
+from velbusaio.helpers import keys_exists, handle_match
 from velbusaio.messages.read_data_from_memory import ReadDataFromMemoryMessage
 from velbusaio.messages.memory_data import MemoryDataMessage
 from velbusaio.messages.channel_name_part1 import ChannelNamePart1Message
@@ -18,10 +20,23 @@ from velbusaio.messages.module_type import ModuleTypeMessage
 from velbusaio.messages.module_subtype import ModuleSubTypeMessage
 from velbusaio.messages.module_status_request import ModuleStatusRequestMessage
 from velbusaio.messages.channel_name_request import ChannelNameRequestMessage
-from velbusaio.channels.channel import *
+from velbusaio.channels.channel import (
+    Blind,
+    Button,
+    ButtonCounter,
+    Dimmer,
+    EdgeLit,
+    LightSensor,
+    Memo,
+    Relay,
+    Sensor,
+    SensorNumber,
+    Temperature,
+    ThermostatChannel,
+)
 
 
-class Module(object):
+class Module:
     """
     Abstract class for Velbus hardware modules.
     """
@@ -49,6 +64,9 @@ class Module(object):
         self._log.info("Found Module {} @ {} ".format(self._type, self._address))
 
     def get_addresses(self):
+        """
+        Get all addresses for this module
+        """
         res = list()
         res.append(self._address)
         for addr in self._sub_address.values():
@@ -56,6 +74,9 @@ class Module(object):
         return res
 
     def get_type(self):
+        """
+        Get the module type
+        """
         return self._type
 
     def on_message(self, message):
@@ -63,17 +84,11 @@ class Module(object):
         Process received message
         """
         # handle the messages
-        if isinstance(message, ChannelNamePart1Message) or isinstance(
-            message, ChannelNamePart1Message2
-        ):
+        if isinstance(message, ChannelNamePart1Message, ChannelNamePart1Message2):
             self._process_channel_name_message(1, message)
-        elif isinstance(message, ChannelNamePart2Message) or isinstance(
-            message, ChannelNamePart2Message2
-        ):
+        elif isinstance(message, ChannelNamePart2Message, ChannelNamePart2Message2):
             self._process_channel_name_message(2, message)
-        elif isinstance(message, ChannelNamePart3Message) or isinstance(
-            message, ChannelNamePart3Message2
-        ):
+        elif isinstance(message, ChannelNamePart3Message, ChannelNamePart3Message2):
             self._process_channel_name_message(3, message)
         elif isinstance(message, MemoryDataMessage):
             print(message)
@@ -86,9 +101,15 @@ class Module(object):
             self._on_message(message)
 
     def get_channels(self):
+        """
+        List all channels for this module
+        """
         return self._channels
 
     def _on_message(self, message):
+        """
+        Method to handle per module type messages
+        """
         pass
 
     async def load(self):
@@ -116,6 +137,9 @@ class Module(object):
         self._load()
 
     def _load(self):
+        """
+        Method for per module type loading
+        """
         pass
 
     def number_of_channels(self):
@@ -129,50 +153,11 @@ class Module(object):
         return max(self._channels.keys())
 
     def light_is_buttonled(self, channel):
+        """
+        Is this light element a buttonled
+        """
+        # TODO
         return False
-
-    def _handle_match(self, matchDict, data):
-        mResult = {}
-        bData = "{:08b}".format(int(data))
-        for _num, matchD in matchDict.items():
-            tmp = {}
-            for match, res in matchD.items():
-                if re.fullmatch(match[1:], bData):
-                    res2 = res.copy()
-                    res2["Data"] = int(data)
-                    tmp.update(res2)
-            mResult[_num] = tmp
-        result = {}
-        for res in mResult.values():
-            if "Channel" in res:
-                result[int(res["Channel"])] = {}
-                if (
-                    "SubName" in res
-                    and "Value" in res
-                    and res["Value"] != "PulsePerUnits"
-                ):
-                    result[int(res["Channel"])] = {res["SubName"]: res["Value"]}
-                else:
-                    # Very specifick for vmb7in
-                    # a = bit 0 to 5 = 0 to 63
-                    # b = a * 100
-                    b = (data & 0x3F) * 100
-                    # c = bit 6 + 7
-                    #   00 = x1
-                    #   01 = x2,5
-                    #   10 = x0.05
-                    #   11 = x0.01
-                    # d = b * c
-                    if data >> 5 == 3:
-                        d = b * 0.01
-                    elif data >> 5 == 2:
-                        d = b * 0.05
-                    elif data >> 5 == 1:
-                        d = b * 2.5
-                    else:
-                        d = b
-                    result[int(res["Channel"])] = {res["Value"]: d}
-        return result
 
     def _process_memory_data_message(self, message):
         addr = "{high:02X}{low:02X}".format(
@@ -192,14 +177,13 @@ class Module(object):
                     self._name[int(char)] = chr(message.data)
                     print("{} == {}".format(int(char), chr(message.data)))
             elif "Match" in mdata:
-                for chan, cData in self._handle_match(
+                for chan, chan_data in handle_match(
                     mdata["Match"], message.data
                 ).items():
-                    data = cData.copy()
+                    data = chan_data.copy()
                     self._channels[chan].update(data)
         except KeyError:
             print("KEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEY")
-            pass
 
     def _process_channel_name_message(self, part, message):
         channel = int(message.channel)
@@ -260,14 +244,17 @@ class Module(object):
             await self._writer(msg)
 
     async def _load_memory(self):
+        """
+        Request all needed memory addresses
+        """
         if "Memory" not in self._data:
             return
 
-        for _memoryKey, memoryPart in self._data["Memory"].items():
-            if "Address" in memoryPart:
-                for addrAddr in memoryPart["Address"].keys():
+        for _memory_key, memory_part in self._data["Memory"].items():
+            if "Address" in memory_part:
+                for addr_int in memory_part["Address"].keys():
                     addr = struct.unpack(
-                        ">BB", struct.pack(">h", int("0x" + addrAddr, 0))
+                        ">BB", struct.pack(">h", int("0x" + addr_int, 0))
                     )
                     msg = ReadDataFromMemoryMessage(self._address)
                     msg.priority = PRIORITY_LOW
@@ -279,9 +266,9 @@ class Module(object):
         if "Channels" not in self._data:
             return
 
-        for chan, chanData in self._data["Channels"].items():
+        for chan, chan_data in self._data["Channels"].items():
             edit = True
-            if "Editable" not in chanData or chanData["Editable"] != "yes":
+            if "Editable" not in chan_data or chan_data["Editable"] != "yes":
                 edit = False
-            cls = getattr(sys.modules[__name__], chanData["Type"])
-            self._channels[int(chan)] = cls(self, chanData["Name"], int(chan), edit)
+            cls = getattr(sys.modules[__name__], chan_data["Type"])
+            self._channels[int(chan)] = cls(self, chan_data["Name"], int(chan), edit)

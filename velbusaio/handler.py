@@ -1,26 +1,35 @@
+"""
+Velbus packet handler
+:Author maikel punie <maikel.punie@gmail.com>
+"""
+
 import logging
-import itertools
 import json
 import re
-from velbusaio.message import Message
 from velbusaio.helpers import keys_exists, h2
 from velbusaio.command_registry import commandRegistry
-from velbusaio.const import *
-from velbusaio.messages import *
+from velbusaio.messages.module_type import ModuleTypeMessage
+from velbusaio.messages.module_subtype import ModuleSubTypeMessage
+from velbusaio.const import RTR
 
 
 class PacketHandler:
+    """
+    The packetHandler class
+    """
     def __init__(self, writer, velbus):
         self._log = logging.getLogger("velbus-packet")
         self._writer = writer
         self._velbus = velbus
-        self.modules = dict()
         with open(
             "/home/cereal/velbus-aio/velbusaio/moduleprotocol/protocol.json"
-        ) as fl:
-            self.pdata = json.load(fl)
+        ) as protocol_file:
+            self.pdata = json.load(protocol_file)
 
     async def handle(self, data):
+        """
+        Handle a recievd packet
+        """
         priority = data[1]
         address = data[2]
         rtr = data[3] & RTR == RTR
@@ -30,11 +39,11 @@ class PacketHandler:
         if data[4] == 0xFF:
             msg = ModuleTypeMessage()
             msg.populate(priority, address, rtr, data[5:-2])
-            await self._handleModuleType(msg)
+            await self._handle_module_type(msg)
         elif data[4] == 0xB0:
             msg = ModuleSubTypeMessage()
             msg.populate(priority, address, rtr, data[5:-2])
-            await self._handleModuleSubType(msg)
+            await self._handle_module_subtype(msg)
         # TODO handle global messages
         elif address in self._velbus.get_modules():
             command_value = data[4]
@@ -47,7 +56,7 @@ class PacketHandler:
                 # send the message to the modules
                 (self._velbus.get_module(msg.address)).on_message(msg)
 
-    def _perByte(self, cmsg, msg):
+    def _per_byte(self, cmsg, msg):
         result = dict()
         for num, byte in enumerate(msg.data):
             num = str(num)
@@ -61,10 +70,10 @@ class PacketHandler:
                     or mat == "{0:08b}".format(byte)
                     or mat == "{0:02x}".format(byte)
                 ):
-                    result = self._perByte_handle(result, cmsg[num]["Match"][mat], byte)
+                    result = self._per_byte_handle(result, cmsg[num]["Match"][mat], byte)
         return result
 
-    def _perByte_handle(self, result, todo, byte):
+    def _per_byte_handle(self, result, todo, byte):
         if "Channel" in todo:
             result["Channel"] = todo["Channel"]
         if "Value" in todo:
@@ -78,9 +87,9 @@ class PacketHandler:
             elif todo["Convert"] == "Temperature":
                 print("CONVERT temperature")
             elif todo["Convert"] == "Divider":
-                binStr = "{0:08b}".format(byte)
-                chan = binStr[6:]
-                val = binStr[:5]
+                bin_str = "{0:08b}".format(byte)
+                chan = bin_str[6:]
+                val = bin_str[:5]
                 print("CONVERT Divider {} {}".format(chan, val))
             elif todo["Convert"] == "Channel":
                 print("CONVERT Channel")
@@ -92,16 +101,18 @@ class PacketHandler:
                 self._log.error("UNKNOWN convert requested: {}".format(todo["Convert"]))
         return result
 
-    async def _handleModuleType(self, msg):
-        # load the module data
-        d = keys_exists(self.pdata, "ModuleTypes", h2(msg.module_type))
-        if not d:
+    async def _handle_module_type(self, msg):
+        """
+        load the module data
+        """
+        data = keys_exists(self.pdata, "ModuleTypes", h2(msg.module_type))
+        if not data:
             self._log.warning("Module not recognized: {}".format(msg.module_type))
             return
         # create the module
-        await self._velbus.add_module(msg.address, msg.module_type, d)
+        await self._velbus.add_module(msg.address, msg.module_type, data)
 
-    async def _handleModuleSubType(self, msg):
+    async def _handle_module_subtype(self, msg):
         if msg.address not in self._velbus.get_modules():
             return
         if msg.sub_address_1 != 0xFF:
@@ -121,14 +132,13 @@ class PacketHandler:
                 msg.address, msg.module_type, None, msg.sub_address_4, 4
             )
 
-    def _channelConvert(self, module, channel, ctype):
-        d = keys_exists(self.pdata, "ModuleTypes", h2(module), "ChannelNumbers", ctype)
-        if d and "Map" in d and h2(channel) in d["Map"]:
-            return d["Map"][h2(channel)]
-        elif d and "Convert" in d:
+    def _channel_convert(self, module, channel, ctype):
+        data = keys_exists(self.pdata, "ModuleTypes", h2(module), "ChannelNumbers", ctype)
+        if data and "Map" in data and h2(channel) in data["Map"]:
+            return data["Map"][h2(channel)]
+        if data and "Convert" in data:
             return int(channel)
-        else:
-            for offset in range(0, 8):
-                if channel & (1 << offset):
-                    return offset + 1
-            return None
+        for offset in range(0, 8):
+            if channel & (1 << offset):
+                return offset + 1
+        return None
