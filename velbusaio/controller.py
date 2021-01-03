@@ -83,7 +83,7 @@ class Velbus:
         asyncio.Task(self._socket_send_task())
         asyncio.Task(self._parser_task())
         # scan the bus
-        for addr in range(0, 15):
+        for addr in range(0, 255):
             msg = ModuleTypeRequestMessage(addr)
             await self.send(msg)
         # wait for 40 seconds to give the modules and the tasks the time to load all the data
@@ -124,6 +124,7 @@ class Velbus:
         while self._send_queue:
             msg = await self._send_queue.get()
             self._log.debug("SENDING message: {}".format(msg))
+            #print(':'.join('{:02X}'.format(x) for x in msg.to_binary()))
             self._writer.write(msg.to_binary())
             await asyncio.sleep(0.2)
 
