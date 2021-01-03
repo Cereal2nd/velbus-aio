@@ -41,7 +41,7 @@ def h2(inp):
     """
     return format(inp, "02x").upper()
 
-def handle_match(self, match_dict, data):
+def handle_match(match_dict, data):
     """
     Handle memory match from the module data
     """
