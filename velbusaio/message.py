@@ -81,11 +81,11 @@ class Message:
         else:
             rtr_and_size = len(data_bytes)
         header = bytearray([STX, self.priority, self.address, rtr_and_size])
-        _checksum = checksum(header + data_bytes)
+        checksum_string = checksum(header + data_bytes)
         return (
             header
             + data_bytes
-            + bytearray.fromhex("{:02x}".format(_checksum))
+            + bytearray.fromhex("{:02x}".format(checksum_string))
             + bytearray([ETX])
         )
 
@@ -202,7 +202,7 @@ class Message:
         """
         :return: None
         """
-        self.priority = PRIORITY_HIGH
+        self.priority = PRIORITY_LOW
 
     def needs_high_priority(self, priority):
         """

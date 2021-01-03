@@ -84,11 +84,11 @@ class Module:
         Process received message
         """
         # handle the messages
-        if isinstance(message, ChannelNamePart1Message, ChannelNamePart1Message2):
+        if isinstance(message, (ChannelNamePart1Message, ChannelNamePart1Message2)):
             self._process_channel_name_message(1, message)
-        elif isinstance(message, ChannelNamePart2Message, ChannelNamePart2Message2):
+        elif isinstance(message, (ChannelNamePart2Message, ChannelNamePart2Message2)):
             self._process_channel_name_message(2, message)
-        elif isinstance(message, ChannelNamePart3Message, ChannelNamePart3Message2):
+        elif isinstance(message, (ChannelNamePart3Message, ChannelNamePart3Message2)):
             self._process_channel_name_message(3, message)
         elif isinstance(message, MemoryDataMessage):
             print(message)
