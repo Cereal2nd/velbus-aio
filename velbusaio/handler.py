@@ -17,6 +17,7 @@ class PacketHandler:
     """
     The packetHandler class
     """
+
     def __init__(self, writer, velbus):
         self._log = logging.getLogger("velbus-packet")
         self._writer = writer
@@ -70,7 +71,9 @@ class PacketHandler:
                     or mat == "{0:08b}".format(byte)
                     or mat == "{0:02x}".format(byte)
                 ):
-                    result = self._per_byte_handle(result, cmsg[num]["Match"][mat], byte)
+                    result = self._per_byte_handle(
+                        result, cmsg[num]["Match"][mat], byte
+                    )
         return result
 
     def _per_byte_handle(self, result, todo, byte):
@@ -133,7 +136,9 @@ class PacketHandler:
             )
 
     def _channel_convert(self, module, channel, ctype):
-        data = keys_exists(self.pdata, "ModuleTypes", h2(module), "ChannelNumbers", ctype)
+        data = keys_exists(
+            self.pdata, "ModuleTypes", h2(module), "ChannelNumbers", ctype
+        )
         if data and "Map" in data and h2(channel) in data["Map"]:
             return data["Map"][h2(channel)]
         if data and "Convert" in data:

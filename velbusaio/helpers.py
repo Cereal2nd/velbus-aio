@@ -3,6 +3,7 @@ Helper functions
 """
 import re
 
+
 def keys_exists(element, *keys):
     """
     Check if *keys (nested) exists in `element` (dict).
@@ -42,6 +43,7 @@ def h2(inp):
     """
     return format(inp, "02x").upper()
 
+
 def handle_match(match_dict, data):
     """
     Handle memory match from the module data
@@ -60,11 +62,7 @@ def handle_match(match_dict, data):
     for res in match_result.values():
         if "Channel" in res:
             result[int(res["Channel"])] = {}
-            if (
-                "SubName" in res
-                and "Value" in res
-                and res["Value"] != "PulsePerUnits"
-            ):
+            if "SubName" in res and "Value" in res and res["Value"] != "PulsePerUnits":
                 result[int(res["Channel"])] = {res["SubName"]: res["Value"]}
             else:
                 # Very specifick for vmb7in
@@ -87,4 +85,3 @@ def handle_match(match_dict, data):
                     val = multi
                 result[int(res["Channel"])] = {res["Value"]: val}
     return result
-
