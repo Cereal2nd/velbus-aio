@@ -7,11 +7,13 @@ author: Maikel Punie <maikel.punie@gmail.com>
 
 import string
 
+
 class Channel:
     """
     A velbus channel
     This is the basic abstract class of a velbus channel
     """
+
     def __init__(self, module, num, name, nameEditable):
         self._num = num
         self._module = module
@@ -81,18 +83,22 @@ class Channel:
         # COMPONENT_TYPES = ["switch", "sensor", "binary_sensor", "cover", "climate", "light"]
         return []
 
+
 class Blind(Channel):
     """
     A blind channel
     """
+
     @property
     def get_categories(self):
         return ["cover"]
+
 
 class Button(Channel):
     """
     A Button channel
     """
+
     _Enabled = True
     _Closed = False
 
@@ -106,6 +112,7 @@ class ButtonCounter(Channel):
     A ButtonCounter channel
     This channel can act as a button and as a counter
     """
+
     _Unit = None
     _PulsePerUnits = None
 
@@ -120,6 +127,7 @@ class Dimmer(Channel):
     """
     A Dimmer channel
     """
+
     @property
     def get_categories(self):
         return ["light"]
@@ -129,6 +137,7 @@ class EdgeLit(Channel):
     """
     An EdgeLit channel
     """
+
     @property
     def get_categories(self):
         return ["light"]
@@ -138,6 +147,7 @@ class LightSensor(Channel):
     """
     A light sensor channel
     """
+
     @property
     def get_categories(self):
         return ["sensor"]
@@ -153,6 +163,7 @@ class Relay(Channel):
     """
     A Relay channel
     """
+
     _On = True
 
     @property
@@ -180,6 +191,7 @@ class Sensor(Channel):
     """
     A Sensor channel
     """
+
     @property
     def get_categories(self):
         return ["sensor"]
@@ -189,6 +201,7 @@ class SensorNumber(Channel):
     """
     A Numeric Sensor channel
     """
+
     @property
     def get_categories(self):
         return ["sensor"]
@@ -198,6 +211,7 @@ class Temperature(Channel):
     """
     A Temperature sensor channel
     """
+
     @property
     def get_categories(self):
         return ["sensor"]
