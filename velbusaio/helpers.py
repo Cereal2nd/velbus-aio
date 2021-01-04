@@ -1,6 +1,7 @@
 """
 Helper functions
 """
+import re
 
 def keys_exists(element, *keys):
     """
