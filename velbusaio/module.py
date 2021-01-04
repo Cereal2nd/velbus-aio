@@ -4,7 +4,6 @@ This represents a velbus module
 
 import logging
 import struct
-import re
 import sys
 from velbusaio.const import PRIORITY_LOW
 from velbusaio.helpers import keys_exists, handle_match
@@ -109,7 +108,6 @@ class Module:
         """
         Method to handle per module type messages
         """
-        pass
 
     async def load(self):
         """
@@ -125,9 +123,9 @@ class Module:
         # start the loading
         self._is_loading = True
         # load default channels
-        self._load_default_channels()
+        self.__load_default_channels()
         # load the data from memory ( the stuff that we need)
-        await self._load_memory()
+        await self.__load_memory()
         # load the module status
         await self._request_module_status()
         # load the channel names
@@ -139,7 +137,6 @@ class Module:
         """
         Method for per module type loading
         """
-        pass
 
     def number_of_channels(self):
         """
@@ -242,7 +239,7 @@ class Module:
             msg.channels = list(range(1, (self.number_of_channels() + 1)))
             await self._writer(msg)
 
-    async def _load_memory(self):
+    async def __load_memory(self):
         """
         Request all needed memory addresses
         """
@@ -261,7 +258,7 @@ class Module:
                     msg.low_address = addr[1]
                     await self._writer(msg)
 
-    def _load_default_channels(self):
+    def __load_default_channels(self):
         if "Channels" not in self._data:
             return
 
