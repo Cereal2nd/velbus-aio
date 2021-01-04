@@ -1,3 +1,5 @@
+![CodeQL](https://github.com/Cereal2nd/velbus-aio/workflows/CodeQL/badge.svg)
+
 # velbus-aio
 Velbus Asyncio
 
