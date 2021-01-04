@@ -18,6 +18,7 @@ class Velbus:
     """
     A velbus controller
     """
+
     def __init__(self, ip, port, useSsl=False):
         self._log = logging.getLogger("velbus")
         self._ip = ip
@@ -34,7 +35,7 @@ class Velbus:
         """
         Add a founc module to the module cache
         """
-        if typ in [63, 64]:
+        if typ in [57]:
             # ignore signum and usbip module
             return
         if sub_addr and sub_num:
@@ -124,7 +125,7 @@ class Velbus:
         while self._send_queue:
             msg = await self._send_queue.get()
             self._log.debug("SENDING message: {}".format(msg))
-            #print(':'.join('{:02X}'.format(x) for x in msg.to_binary()))
+            # print(':'.join('{:02X}'.format(x) for x in msg.to_binary()))
             self._writer.write(msg.to_binary())
             await asyncio.sleep(0.2)
 

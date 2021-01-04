@@ -33,7 +33,7 @@ class VelbusParser:
         """
         self.buffer.extend(bytearray(data))
 
-    #async def _next(self):
+    # async def _next(self):
     #    packet = None
     #    has_valid_packet = self._has_valid_packet_waiting()
     #    while not has_valid_packet:
@@ -65,14 +65,14 @@ class VelbusParser:
         if len(self.buffer) < MIN_PACKET_LENGTH:
             return False
         return self.__has_packet_length_waiting() or False
-        #bytes_to_check = bytearray(
+        # bytes_to_check = bytearray(
         #    itertools.islice(self.buffer, 0, 4 + self.__curr_packet_body_length())
-        #)
-        #checksum_valid = self.buffer[(self.__curr_packet_length() - 2)] == checksum(
+        # )
+        # checksum_valid = self.buffer[(self.__curr_packet_length() - 2)] == checksum(
         #    bytes_to_check
-        #)
-        #end_valid = self.buffer[(self.__curr_packet_length() - 1)] == ETX
-        #return checksum_valid and end_valid
+        # )
+        # end_valid = self.buffer[(self.__curr_packet_length() - 1)] == ETX
+        # return checksum_valid and end_valid
 
     def __has_valid_header_waiting(self):
         """
