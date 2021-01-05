@@ -1,3 +1,4 @@
+![Python package](https://github.com/Cereal2nd/velbus-aio/workflows/Python%20package/badge.svg)
 ![CodeQL](https://github.com/Cereal2nd/velbus-aio/workflows/CodeQL/badge.svg)
 
 # velbus-aio
