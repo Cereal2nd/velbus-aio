@@ -2,8 +2,9 @@
 :author: Frank van Breugel
 """
 import json
-from velbusaio.message import Message
+
 from velbusaio.command_registry import register_command
+from velbusaio.message import Message
 
 COMMAND_CODE = 0x0F
 

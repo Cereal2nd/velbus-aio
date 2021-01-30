@@ -1,10 +1,11 @@
 """
 :author: Thomas Delaet <thomas@delaet.org>
 """
-import struct
 import json
-from velbusaio.message import Message
+import struct
+
 from velbusaio.command_registry import register_command
+from velbusaio.message import Message
 
 COMMAND_CODE = 0xFB
 

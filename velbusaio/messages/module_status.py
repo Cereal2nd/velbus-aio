@@ -1,9 +1,10 @@
 """
 :author: Thomas Delaet <thomas@delaet.org>
 """
-from velbusaio.message import Message
-from velbusaio.command_registry import register_command
 import json
+
+from velbusaio.command_registry import register_command
+from velbusaio.message import Message
 
 COMMAND_CODE = 0xED
 

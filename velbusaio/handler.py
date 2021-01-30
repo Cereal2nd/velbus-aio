@@ -3,15 +3,17 @@ Velbus packet handler
 :Author maikel punie <maikel.punie@gmail.com>
 """
 
-import logging
 import json
-import pkg_resources
+import logging
 import re
-from velbusaio.helpers import keys_exists, h2
+
+import pkg_resources
+
 from velbusaio.command_registry import commandRegistry
-from velbusaio.messages.module_type import ModuleTypeMessage
-from velbusaio.messages.module_subtype import ModuleSubTypeMessage
 from velbusaio.const import RTR
+from velbusaio.helpers import h2, keys_exists
+from velbusaio.messages.module_subtype import ModuleSubTypeMessage
+from velbusaio.messages.module_type import ModuleTypeMessage
 
 
 class PacketHandler:

@@ -1,7 +1,7 @@
 import asyncio
-import socket
 import json
-from typing import Tuple, Union, Text
+import socket
+from typing import Text, Tuple, Union
 
 Address = Tuple[str, int]
 

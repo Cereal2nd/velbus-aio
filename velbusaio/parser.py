@@ -2,19 +2,13 @@
 :author: Maikel Punie <maikel.punie@gmail.com>
 """
 import asyncio
+import itertools
 import logging
 from collections import deque
-import itertools
+
+from velbusaio.const import (ETX, HEADER_LENGTH, LENGTH_MASK, MAX_DATA_AMOUNT,
+                             MIN_PACKET_LENGTH, PRIORITIES, STX)
 from velbusaio.helpers import checksum
-from velbusaio.const import (
-    STX,
-    ETX,
-    HEADER_LENGTH,
-    MIN_PACKET_LENGTH,
-    MAX_DATA_AMOUNT,
-    PRIORITIES,
-    LENGTH_MASK,
-)
 
 
 class VelbusParser:

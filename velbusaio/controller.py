@@ -2,13 +2,14 @@
 Main interface for the velbusaio lib
 """
 
-import logging
 import asyncio
+import logging
 import ssl
-from velbusaio.parser import VelbusParser
+
 from velbusaio.handler import PacketHandler
-from velbusaio.module import Module
 from velbusaio.messages.module_type_request import ModuleTypeRequestMessage
+from velbusaio.module import Module
+from velbusaio.parser import VelbusParser
 
 
 class Velbus:

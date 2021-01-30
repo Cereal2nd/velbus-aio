@@ -2,8 +2,9 @@
 :author: Tom Dupré <gitd8400@gmail.com>
 """
 import json
-from velbusaio.message import Message
+
 from velbusaio.command_registry import register_command
+from velbusaio.message import Message
 
 COMMAND_CODE = 0xEC
 DSTATUS = {0: "off", 1: "up", 2: "down"}
