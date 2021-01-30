@@ -3,15 +3,10 @@ The velbus abstract message class
 """
 
 import json
+
+from velbusaio.const import (ETX, PRIORITY_FIRMWARE, PRIORITY_HIGH,
+                             PRIORITY_LOW, RTR, STX)
 from velbusaio.helpers import checksum
-from velbusaio.const import (
-    PRIORITY_LOW,
-    PRIORITY_HIGH,
-    PRIORITY_FIRMWARE,
-    STX,
-    ETX,
-    RTR,
-)
 
 
 class ParserError(Exception):

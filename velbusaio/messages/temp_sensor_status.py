@@ -2,8 +2,9 @@
 :author: Maikel Punie <maikel.punie@gmail.com>
 """
 import json
-from velbusaio.message import Message
+
 from velbusaio.command_registry import register_command
+from velbusaio.message import Message
 
 COMMAND_CODE = 0xEA
 DSTATUS = {0: "run", 1: "manual", 2: "sleep", 4: "disable"}

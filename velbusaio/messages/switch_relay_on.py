@@ -3,8 +3,9 @@
 """
 import json
 import logging
-from velbusaio.message import Message
+
 from velbusaio.command_registry import register_command
+from velbusaio.message import Message
 
 COMMAND_CODE = 0x02
 

@@ -2,9 +2,9 @@
 :author: Thomas Delaet <thomas@delaet.org>
 """
 import struct
-from velbusaio.message import Message
-from velbusaio.command_registry import register_command
 
+from velbusaio.command_registry import register_command
+from velbusaio.message import Message
 
 COMMAND_CODE = 0x6A
 

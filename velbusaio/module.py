@@ -5,41 +5,32 @@ This represents a velbus module
 import logging
 import struct
 import sys
+
+from velbusaio.channels.channel import (Blind, Button, ButtonCounter, Dimmer,
+                                        EdgeLit, LightSensor, Memo, Relay,
+                                        Sensor, SensorNumber, Temperature,
+                                        ThermostatChannel)
 from velbusaio.const import PRIORITY_LOW
-from velbusaio.helpers import keys_exists, handle_match
-from velbusaio.messages.read_data_from_memory import ReadDataFromMemoryMessage
-from velbusaio.messages.memory_data import MemoryDataMessage
-from velbusaio.messages.channel_name_part1 import ChannelNamePart1Message
-from velbusaio.messages.channel_name_part1 import ChannelNamePart1Message2
-from velbusaio.messages.channel_name_part2 import ChannelNamePart2Message
-from velbusaio.messages.channel_name_part2 import ChannelNamePart2Message2
-from velbusaio.messages.channel_name_part3 import ChannelNamePart3Message
-from velbusaio.messages.channel_name_part3 import ChannelNamePart3Message2
-from velbusaio.messages.module_type import ModuleTypeMessage
-from velbusaio.messages.module_subtype import ModuleSubTypeMessage
-from velbusaio.messages.module_status_request import ModuleStatusRequestMessage
+from velbusaio.helpers import handle_match, keys_exists
+from velbusaio.messages.channel_name_part1 import (ChannelNamePart1Message,
+                                                   ChannelNamePart1Message2)
+from velbusaio.messages.channel_name_part2 import (ChannelNamePart2Message,
+                                                   ChannelNamePart2Message2)
+from velbusaio.messages.channel_name_part3 import (ChannelNamePart3Message,
+                                                   ChannelNamePart3Message2)
 from velbusaio.messages.channel_name_request import ChannelNameRequestMessage
+from velbusaio.messages.counter_status import CounterStatusMessage
+from velbusaio.messages.memory_data import MemoryDataMessage
+from velbusaio.messages.module_status import (ModuleStatusMessage,
+                                              ModuleStatusMessage2)
+from velbusaio.messages.module_status_request import ModuleStatusRequestMessage
+from velbusaio.messages.module_subtype import ModuleSubTypeMessage
+from velbusaio.messages.module_type import ModuleTypeMessage
+from velbusaio.messages.push_button_status import PushButtonStatusMessage
+from velbusaio.messages.read_data_from_memory import ReadDataFromMemoryMessage
 from velbusaio.messages.relay_status import RelayStatusMessage
 from velbusaio.messages.sensor_temperature import SensorTemperatureMessage
 from velbusaio.messages.temp_sensor_status import TempSensorStatusMessage
-from velbusaio.messages.push_button_status import PushButtonStatusMessage
-from velbusaio.messages.module_status import ModuleStatusMessage
-from velbusaio.messages.module_status import ModuleStatusMessage2
-from velbusaio.messages.counter_status import CounterStatusMessage
-from velbusaio.channels.channel import (
-    Blind,
-    Button,
-    ButtonCounter,
-    Dimmer,
-    EdgeLit,
-    LightSensor,
-    Memo,
-    Relay,
-    Sensor,
-    SensorNumber,
-    Temperature,
-    ThermostatChannel,
-)
 
 
 class Module:
