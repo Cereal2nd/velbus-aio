@@ -1,9 +1,7 @@
 """
 :author: Thomas Delaet <thomas@delaet.org>
 """
-from velbusaio.const import PRIORITY_HIGH
 from velbusaio.message import Message
-from velbusaio.command_registry import register_command
 
 
 class ModuleTypeRequestMessage(Message):

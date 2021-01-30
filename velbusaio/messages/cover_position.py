@@ -53,7 +53,11 @@ class CoverPosMessage(Message):
         :return: bytes
         """
         return bytes(
-            [COMMAND_CODE, self.channels_to_byte([self.channel]), self.position]
+            [
+                COMMAND_CODE,
+                self.channels_to_byte([self.channel]),
+                self.position,
+            ]
         )
 
 

@@ -36,10 +36,6 @@ class Message:
         """
         :return: None
         """
-        assert isinstance(priority, int)
-        assert isinstance(address, int)
-        assert isinstance(rtr, bool)
-        assert priority in (PRIORITY_HIGH, PRIORITY_LOW)
         self.priority = priority
         self.address = address
         self.rtr = rtr
@@ -68,7 +64,6 @@ class Message:
         """
         :return: None
         """
-        assert isinstance(address, int)
         self.address = address
 
     def to_binary(self):
@@ -126,9 +121,6 @@ class Message:
         :return: list(int)
         """
         # pylint: disable-msg=R0201
-        assert isinstance(byte, int)
-        assert byte >= 0
-        assert byte < 256
         result = []
         for offset in range(0, 8):
             if byte & (1 << offset):
@@ -140,7 +132,6 @@ class Message:
         :return: int
         """
         # pylint: disable-msg=R0201
-        assert isinstance(channels, list)
         result = 0
         for offset in range(0, 8):
             if offset + 1 in channels:
@@ -151,7 +142,6 @@ class Message:
         """
         :return: int
         """
-        assert isinstance(byte, int)
         channels = self.byte_to_channels(byte)
         self.needs_one_channel(channels)
         return channels[0]
@@ -166,7 +156,6 @@ class Message:
         """
         :return: None
         """
-        assert isinstance(rtr, bool)
         if not rtr:
             self.parser_error("needs rtr set")
 
@@ -180,7 +169,6 @@ class Message:
         """
         :return: None
         """
-        assert isinstance(rtr, bool)
         if rtr:
             self.parser_error("does not need rtr set")
 
@@ -194,7 +182,6 @@ class Message:
         """
         :return: None
         """
-        assert isinstance(priority, int)
         if priority != PRIORITY_LOW:
             self.parser_error("needs low priority set")
 
@@ -208,7 +195,6 @@ class Message:
         """
         :return: None
         """
-        assert isinstance(priority, int)
         if priority != PRIORITY_HIGH:
             self.parser_error("needs high priority set")
 
@@ -222,7 +208,6 @@ class Message:
         """
         :return: None
         """
-        assert isinstance(priority, int)
         if priority != PRIORITY_FIRMWARE:
             self.parser_error("needs firmware priority set")
 
@@ -253,10 +238,6 @@ class Message:
         """
         :return: None
         """
-        assert isinstance(byte, int)
-        assert isinstance(value, int)
-        assert byte >= 0 and value >= 0
-        assert byte <= 0xFF and value <= 0xFF
         if byte != value:
             self.parser_error("expects " + chr(value) + " in byte " + chr(byte))
 
@@ -264,7 +245,6 @@ class Message:
         """
         :return: None
         """
-        assert isinstance(channels, list)
         if (
             len(channels) != 1
             or not isinstance(channels[0], int)

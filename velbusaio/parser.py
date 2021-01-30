@@ -135,6 +135,5 @@ class VelbusParser:
         Shifts the buffer by the specified amount.
         :param amount: The amount of bytes that the buffer needs to be shifted.
         """
-        assert isinstance(amount, int)
         for _ in itertools.repeat(None, amount):
             self.buffer.popleft()

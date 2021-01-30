@@ -19,6 +19,13 @@ from velbusaio.messages.module_type import ModuleTypeMessage
 from velbusaio.messages.module_subtype import ModuleSubTypeMessage
 from velbusaio.messages.module_status_request import ModuleStatusRequestMessage
 from velbusaio.messages.channel_name_request import ChannelNameRequestMessage
+from velbusaio.messages.relay_status import RelayStatusMessage
+from velbusaio.messages.sensor_temperature import SensorTemperatureMessage
+from velbusaio.messages.temp_sensor_status import TempSensorStatusMessage
+from velbusaio.messages.push_button_status import PushButtonStatusMessage
+from velbusaio.messages.module_status import ModuleStatusMessage
+from velbusaio.messages.module_status import ModuleStatusMessage2
+from velbusaio.messages.counter_status import CounterStatusMessage
 from velbusaio.channels.channel import (
     Blind,
     Button,
@@ -62,6 +69,12 @@ class Module:
 
         self._log.info("Found Module {} @ {} ".format(self._type, self._address))
 
+    def __repr__(self):
+        return "<%s: {%s} loaded:{%s} channels{:%s}>" % (self._name, self._type, self.loaded, self._channels)
+
+    def __str__(self):
+        return self.__repr__()
+
     def get_addresses(self):
         """
         Get all addresses for this module
@@ -82,7 +95,6 @@ class Module:
         """
         Process received message
         """
-        # handle the messages
         if isinstance(message, (ChannelNamePart1Message, ChannelNamePart1Message2)):
             self._process_channel_name_message(1, message)
         elif isinstance(message, (ChannelNamePart2Message, ChannelNamePart2Message2)):
@@ -95,19 +107,67 @@ class Module:
             self._process_module_type_message(message)
         elif isinstance(message, ModuleSubTypeMessage):
             self._process_module_subtype_message(message)
-        else:
-            self._on_message(message)
+        elif isinstance(message, RelayStatusMessage):
+            self._channels[message.channel].update({"on": message.is_on()})
+        elif isinstance(message, SensorTemperatureMessage):
+            chan = self._translate_channel_name('1')
+            self._channels[chan].update(
+                {
+                    "cur": message.getCurTemp(),
+                    "min": message.getMinTemp(),
+                    "max": message.getMaxTemp(),
+                }
+            )
+            print(self._channels[chan])
+        elif isinstance(message, TempSensorStatusMessage):
+            chan = self._translate_channel_name('21')
+            print(message)
+            print(self._channels[chan])
+            self._channels[chan].update(
+                {
+                    "cur": message.current_temp
+                }
+            )
+            #self._target = message.target_temp
+            #self._cmode = message.mode_str
+            #self._cstatus = message.status_str
+            print(self._channels[chan])
+        elif isinstance(message, PushButtonStatusMessage):
+            for channel in message.closed:
+                self._channels[channel].update({"closed": True})
+            for channel in message.opened:
+                self._channels[channel].update({"closed": False})
+        elif isinstance(message, ModuleStatusMessage):
+            for channel in self._channels.keys():
+                if channel in message.closed:
+                    self._channels[channel].update({"closed": True})
+                elif isinstance(self._channels[channel], (Button, ButtonCounter)):
+                    self._channels[channel].update({"closed": False})
+        elif isinstance(message, ModuleStatusMessage2):
+            for channel in self._channels.keys():
+                if channel in message.closed:
+                    self._channels[channel].update({"closed": True})
+                elif isinstance(self._channels[channel], (Button, ButtonCounter)):
+                    self._channels[channel].update({"closed": False})
+                if channel in message.enabled:
+                    self._channels[channel].update({"enabled": True})
+                elif isinstance(self._channels[channel], (Button, ButtonCounter)): 
+                    self._channels[channel].update({"enabled": False})
+        elif isinstance(message, CounterStatusMessage) and isinstance(self._channels[message.channel], ButtonCounter):
+            self._channels[message.channel].update(
+                {
+                    "pulses": message.pulses,
+                    "counter": message.counter,
+                    "delay": message.delay
+                }
+            )
+            print(self._channels[message.channel])
 
     def get_channels(self):
         """
         List all channels for this module
         """
         return self._channels
-
-    def _on_message(self, message):
-        """
-        Method to handle per module type messages
-        """
 
     async def load(self):
         """
@@ -148,20 +208,12 @@ class Module:
             return 0
         return max(self._channels.keys())
 
-    def light_is_buttonled(self, channel):
-        """
-        Is this light element a buttonled
-        """
-        # TODO
-        return False
-
     def _process_memory_data_message(self, message):
         addr = "{high:02X}{low:02X}".format(
             high=message.high_address, low=message.low_address
         )
         try:
             mdata = self._data["Memory"]["1"]["Address"][addr]
-            print(mdata)
             if "ModuleName" in mdata and isinstance(self._name, dict):
                 # if self._name is a dict we are still loading
                 # if its a string it was already complete
@@ -171,7 +223,6 @@ class Module:
                 else:
                     char = mdata["ModuleName"].split(":")[0]
                     self._name[int(char)] = chr(message.data)
-                    print("{} == {}".format(int(char), chr(message.data)))
             elif "Match" in mdata:
                 for chan, chan_data in handle_match(
                     mdata["Match"], message.data
@@ -182,15 +233,21 @@ class Module:
             print("KEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEY")
 
     def _process_channel_name_message(self, part, message):
-        channel = int(message.channel)
-        # some modules need a remap of the channel number
-        if keys_exists(
-            self._data, "ChannelNumbers", "Name", "Map", "{:02X}".format(channel)
-        ):
-            channel = int(
-                self._data["ChannelNumbers"]["Name"]["Map"]["{:02X}".format(channel)]
-            )
+        channel = self._translate_channel_name(message.channel)
         self._channels[channel].set_name_part(part, message.name)
+
+    def _translate_channel_name(self, channel):
+        if keys_exists(
+            self._data,
+            "ChannelNumbers",
+            "Name",
+            "Map",
+            "{:02X}".format(int(channel)),
+        ):
+            return int(
+                self._data["ChannelNumbers"]["Name"]["Map"]["{:02X}".format(int(channel))]
+            )
+        return int(channel)
 
     def _process_module_type_message(self, message):
         self.serial = message.serial
@@ -244,6 +301,7 @@ class Module:
         Request all needed memory addresses
         """
         if "Memory" not in self._data:
+            self._name = None
             return
 
         for _memory_key, memory_part in self._data["Memory"].items():
@@ -267,4 +325,6 @@ class Module:
             if "Editable" not in chan_data or chan_data["Editable"] != "yes":
                 edit = False
             cls = getattr(sys.modules[__name__], chan_data["Type"])
-            self._channels[int(chan)] = cls(self, chan_data["Name"], int(chan), edit)
+            self._channels[int(chan)] = cls(
+                self, chan_data["Name"], int(chan), edit, self._writer, self._address
+            )

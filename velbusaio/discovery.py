@@ -1,10 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import asyncio
 import socket
 import json
-import random
 from typing import Tuple, Union, Text
 
 Address = Tuple[str, int]
@@ -26,7 +22,7 @@ class VelbusDiscoveryProtocol(asyncio.DatagramProtocol):
         # data received: b'{"message": "Velbus Navigation Guidance", "hostname": "Velbus", "model": "signum18", "id": "7b95834e", "velbus_port": 27015, "velbus_auth": false}' ('192.168.1.9', 32767)
         try:
             json_data = json.loads(data)
-        except:
+        except Exception:
             return
         if all(
             key in json_data

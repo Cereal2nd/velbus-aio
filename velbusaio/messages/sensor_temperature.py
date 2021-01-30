@@ -23,6 +23,12 @@ class SensorTemperatureMessage(Message):
     def getCurTemp(self):
         return self.cur
 
+    def getMaxTemp(self):
+        return self.max
+
+    def getMinTemp(self):
+        return self.min
+
     def populate(self, priority, address, rtr, data):
         """
         data bytes (high + low)
