@@ -63,7 +63,7 @@ class Channel:
     def __repr__(self):
         items = []
         for k, v in self.__dict__.items():
-            if k not in ['_module', '_writer', '_name_parts']:
+            if k not in ["_module", "_writer", "_name_parts"]:
                 items.append("%s = %r" % (k, v))
         return "<%s: {%s}>" % (self.__class__.__name__, ", ".join(items))
 
