@@ -61,8 +61,8 @@ class PacketHandler:
             else:
                 self._log.warning("NOT FOUND IN command_registry")
         else:
-            self._log.warning('UNKNOWN modules')
-            print(':'.join(format(x, '02x') for x in data))
+            self._log.warning("UNKNOWN modules")
+            print(":".join(format(x, "02x") for x in data))
             print(self._velbus.get_modules().keys())
             print(address)
 

@@ -70,7 +70,12 @@ class Module:
         self._log.info("Found Module {} @ {} ".format(self._type, self._address))
 
     def __repr__(self):
-        return "<%s: {%s} loaded:{%s} channels{:%s}>" % (self._name, self._type, self.loaded, self._channels)
+        return "<%s: {%s} loaded:{%s} channels{:%s}>" % (
+            self._name,
+            self._type,
+            self.loaded,
+            self._channels,
+        )
 
     def __str__(self):
         return self.__repr__()
@@ -110,7 +115,7 @@ class Module:
         elif isinstance(message, RelayStatusMessage):
             self._channels[message.channel].update({"on": message.is_on()})
         elif isinstance(message, SensorTemperatureMessage):
-            chan = self._translate_channel_name('1')
+            chan = self._translate_channel_name("1")
             self._channels[chan].update(
                 {
                     "cur": message.getCurTemp(),
@@ -120,17 +125,13 @@ class Module:
             )
             print(self._channels[chan])
         elif isinstance(message, TempSensorStatusMessage):
-            chan = self._translate_channel_name('21')
+            chan = self._translate_channel_name("21")
             print(message)
             print(self._channels[chan])
-            self._channels[chan].update(
-                {
-                    "cur": message.current_temp
-                }
-            )
-            #self._target = message.target_temp
-            #self._cmode = message.mode_str
-            #self._cstatus = message.status_str
+            self._channels[chan].update({"cur": message.current_temp})
+            # self._target = message.target_temp
+            # self._cmode = message.mode_str
+            # self._cstatus = message.status_str
             print(self._channels[chan])
         elif isinstance(message, PushButtonStatusMessage):
             for channel in message.closed:
@@ -151,14 +152,16 @@ class Module:
                     self._channels[channel].update({"closed": False})
                 if channel in message.enabled:
                     self._channels[channel].update({"enabled": True})
-                elif isinstance(self._channels[channel], (Button, ButtonCounter)): 
+                elif isinstance(self._channels[channel], (Button, ButtonCounter)):
                     self._channels[channel].update({"enabled": False})
-        elif isinstance(message, CounterStatusMessage) and isinstance(self._channels[message.channel], ButtonCounter):
+        elif isinstance(message, CounterStatusMessage) and isinstance(
+            self._channels[message.channel], ButtonCounter
+        ):
             self._channels[message.channel].update(
                 {
                     "pulses": message.pulses,
                     "counter": message.counter,
-                    "delay": message.delay
+                    "delay": message.delay,
                 }
             )
             print(self._channels[message.channel])
@@ -245,7 +248,9 @@ class Module:
             "{:02X}".format(int(channel)),
         ):
             return int(
-                self._data["ChannelNumbers"]["Name"]["Map"]["{:02X}".format(int(channel))]
+                self._data["ChannelNumbers"]["Name"]["Map"][
+                    "{:02X}".format(int(channel))
+                ]
             )
         return int(channel)
 
