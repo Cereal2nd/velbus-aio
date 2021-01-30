@@ -2,7 +2,6 @@
 :author: Thomas Delaet <thomas@delaet.org>
 """
 import json
-import logging
 from velbusaio.message import Message
 from velbusaio.command_registry import register_command
 

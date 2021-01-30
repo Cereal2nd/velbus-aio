@@ -29,7 +29,6 @@ def checksum(arr):
     :param arr: The array of bytes of which the checksum has to be calculated of.
     :return: The checksum of the given array.
     """
-    assert isinstance(arr, bytearray)
     crc = sum(arr)
     crc = crc ^ 255
     crc = crc + 1
@@ -50,14 +49,14 @@ def handle_match(match_dict, data):
     """
     match_result = {}
     binary_data = "{:08b}".format(int(data))
-    for _num, match_data in match_dict.items():
+    for num, match_data in match_dict.items():
         tmp = {}
-    for match, res in match_data.items():
-        if re.fullmatch(match[1:], binary_data):
-            res2 = res.copy()
-            res2["Data"] = int(data)
-            tmp.update(res2)
-    match_result[_num] = tmp
+        for match, res in match_data.items():
+            if re.fullmatch(match[1:], binary_data):
+                res2 = res.copy()
+                res2["Data"] = int(data)
+                tmp.update(res2)
+        match_result[num] = tmp
     result = {}
     for res in match_result.values():
         if "Channel" in res:

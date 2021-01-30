@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 """
 Main interface for the velbusaio lib
 """
@@ -84,7 +81,7 @@ class Velbus:
         asyncio.Task(self._socket_send_task())
         asyncio.Task(self._parser_task())
         # scan the bus
-        for addr in range(0, 255):
+        for addr in range(0, 256):
             msg = ModuleTypeRequestMessage(addr)
             await self.send(msg)
         # wait for 40 seconds to give the modules and the tasks the time to load all the data
@@ -108,7 +105,7 @@ class Velbus:
             print("NOT ALL MODULES LOADED YET")
             for mod in (self.get_modules()).values():
                 if not mod.is_loaded():
-                    print(mod.__dict__)
+                    print(mod)
                     print("")
             await asyncio.sleep(20)
 
@@ -127,7 +124,7 @@ class Velbus:
             self._log.debug("SENDING message: {}".format(msg))
             # print(':'.join('{:02X}'.format(x) for x in msg.to_binary()))
             self._writer.write(msg.to_binary())
-            await asyncio.sleep(0.2)
+            await asyncio.sleep(0.11)
 
     async def _socket_read_task(self):
         """

@@ -11,8 +11,9 @@ async def main():
     velbus = Velbus("192.168.1.9", 27015, True)
     await velbus.connect()
     for mod in (velbus.get_modules()).values():
-        print(mod.__dict__)
+        print(mod)
         print("")
+    await asyncio.sleep(6000)
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)

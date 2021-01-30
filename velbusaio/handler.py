@@ -5,6 +5,7 @@ Velbus packet handler
 
 import logging
 import json
+import pkg_resources
 import re
 from velbusaio.helpers import keys_exists, h2
 from velbusaio.command_registry import commandRegistry
@@ -23,7 +24,7 @@ class PacketHandler:
         self._writer = writer
         self._velbus = velbus
         with open(
-            "/home/cereal/velbus-aio/velbusaio/moduleprotocol/protocol.json"
+            pkg_resources.resource_filename(__name__, "moduleprotocol/protocol.json")
         ) as protocol_file:
             self.pdata = json.load(protocol_file)
 
@@ -31,31 +32,39 @@ class PacketHandler:
         """
         Handle a recievd packet
         """
+        # print(':'.join(format(x, '02x') for x in data))
         priority = data[1]
-        address = data[2]
+        address = int(data[2])
         rtr = data[3] & RTR == RTR
         data_size = data[3] & 0x0F
+        command_value = data[4]
         if data_size < 1:
             return
-        if data[4] == 0xFF:
+        if command_value == 0xFF:
             msg = ModuleTypeMessage()
             msg.populate(priority, address, rtr, data[5:-2])
             await self._handle_module_type(msg)
-        elif data[4] == 0xB0:
+        elif command_value == 0xB0:
             msg = ModuleSubTypeMessage()
             msg.populate(priority, address, rtr, data[5:-2])
             await self._handle_module_subtype(msg)
         # TODO handle global messages
-        elif address in self._velbus.get_modules():
-            command_value = data[4]
+        elif address in self._velbus.get_modules().keys():
             module_type = self._velbus.get_module(address).get_type()
-            if commandRegistry.has_command(command_value, module_type):
+            if commandRegistry.has_command(int(command_value), module_type):
                 command = commandRegistry.get_command(command_value, module_type)
                 msg = command()
                 msg.populate(priority, address, rtr, data[5:-2])
                 self._log.debug("Msg received {}".format(msg))
                 # send the message to the modules
                 (self._velbus.get_module(msg.address)).on_message(msg)
+            else:
+                self._log.warning("NOT FOUND IN command_registry")
+        else:
+            self._log.warning('UNKNOWN modules')
+            print(':'.join(format(x, '02x') for x in data))
+            print(self._velbus.get_modules().keys())
+            print(address)
 
     def _per_byte(self, cmsg, msg):
         result = dict()

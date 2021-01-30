@@ -1,7 +1,7 @@
 """
 :author: Maikel Punie <maikel.punie@gmail.com> and Thomas Delaet <thomas@delaet.org>
 """
-from velbus.module_registry import MODULE_DIRECTORY
+from velbusaio.module_registry import MODULE_DIRECTORY
 
 
 class CommandRegistry:

@@ -2,7 +2,6 @@
 :author: Tom Dupré <gitd8400@gmail.com>
 """
 import json
-import logging
 import struct
 from velbusaio.message import Message
 from velbusaio.command_registry import register_command

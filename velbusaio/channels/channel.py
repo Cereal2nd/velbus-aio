@@ -1,10 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 """
 author: Maikel Punie <maikel.punie@gmail.com>
 """
 
+import json
 import string
 
 
@@ -14,7 +12,7 @@ class Channel:
     This is the basic abstract class of a velbus channel
     """
 
-    def __init__(self, module, num, name, nameEditable):
+    def __init__(self, module, num, name, nameEditable, writer, address):
         self._num = num
         self._module = module
         self._name = name
@@ -22,6 +20,8 @@ class Channel:
             self._is_loaded = True
         else:
             self._is_loaded = False
+        self._writer = writer
+        self._address = address
         self._name_parts = {}
 
     def is_loaded(self):
@@ -55,18 +55,20 @@ class Channel:
         """
         Generate the channel name if all 3 parts are received
         """
-        assert len(self._name_parts) == 3
         name = self._name_parts[1] + self._name_parts[2] + self._name_parts[3]
         self._name = "".join(filter(lambda x: x in string.printable, name))
         self._is_loaded = True
         self._name_parts = None
 
     def __repr__(self):
-        items = ("%s = %r" % (k, v) for k, v in self.__dict__.items())
+        items = []
+        for k, v in self.__dict__.items():
+            if k not in ['_module', '_writer', '_name_parts']:
+                items.append("%s = %r" % (k, v))
         return "<%s: {%s}>" % (self.__class__.__name__, ", ".join(items))
 
     def __str__(self):
-        return "{}(name={}, loaded={})".format(type(self), self._name, self._is_loaded)
+        return self.__repr__()
 
     def update(self, data):
         """
@@ -99,12 +101,19 @@ class Button(Channel):
     A Button channel
     """
 
-    _Enabled = True
-    _Closed = False
+    _enabled = True
+    _closed = False
+    _on = None
 
     @property
     def get_categories(self):
         return ["binary_sensor", "light"]
+
+    def is_on(self):
+        """
+        Return if this relay is on
+        """
+        return self._on
 
 
 class ButtonCounter(Channel):
@@ -115,6 +124,9 @@ class ButtonCounter(Channel):
 
     _Unit = None
     _PulsePerUnits = None
+    _pulses = None
+    _counter = None
+    _delay = None
 
     @property
     def get_categories(self):
@@ -143,19 +155,15 @@ class EdgeLit(Channel):
         return ["light"]
 
 
-class LightSensor(Channel):
-    """
-    A light sensor channel
-    """
-
-    @property
-    def get_categories(self):
-        return ["sensor"]
-
-
 class Memo(Channel):
     """
     A Memo text
+    """
+
+
+class ThermostatChannel(Channel):
+    """
+    A Thermostat channel
     """
 
 
@@ -164,7 +172,7 @@ class Relay(Channel):
     A Relay channel
     """
 
-    _On = True
+    _on = None
 
     @property
     def get_categories(self):
@@ -174,17 +182,28 @@ class Relay(Channel):
         """
         Return if this relay is on
         """
-        return self._On
+        return self._on
 
-    def turn_on(self):
+    async def turn_on(self):
         """
         Send the turn on message
         """
+        msg = SwitchRelayOnMessage(self._address)
+        msg.relay_channels = [self.num]
+        await self._writer(msg)
 
-    def turn_off(self):
+    async def turn_off(self):
         """
         Send the turn off message
         """
+        msg = SwitchRelayOffMessage(self._address)
+        msg.relay_channels = [self.num]
+        await self._writer(msg)
+
+    def __str__(self):
+        return "{}(name={}, loaded={}, on={})".format(
+            type(self), self._name, self._is_loaded, self._on
+        )
 
 
 class Sensor(Channel):
@@ -197,27 +216,28 @@ class Sensor(Channel):
         return ["sensor"]
 
 
-class SensorNumber(Channel):
+class SensorNumber(Sensor):
     """
     A Numeric Sensor channel
     """
 
-    @property
-    def get_categories(self):
-        return ["sensor"]
 
-
-class Temperature(Channel):
+class Temperature(Sensor):
     """
     A Temperature sensor channel
     """
 
-    @property
-    def get_categories(self):
-        return ["sensor"]
+    _cur = None
+    _max = None
+    _min = None
+
+    def __str__(self):
+        return "{}(name={}, loaded={}, cur={}, min={}, max={})".format(
+            type(self), self._name, self._is_loaded, self._cur, self._min, self._max
+        )
 
 
-class ThermostatChannel(Channel):
+class LightSensor(Sensor):
     """
-    A Thermostat channel
+    A light sensor channel
     """
