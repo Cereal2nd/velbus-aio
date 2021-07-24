@@ -51,7 +51,7 @@ class Velbus:
 
     def _load_module_from_cache(self, address):
         try:
-            with open('{}/{}.p'.format(CACHEDIR, address), "rb") as fl:
+            with open("{}/{}.p".format(CACHEDIR, address), "rb") as fl:
                 return pickle.load(fl)
         except EnvironmentError:
             pass

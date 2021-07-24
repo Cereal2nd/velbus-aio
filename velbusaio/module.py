@@ -65,12 +65,12 @@ class Module:
     def _cache(self):
         if not os.path.isdir(CACHEDIR):
             os.mkdir(CACHEDIR)
-        with open('{}/{}.p'.format(CACHEDIR, self._address), "wb") as fl:
+        with open("{}/{}.p".format(CACHEDIR, self._address), "wb") as fl:
             pickle.dump(self, fl)
 
     def __getstate__(self):
         d = self.__dict__
-        self_dict = {k : d[k] for k in d if k != '_writer' and k != '_log'}
+        self_dict = {k: d[k] for k in d if k != "_writer" and k != "_log"}
         return self_dict
 
     def __setstate__(self, state):
