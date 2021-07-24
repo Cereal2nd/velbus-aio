@@ -62,7 +62,7 @@ class Channel:
 
     def __getstate__(self):
         d = self.__dict__
-        return {k : d[k] for k in d if k != '_writer' and k != '_module'}
+        return {k: d[k] for k in d if k != "_writer" and k != "_module"}
 
     def __setstate__(self, state):
         self.__dict__ = state

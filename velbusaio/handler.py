@@ -34,7 +34,7 @@ class PacketHandler:
         """
         Handle a recievd packet
         """
-        # print(':'.join(format(x, '02x') for x in data))
+        print(":".join(format(x, "02x") for x in data))
         priority = data[1]
         address = int(data[2])
         rtr = data[3] & RTR == RTR
