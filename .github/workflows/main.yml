@@ -1,7 +1,4 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
-
-name: Python package
+name: Python checks
 
 on:
   push:
@@ -11,9 +8,9 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ['3.6', '3.7', '3.8', '3.9']
         include: # define single matrix case that performs upload
@@ -25,6 +22,7 @@ jobs:
       uses: actions/checkout@master
     - name: Checkout submodules
       run: git submodule update --init --recursive
+    - uses: pre-commit/action@v2.0.0
     - name: Black Code Formatter
       uses: lgeiger/black-action@master
       with:
@@ -36,14 +34,12 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install pypa/build
-      if: matrix.upload
       run: >-
         python -m
         pip install
         build
         --user
-    - name: Build a binary wheel and a source tarball
-      if: matrix.upload
+    - name: Build a binary wheel and a source tarballd
       run: >-
         python -m
         build
@@ -51,8 +47,3 @@ jobs:
         --wheel
         --outdir dist/
         .
-    - name: Publish distribution 📦 to PyPI
-      if: matrix.upload && startsWith(github.ref, 'refs/tags')
-      uses: pypa/gh-action-pypi-publish@master
-      with:
-        password: ${{ secrets.PYPI_API_TOKEN }}
