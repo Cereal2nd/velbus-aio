@@ -22,7 +22,7 @@ jobs:
       uses: actions/checkout@master
     - name: Checkout submodules
       run: git submodule update --init --recursive
-    - uses: pre-commit/action@v2.0.0
+    - uses: pre-commit/action@v2.0.3
     - name: Black Code Formatter
       uses: lgeiger/black-action@master
       with:
