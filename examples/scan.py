@@ -14,7 +14,7 @@ async def main():
     for mod in (velbus.get_modules()).values():
         print(mod)
         print("")
-    await asyncio.sleep(6000)
+    await asyncio.sleep(60000)
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)

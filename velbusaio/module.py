@@ -3,6 +3,8 @@ This represents a velbus module
 """
 
 import logging
+import os
+import pickle
 import struct
 import sys
 
@@ -10,7 +12,7 @@ from velbusaio.channels.channel import (Blind, Button, ButtonCounter, Dimmer,
                                         EdgeLit, LightSensor, Memo, Relay,
                                         Sensor, SensorNumber, Temperature,
                                         ThermostatChannel)
-from velbusaio.const import PRIORITY_LOW
+from velbusaio.const import CACHEDIR, PRIORITY_LOW
 from velbusaio.helpers import handle_match, keys_exists
 from velbusaio.messages.channel_name_part1 import (ChannelNamePart1Message,
                                                    ChannelNamePart1Message2)
@@ -60,11 +62,27 @@ class Module:
 
         self._log.info("Found Module {} @ {} ".format(self._type, self._address))
 
+    def _cache(self):
+        if not os.path.isdir(CACHEDIR):
+            os.mkdir(CACHEDIR)
+        with open('{}/{}.p'.format(CACHEDIR, self._address), "wb") as fl:
+            pickle.dump(self, fl)
+
+    def __getstate__(self):
+        d = self.__dict__
+        self_dict = {k : d[k] for k in d if k != '_writer' and k != '_log'}
+        return self_dict
+
+    def __setstate__(self, state):
+        self.__dict__ = state
+
     def __repr__(self):
-        return "<%s: {%s} loaded:{%s} channels{:%s}>" % (
+        return "<%s: {%s} @ {%s} loaded:{%s} loading:{%s} channels{:%s}>" % (
             self._name,
             self._type,
+            self._address,
             self.loaded,
+            self._is_loading,
             self._channels,
         )
 
@@ -156,6 +174,7 @@ class Module:
                 }
             )
             print(self._channels[message.channel])
+        self._cache()
 
     def get_channels(self):
         """
@@ -171,7 +190,7 @@ class Module:
         # this is needed for the submodules,
         # as the submodule address maps to the main module
         # this method can be called multiple times
-        if self._is_loading:
+        if self._is_loading or self.loaded:
             return
         self._log.info("Load Module")
         # start the loading
@@ -186,6 +205,8 @@ class Module:
         await self._request_channel_name()
         # load the module specific stuff
         self._load()
+        # stop the loading
+        self._is_loading = False
 
     def _load(self):
         """
@@ -261,6 +282,8 @@ class Module:
         # if we are loaded, just return
         if self.loaded:
             return True
+        if self._is_loading:
+            return False
         # the name should be loaded
         if isinstance(self._name, dict):
             return False
@@ -270,6 +293,7 @@ class Module:
                 return False
         # set that  we finished the module loading
         self.loaded = True
+        self._cache()
         return True
 
     async def _request_module_status(self):
