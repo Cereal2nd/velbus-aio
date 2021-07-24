@@ -9,6 +9,11 @@ from velbusaio.controller import Velbus
 
 
 async def main():
+    # SET THE connection params below
+    # example via signum:
+    #   velbus = Velbus("192.168.1.9", 27015, True)
+    # example via plain IP
+    #   velbus = Velbus("192.168.1.9", 27015, False)
     velbus = Velbus("192.168.1.9", 27015, True)
     await velbus.connect()
     for mod in (velbus.get_modules()).values():
