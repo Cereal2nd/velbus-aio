@@ -60,6 +60,13 @@ class Channel:
         self._is_loaded = True
         self._name_parts = None
 
+    def __getstate__(self):
+        d = self.__dict__
+        return {k : d[k] for k in d if k != '_writer' and k != '_module'}
+
+    def __setstate__(self, state):
+        self.__dict__ = state
+
     def __repr__(self):
         items = []
         for k, v in self.__dict__.items():

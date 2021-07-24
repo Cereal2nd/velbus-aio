@@ -4,8 +4,10 @@ Main interface for the velbusaio lib
 
 import asyncio
 import logging
+import pickle
 import ssl
 
+from velbusaio.const import CACHEDIR
 from velbusaio.handler import PacketHandler
 from velbusaio.messages.module_type_request import ModuleTypeRequestMessage
 from velbusaio.module import Module
@@ -40,8 +42,19 @@ class Velbus:
             self._modules[addr]._sub_address[sub_num] = sub_addr
             self._modules[sub_addr] = self._modules[addr]
         else:
-            self._modules[addr] = Module(addr, typ, data, self.send)
+            mod = self._load_module_from_cache(addr)
+            if mod:
+                self._modules[addr] = mod
+            else:
+                self._modules[addr] = Module(addr, typ, data, self.send)
             await self._modules[addr].load()
+
+    def _load_module_from_cache(self, address):
+        try:
+            with open('{}/{}.p'.format(CACHEDIR, address), "rb") as fl:
+                return pickle.load(fl)
+        except EnvironmentError:
+            pass
 
     def get_modules(self):
         """
@@ -85,7 +98,7 @@ class Velbus:
         for addr in range(0, 256):
             msg = ModuleTypeRequestMessage(addr)
             await self.send(msg)
-        # wait for 40 seconds to give the modules and the tasks the time to load all the data
+        # wait for 60 seconds to give the modules and the tasks the time to load all the data
         await asyncio.sleep(60)
         # create a task to wait until we have all modules loaded
         # TODO add a timeout
