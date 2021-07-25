@@ -8,23 +8,38 @@ import pickle
 import struct
 import sys
 
-from velbusaio.channels.channel import (Blind, Button, ButtonCounter, Dimmer,
-                                        EdgeLit, LightSensor, Memo, Relay,
-                                        Sensor, SensorNumber, Temperature,
-                                        ThermostatChannel)
+from velbusaio.channels.channel import (
+    Blind,
+    Button,
+    ButtonCounter,
+    Dimmer,
+    EdgeLit,
+    LightSensor,
+    Memo,
+    Relay,
+    Sensor,
+    SensorNumber,
+    Temperature,
+    ThermostatChannel,
+)
 from velbusaio.const import CACHEDIR, PRIORITY_LOW
 from velbusaio.helpers import handle_match, keys_exists
-from velbusaio.messages.channel_name_part1 import (ChannelNamePart1Message,
-                                                   ChannelNamePart1Message2)
-from velbusaio.messages.channel_name_part2 import (ChannelNamePart2Message,
-                                                   ChannelNamePart2Message2)
-from velbusaio.messages.channel_name_part3 import (ChannelNamePart3Message,
-                                                   ChannelNamePart3Message2)
+from velbusaio.messages.channel_name_part1 import (
+    ChannelNamePart1Message,
+    ChannelNamePart1Message2,
+)
+from velbusaio.messages.channel_name_part2 import (
+    ChannelNamePart2Message,
+    ChannelNamePart2Message2,
+)
+from velbusaio.messages.channel_name_part3 import (
+    ChannelNamePart3Message,
+    ChannelNamePart3Message2,
+)
 from velbusaio.messages.channel_name_request import ChannelNameRequestMessage
 from velbusaio.messages.counter_status import CounterStatusMessage
 from velbusaio.messages.memory_data import MemoryDataMessage
-from velbusaio.messages.module_status import (ModuleStatusMessage,
-                                              ModuleStatusMessage2)
+from velbusaio.messages.module_status import ModuleStatusMessage, ModuleStatusMessage2
 from velbusaio.messages.module_status_request import ModuleStatusRequestMessage
 from velbusaio.messages.module_subtype import ModuleSubTypeMessage
 from velbusaio.messages.module_type import ModuleTypeMessage

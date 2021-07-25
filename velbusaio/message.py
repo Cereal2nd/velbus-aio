@@ -4,8 +4,14 @@ The velbus abstract message class
 
 import json
 
-from velbusaio.const import (ETX, PRIORITY_FIRMWARE, PRIORITY_HIGH,
-                             PRIORITY_LOW, RTR, STX)
+from velbusaio.const import (
+    ETX,
+    PRIORITY_FIRMWARE,
+    PRIORITY_HIGH,
+    PRIORITY_LOW,
+    RTR,
+    STX,
+)
 from velbusaio.helpers import checksum
 
 

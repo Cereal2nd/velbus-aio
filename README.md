@@ -8,7 +8,7 @@ This Lib is a rewrite in python3 with asyncio from https://github.com/thomasdela
 Part of the code from the above lib is reused.
 
 # How to test
-* clone the repo
+* clone the repo (with the --recursive parameter)
 * cd into the repo
 * run: python3 -m venv venv
 * run: source venv/bin/activate

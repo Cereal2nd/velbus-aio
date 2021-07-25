@@ -6,8 +6,15 @@ import itertools
 import logging
 from collections import deque
 
-from velbusaio.const import (ETX, HEADER_LENGTH, LENGTH_MASK, MAX_DATA_AMOUNT,
-                             MIN_PACKET_LENGTH, PRIORITIES, STX)
+from velbusaio.const import (
+    ETX,
+    HEADER_LENGTH,
+    LENGTH_MASK,
+    MAX_DATA_AMOUNT,
+    MIN_PACKET_LENGTH,
+    PRIORITIES,
+    STX,
+)
 from velbusaio.helpers import checksum
 
 
