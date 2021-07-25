@@ -150,13 +150,15 @@ class Module:
             print(self._channels[chan])
         elif isinstance(message, TempSensorStatusMessage):
             chan = self._translate_channel_name("21")
-            print(message)
-            print(self._channels[chan])
-            self._channels[chan].update({"cur": message.current_temp})
+            if chan in self._channels:
+                print(self._channels[chan])
+                self._channels[chan].update({"cur": message.current_temp})
+                print(self._channels[chan])
+            else:
+                self._log.warning("temperature channel not found")
             # self._target = message.target_temp
             # self._cmode = message.mode_str
             # self._cstatus = message.status_str
-            print(self._channels[chan])
         elif isinstance(message, PushButtonStatusMessage):
             for channel in message.closed:
                 self._channels[channel].update({"closed": True})
