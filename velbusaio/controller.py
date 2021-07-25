@@ -47,7 +47,6 @@ class Velbus:
                 self._modules[addr] = mod
             else:
                 self._modules[addr] = Module(addr, typ, data, self.send)
-            await self._modules[addr].load()
 
     def _load_module_from_cache(self, address):
         try:
@@ -99,7 +98,9 @@ class Velbus:
             msg = ModuleTypeRequestMessage(addr)
             await self.send(msg)
         # wait for 60 seconds to give the modules and the tasks the time to load all the data
-        await asyncio.sleep(60)
+        await asyncio.sleep(30)
+        for addr in self._modules:
+            await self._modules[addr].load()
         # create a task to wait until we have all modules loaded
         # TODO add a timeout
         tsk = asyncio.Task(self._check_if_modules_are_loaded())
