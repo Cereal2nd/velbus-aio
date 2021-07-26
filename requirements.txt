@@ -1,4 +1,4 @@
-asyncio
 aiocache
-aiofiles
 aiofilecache
+aiofiles
+asyncio
