@@ -54,7 +54,8 @@ class Velbus:
 
     async def add_submodules(self, addr, subList):
         for sub_num, sub_addr in subList.items():
-            if sub_addr == 0xFF: continue
+            if sub_addr == 0xFF:
+                continue
             self._modules[addr]._sub_address[sub_num] = sub_addr
             self._modules[sub_addr] = self._modules[addr]
         self._modules[addr].cleanupSubChannels()
@@ -110,7 +111,7 @@ class Velbus:
             await self.send(msg)
         # wait for 60 seconds to give the modules and the tasks the time to load all the data
         await asyncio.sleep(30)
-        #for addr in self._modules:
+        # for addr in self._modules:
         #    await self._modules[addr].load()
         # create a task to wait until we have all modules loaded
         # TODO add a timeout

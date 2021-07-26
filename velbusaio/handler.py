@@ -62,7 +62,11 @@ class PacketHandler:
                 # send the message to the modules
                 (self._velbus.get_module(msg.address)).on_message(msg)
             else:
-                self._log.warning("NOT FOUND IN command_registry: {}".format(":".join(format(x, "02x") for x in data)))
+                self._log.warning(
+                    "NOT FOUND IN command_registry: {}".format(
+                        ":".join(format(x, "02x") for x in data)
+                    )
+                )
         else:
             self._log.warning("UNKNOWN modules")
             print(":".join(format(x, "02x") for x in data))
@@ -134,7 +138,7 @@ class PacketHandler:
             1: msg.sub_address_1,
             2: msg.sub_address_2,
             3: msg.sub_address_3,
-            4: msg.sub_address_4
+            4: msg.sub_address_4,
         }
         await self._velbus.add_submodules(msg.address, addrList)
 

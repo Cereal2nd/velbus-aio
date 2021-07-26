@@ -79,10 +79,11 @@ class Module:
         self._writer = writer
 
     def cleanupSubChannels(self):
-        if self._sub_address == {}: assert("No subaddresses defined")
-        for sub in range(1,4):
+        if self._sub_address == {}:
+            assert "No subaddresses defined"
+        for sub in range(1, 4):
             if sub not in self._sub_address:
-                for i in range(((sub*8)+1), (((sub+1)*8)+1)):
+                for i in range(((sub * 8) + 1), (((sub + 1) * 8) + 1)):
                     if i in self._channels:
                         del self._channels[i]
 
@@ -133,11 +134,32 @@ class Module:
         """
         Process received message
         """
-        if isinstance(message, (ChannelNamePart1Message, ChannelNamePart1Message2, ChannelNamePart1Message3)):
+        if isinstance(
+            message,
+            (
+                ChannelNamePart1Message,
+                ChannelNamePart1Message2,
+                ChannelNamePart1Message3,
+            ),
+        ):
             self._process_channel_name_message(1, message)
-        elif isinstance(message, (ChannelNamePart2Message, ChannelNamePart2Message2, ChannelNamePart2Message3)):
+        elif isinstance(
+            message,
+            (
+                ChannelNamePart2Message,
+                ChannelNamePart2Message2,
+                ChannelNamePart2Message3,
+            ),
+        ):
             self._process_channel_name_message(2, message)
-        elif isinstance(message, (ChannelNamePart3Message, ChannelNamePart3Message2, ChannelNamePart3Message3)):
+        elif isinstance(
+            message,
+            (
+                ChannelNamePart3Message,
+                ChannelNamePart3Message2,
+                ChannelNamePart3Message3,
+            ),
+        ):
             self._process_channel_name_message(3, message)
         elif isinstance(message, MemoryDataMessage):
             self._process_memory_data_message(message)
@@ -273,7 +295,8 @@ class Module:
 
     def _process_channel_name_message(self, part, message):
         channel = self._translate_channel_name(message.channel)
-        if channel not in self._channels: return
+        if channel not in self._channels:
+            return
         self._channels[channel].set_name_part(part, message.name)
 
     def _translate_channel_name(self, channel):
