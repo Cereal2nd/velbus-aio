@@ -44,9 +44,20 @@ class Velbus:
         else:
             mod = self._load_module_from_cache(addr)
             if mod:
+                self._log.info("Load module from CACHE: {}".format(addr))
                 self._modules[addr] = mod
             else:
-                self._modules[addr] = Module(addr, typ, data, self.send)
+                self._log.info("Load NEW module: {} @ {}".format(typ, addr))
+                self._modules[addr] = Module(addr, typ, data)
+            self._modules[addr].initialize(self.send)
+            await self._modules[addr].load()
+
+    async def add_submodules(self, addr, subList):
+        for sub_num, sub_addr in subList.items():
+            if sub_addr == 0xFF: continue
+            self._modules[addr]._sub_address[sub_num] = sub_addr
+            self._modules[sub_addr] = self._modules[addr]
+        self._modules[addr].cleanupSubChannels()
 
     def _load_module_from_cache(self, address):
         try:
@@ -94,13 +105,13 @@ class Velbus:
         asyncio.Task(self._socket_send_task())
         asyncio.Task(self._parser_task())
         # scan the bus
-        for addr in range(0, 256):
+        for addr in range(1, 255):
             msg = ModuleTypeRequestMessage(addr)
             await self.send(msg)
         # wait for 60 seconds to give the modules and the tasks the time to load all the data
         await asyncio.sleep(30)
-        for addr in self._modules:
-            await self._modules[addr].load()
+        #for addr in self._modules:
+        #    await self._modules[addr].load()
         # create a task to wait until we have all modules loaded
         # TODO add a timeout
         tsk = asyncio.Task(self._check_if_modules_are_loaded())

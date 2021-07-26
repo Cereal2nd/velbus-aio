@@ -27,14 +27,17 @@ from velbusaio.helpers import handle_match, keys_exists
 from velbusaio.messages.channel_name_part1 import (
     ChannelNamePart1Message,
     ChannelNamePart1Message2,
+    ChannelNamePart1Message3,
 )
 from velbusaio.messages.channel_name_part2 import (
     ChannelNamePart2Message,
     ChannelNamePart2Message2,
+    ChannelNamePart2Message3,
 )
 from velbusaio.messages.channel_name_part3 import (
     ChannelNamePart3Message,
     ChannelNamePart3Message2,
+    ChannelNamePart3Message3,
 )
 from velbusaio.messages.channel_name_request import ChannelNameRequestMessage
 from velbusaio.messages.counter_status import CounterStatusMessage
@@ -55,13 +58,10 @@ class Module:
     Abstract class for Velbus hardware modules.
     """
 
-    def __init__(self, module_address, module_type, module_data, writer):
+    def __init__(self, module_address, module_type, module_data):
         self._address = module_address
         self._type = module_type
         self._data = module_data
-        self._writer = writer
-        self._log = logging.getLogger("velbus-module")
-        self._log.setLevel(logging.DEBUG)
 
         self._name = {}
         self._sub_address = {}
@@ -70,12 +70,21 @@ class Module:
         self.build_year = 0
         self.build_week = 0
         self._is_loading = False
-
         self._channels = {}
-
         self.loaded = False
 
-        self._log.info("Found Module {} @ {} ".format(self._type, self._address))
+    def initialize(self, writer):
+        self._log = logging.getLogger("velbus-module")
+        self._log.setLevel(logging.DEBUG)
+        self._writer = writer
+
+    def cleanupSubChannels(self):
+        if self._sub_address == {}: assert("No subaddresses defined")
+        for sub in range(1,4):
+            if sub not in self._sub_address:
+                for i in range(((sub*8)+1), (((sub+1)*8)+1)):
+                    if i in self._channels:
+                        del self._channels[i]
 
     def _cache(self):
         if not os.path.isdir(CACHEDIR):
@@ -124,11 +133,11 @@ class Module:
         """
         Process received message
         """
-        if isinstance(message, (ChannelNamePart1Message, ChannelNamePart1Message2)):
+        if isinstance(message, (ChannelNamePart1Message, ChannelNamePart1Message2, ChannelNamePart1Message3)):
             self._process_channel_name_message(1, message)
-        elif isinstance(message, (ChannelNamePart2Message, ChannelNamePart2Message2)):
+        elif isinstance(message, (ChannelNamePart2Message, ChannelNamePart2Message2, ChannelNamePart2Message3)):
             self._process_channel_name_message(2, message)
-        elif isinstance(message, (ChannelNamePart3Message, ChannelNamePart3Message2)):
+        elif isinstance(message, (ChannelNamePart3Message, ChannelNamePart3Message2, ChannelNamePart3Message3)):
             self._process_channel_name_message(3, message)
         elif isinstance(message, MemoryDataMessage):
             self._process_memory_data_message(message)
@@ -154,8 +163,6 @@ class Module:
                 print(self._channels[chan])
                 self._channels[chan].update({"cur": message.current_temp})
                 print(self._channels[chan])
-            else:
-                self._log.warning("temperature channel not found")
             # self._target = message.target_temp
             # self._cmode = message.mode_str
             # self._cstatus = message.status_str
@@ -266,6 +273,7 @@ class Module:
 
     def _process_channel_name_message(self, part, message):
         channel = self._translate_channel_name(message.channel)
+        if channel not in self._channels: return
         self._channels[channel].set_name_part(part, message.name)
 
     def _translate_channel_name(self, channel):
@@ -320,7 +328,6 @@ class Module:
         await self._writer(msg)
 
     async def _request_channel_name(self):
-        self._log.debug("Requesting channel names")
         # request the module channel names
         if keys_exists(self._data, "AllChannelStatus"):
             msg = ChannelNameRequestMessage(self._address)

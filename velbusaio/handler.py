@@ -45,10 +45,12 @@ class PacketHandler:
         if command_value == 0xFF:
             msg = ModuleTypeMessage()
             msg.populate(priority, address, rtr, data[5:-2])
+            self._log.debug("Msg received {}".format(msg))
             await self._handle_module_type(msg)
         elif command_value == 0xB0:
             msg = ModuleSubTypeMessage()
             msg.populate(priority, address, rtr, data[5:-2])
+            self._log.debug("Msg received {}".format(msg))
             await self._handle_module_subtype(msg)
         # TODO handle global messages
         elif address in self._velbus.get_modules().keys():
@@ -129,22 +131,13 @@ class PacketHandler:
     async def _handle_module_subtype(self, msg):
         if msg.address not in self._velbus.get_modules():
             return
-        if msg.sub_address_1 != 0xFF:
-            await self._velbus.add_module(
-                msg.address, msg.module_type, None, msg.sub_address_1, 1
-            )
-        if msg.sub_address_2 != 0xFF:
-            await self._velbus.add_module(
-                msg.address, msg.module_type, None, msg.sub_address_2, 2
-            )
-        if msg.sub_address_3 != 0xFF:
-            await self._velbus.add_module(
-                msg.address, msg.module_type, None, msg.sub_address_3, 3
-            )
-        if msg.sub_address_4 != 0xFF:
-            await self._velbus.add_module(
-                msg.address, msg.module_type, None, msg.sub_address_4, 4
-            )
+        addrList = {
+            1: msg.sub_address_1,
+            2: msg.sub_address_2,
+            3: msg.sub_address_3,
+            4: msg.sub_address_4
+        }
+        await self._velbus.add_submodules(msg.address, addrList)
 
     def _channel_convert(self, module, channel, ctype):
         data = keys_exists(
