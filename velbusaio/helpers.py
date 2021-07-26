@@ -48,7 +48,7 @@ def handle_match(match_dict, data):
     Handle memory match from the module data
     """
     match_result = {}
-    binary_data = "{:08b}".format(int(data))
+    binary_data = f"{int(data):08b}"
     for num, match_data in match_dict.items():
         tmp = {}
         for match, res in match_data.items():

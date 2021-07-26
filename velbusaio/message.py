@@ -81,7 +81,7 @@ class Message:
         return (
             header
             + data_bytes
-            + bytearray.fromhex("{:02x}".format(checksum_string))
+            + bytearray.fromhex(f"{checksum_string:02x}")
             + bytearray([ETX])
         )
 

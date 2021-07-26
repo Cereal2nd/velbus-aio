@@ -5,6 +5,9 @@ author: Maikel Punie <maikel.punie@gmail.com>
 import json
 import string
 
+from velbusaio.messages.switch_relay_off import SwitchRelayOffMessage
+from velbusaio.messages.switch_relay_on import SwitchRelayOnMessage
+
 
 class Channel:
     """
@@ -72,8 +75,8 @@ class Channel:
         items = []
         for k, v in self.__dict__.items():
             if k not in ["_module", "_writer", "_name_parts"]:
-                items.append("%s = %r" % (k, v))
-        return "<%s: {%s}>" % (self.__class__.__name__, ", ".join(items))
+                items.append(f"{k} = {v!r}")
+        return "{}[{}]".format(type(self), ", ".join(items))
 
     def __str__(self):
         return self.__repr__()
@@ -83,7 +86,7 @@ class Channel:
         Set the attributes of this channel
         """
         for key, val in data.items():
-            setattr(self, "_{}".format(key), val)
+            setattr(self, f"_{key}", val)
 
     @property
     def get_categories(self):
@@ -208,11 +211,6 @@ class Relay(Channel):
         msg.relay_channels = [self.num]
         await self._writer(msg)
 
-    def __str__(self):
-        return "{}(name={}, loaded={}, on={})".format(
-            type(self), self._name, self._is_loaded, self._on
-        )
-
 
 class Sensor(Channel):
     """
@@ -238,11 +236,6 @@ class Temperature(Sensor):
     _cur = None
     _max = None
     _min = None
-
-    def __str__(self):
-        return "{}(name={}, loaded={}, cur={}, min={}, max={})".format(
-            type(self), self._name, self._is_loaded, self._cur, self._min, self._max
-        )
 
 
 class LightSensor(Sensor):

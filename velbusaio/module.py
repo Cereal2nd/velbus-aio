@@ -90,7 +90,7 @@ class Module:
     def _cache(self):
         if not os.path.isdir(CACHEDIR):
             os.mkdir(CACHEDIR)
-        with open("{}/{}.p".format(CACHEDIR, self._address), "wb") as fl:
+        with open(f"{CACHEDIR}/{self._address}.p", "wb") as fl:
             pickle.dump(self, fl)
 
     def __getstate__(self):
@@ -102,13 +102,15 @@ class Module:
         self.__dict__ = state
 
     def __repr__(self):
-        return "<%s: {%s} @ {%s} loaded:{%s} loading:{%s} channels{:%s}>" % (
-            self._name,
-            self._type,
-            self._address,
-            self.loaded,
-            self._is_loading,
-            self._channels,
+        return (
+            "<{}: {{{}}} @ {{{}}} loaded:{{{}}} loading:{{{}}} channels{{:{}}}>".format(
+                self._name,
+                self._type,
+                self._address,
+                self.loaded,
+                self._is_loading,
+                self._channels,
+            )
         )
 
     def __str__(self):
@@ -118,7 +120,7 @@ class Module:
         """
         Get all addresses for this module
         """
-        res = list()
+        res = []
         res.append(self._address)
         for addr in self._sub_address.values():
             res.append(addr)
@@ -305,12 +307,10 @@ class Module:
             "ChannelNumbers",
             "Name",
             "Map",
-            "{:02X}".format(int(channel)),
+            f"{int(channel):02X}",
         ):
             return int(
-                self._data["ChannelNumbers"]["Name"]["Map"][
-                    "{:02X}".format(int(channel))
-                ]
+                self._data["ChannelNumbers"]["Name"]["Map"][f"{int(channel):02X}"]
             )
         return int(channel)
 

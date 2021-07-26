@@ -28,7 +28,7 @@ class Velbus:
         self._handler = PacketHandler(self.send, self)
         self._writer = None
         self._reader = None
-        self._modules = dict()
+        self._modules = {}
         self._send_queue = asyncio.Queue()
 
     async def add_module(self, addr, typ, data, sub_addr=None, sub_num=None):
@@ -44,10 +44,10 @@ class Velbus:
         else:
             mod = self._load_module_from_cache(addr)
             if mod:
-                self._log.info("Load module from CACHE: {}".format(addr))
+                self._log.info(f"Load module from CACHE: {addr}")
                 self._modules[addr] = mod
             else:
-                self._log.info("Load NEW module: {} @ {}".format(typ, addr))
+                self._log.info(f"Load NEW module: {typ} @ {addr}")
                 self._modules[addr] = Module(addr, typ, data)
             self._modules[addr].initialize(self.send)
             await self._modules[addr].load()
@@ -62,9 +62,9 @@ class Velbus:
 
     def _load_module_from_cache(self, address):
         try:
-            with open("{}/{}.p".format(CACHEDIR, address), "rb") as fl:
+            with open(f"{CACHEDIR}/{address}.p", "rb") as fl:
                 return pickle.load(fl)
-        except EnvironmentError:
+        except OSError:
             pass
 
     def get_modules(self):
@@ -148,7 +148,7 @@ class Velbus:
         """
         while self._send_queue:
             msg = await self._send_queue.get()
-            self._log.debug("SENDING message: {}".format(msg))
+            self._log.debug(f"SENDING message: {msg}")
             # print(':'.join('{:02X}'.format(x) for x in msg.to_binary()))
             self._writer.write(msg.to_binary())
             await asyncio.sleep(0.11)

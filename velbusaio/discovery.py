@@ -18,7 +18,7 @@ class VelbusDiscoveryProtocol(asyncio.DatagramProtocol):
         string = "Velbus Navigation Request"
         self.transport.sendto(string.encode(), self.target)
 
-    def datagram_received(self, data: Union[bytes, Text], addr: Address):
+    def datagram_received(self, data: Union[bytes, str], addr: Address):
         # data received: b'{"message": "Velbus Navigation Guidance", "hostname": "Velbus", "model": "signum18", "id": "7b95834e", "velbus_port": 27015, "velbus_auth": false}' ('192.168.1.9', 32767)
         try:
             json_data = json.loads(data)

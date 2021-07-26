@@ -44,12 +44,12 @@ class PacketHandler:
         if command_value == 0xFF:
             msg = ModuleTypeMessage()
             msg.populate(priority, address, rtr, data[5:-2])
-            self._log.debug("Received {}".format(msg))
+            self._log.debug(f"Received {msg}")
             await self._handle_module_type(msg)
         elif command_value == 0xB0:
             msg = ModuleSubTypeMessage()
             msg.populate(priority, address, rtr, data[5:-2])
-            self._log.debug("Received {}".format(msg))
+            self._log.debug(f"Received {msg}")
             await self._handle_module_subtype(msg)
         # TODO handle global messages
         elif address in self._velbus.get_modules().keys():
@@ -58,13 +58,13 @@ class PacketHandler:
                 command = commandRegistry.get_command(command_value, module_type)
                 msg = command()
                 msg.populate(priority, address, rtr, data[5:-2])
-                self._log.debug("Received {}".format(msg))
+                self._log.debug(f"Received {msg}")
                 # send the message to the modules
                 (self._velbus.get_module(msg.address)).on_message(msg)
             else:
                 self._log.warning(
-                    "NOT FOUND IN command_registry: {}".format(
-                        ":".join(format(x, "02x") for x in data)
+                    "NOT FOUND IN command_registry: addr={} cmd={} packet={}".format(
+                        address, command_value, ":".join(format(x, "02x") for x in data)
                     )
                 )
         else:
@@ -74,7 +74,7 @@ class PacketHandler:
             print(address)
 
     def _per_byte(self, cmsg, msg):
-        result = dict()
+        result = {}
         for num, byte in enumerate(msg.data):
             num = str(num)
             # only do something if its defined
@@ -83,9 +83,9 @@ class PacketHandler:
             # check if we can do a binary match
             for mat in cmsg[num]["Match"]:
                 if (
-                    (mat.startswith("%") and re.match(mat[1:], "{0:08b}".format(byte)))
-                    or mat == "{0:08b}".format(byte)
-                    or mat == "{0:02x}".format(byte)
+                    (mat.startswith("%") and re.match(mat[1:], f"{byte:08b}"))
+                    or mat == f"{byte:08b}"
+                    or mat == f"{byte:02x}"
                 ):
                     result = self._per_byte_handle(
                         result, cmsg[num]["Match"][mat], byte
@@ -102,14 +102,14 @@ class PacketHandler:
             if todo["Convert"] == "Decimal":
                 result["ValueList"].append(int(byte))
             elif todo["Convert"] == "Counter":
-                result["ValueList"].append("{0:02x}".format(byte))
+                result["ValueList"].append(f"{byte:02x}")
             elif todo["Convert"] == "Temperature":
                 print("CONVERT temperature")
             elif todo["Convert"] == "Divider":
-                bin_str = "{0:08b}".format(byte)
+                bin_str = f"{byte:08b}"
                 chan = bin_str[6:]
                 val = bin_str[:5]
-                print("CONVERT Divider {} {}".format(chan, val))
+                print(f"CONVERT Divider {chan} {val}")
             elif todo["Convert"] == "Channel":
                 print("CONVERT Channel")
             elif todo["Convert"] == "ChannelBit":
@@ -126,7 +126,7 @@ class PacketHandler:
         """
         data = keys_exists(self.pdata, "ModuleTypes", h2(msg.module_type))
         if not data:
-            self._log.warning("Module not recognized: {}".format(msg.module_type))
+            self._log.warning(f"Module not recognized: {msg.module_type}")
             return
         # create the module
         await self._velbus.add_module(msg.address, msg.module_type, data)
