@@ -34,7 +34,6 @@ class PacketHandler:
         """
         Handle a recievd packet
         """
-        print(":".join(format(x, "02x") for x in data))
         priority = data[1]
         address = int(data[2])
         rtr = data[3] & RTR == RTR
@@ -45,12 +44,12 @@ class PacketHandler:
         if command_value == 0xFF:
             msg = ModuleTypeMessage()
             msg.populate(priority, address, rtr, data[5:-2])
-            self._log.debug("Msg received {}".format(msg))
+            self._log.debug("Received {}".format(msg))
             await self._handle_module_type(msg)
         elif command_value == 0xB0:
             msg = ModuleSubTypeMessage()
             msg.populate(priority, address, rtr, data[5:-2])
-            self._log.debug("Msg received {}".format(msg))
+            self._log.debug("Received {}".format(msg))
             await self._handle_module_subtype(msg)
         # TODO handle global messages
         elif address in self._velbus.get_modules().keys():
@@ -59,11 +58,11 @@ class PacketHandler:
                 command = commandRegistry.get_command(command_value, module_type)
                 msg = command()
                 msg.populate(priority, address, rtr, data[5:-2])
-                self._log.debug("Msg received {}".format(msg))
+                self._log.debug("Received {}".format(msg))
                 # send the message to the modules
                 (self._velbus.get_module(msg.address)).on_message(msg)
             else:
-                self._log.warning("NOT FOUND IN command_registry")
+                self._log.warning("NOT FOUND IN command_registry: {}".format(":".join(format(x, "02x") for x in data)))
         else:
             self._log.warning("UNKNOWN modules")
             print(":".join(format(x, "02x") for x in data))

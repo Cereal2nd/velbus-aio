@@ -42,7 +42,6 @@ class Channel:
         """
         Set a part of the channel name
         """
-        if not self._name_parts is dict: return
         try:
             self._name_parts[int(part)] = name
             if int(part) == 3:
