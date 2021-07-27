@@ -15,6 +15,9 @@ class Channel:
     This is the basic abstract class of a velbus channel
     """
 
+    _on_status_update = None
+    _name_parts = {}
+
     def __init__(self, module, num, name, nameEditable, writer, address):
         self._num = num
         self._module = module
@@ -25,7 +28,6 @@ class Channel:
             self._is_loaded = False
         self._writer = writer
         self._address = address
-        self._name_parts = {}
 
     def get_module_type(self):
         return self._module.get_type()
@@ -87,7 +89,7 @@ class Channel:
 
     def __getstate__(self):
         d = self.__dict__
-        return {k: d[k] for k in d if k != "_writer"}
+        return {k: d[k] for k in d if k != "_writer" and k != "_on_status_update"}
 
     def __repr__(self):
         items = []
@@ -105,6 +107,8 @@ class Channel:
         """
         for key, val in data.items():
             setattr(self, f"_{key}", val)
+        if self._on_status_update:
+            self._callback()
 
     def get_categories(self):
         """
@@ -112,6 +116,9 @@ class Channel:
         """
         # COMPONENT_TYPES = ["switch", "sensor", "binary_sensor", "cover", "climate", "light"]
         return []
+
+    def on_status_update(self, meth):
+        self._on_status_update = meth
 
 
 class Blind(Channel):
@@ -135,11 +142,14 @@ class Button(Channel):
     def get_categories(self):
         return ["binary_sensor", "light"]
 
-    def is_on(self):
+    def is_closed(self):
         """
-        Return if this relay is on
+        Return if this button is on
         """
-        return self._on
+        return self._closed
+
+    def _callback(self):
+        self._on_status_update(self.is_closed())
 
 
 class ButtonCounter(Channel):
@@ -221,6 +231,9 @@ class Relay(Channel):
         msg = SwitchRelayOffMessage(self._address)
         msg.relay_channels = [self._num]
         await self._writer(msg)
+
+    def _callback(self):
+        self._on_status_update(self.is_on())
 
 
 class Sensor(Channel):

@@ -21,6 +21,7 @@ class Velbus:
 
     def __init__(self, ip, port, useSsl=False):
         self._log = logging.getLogger("velbus")
+        self._log.setLevel(logging.DEBUG)
         self._ip = ip
         self._port = port
         self._ssl = useSsl

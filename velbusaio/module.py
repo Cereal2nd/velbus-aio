@@ -408,5 +408,5 @@ class Module:
                 edit = False
             cls = getattr(sys.modules[__name__], chan_data["Type"])
             self._channels[int(chan)] = cls(
-                self, chan_data["Name"], int(chan), edit, self._writer, self._address
+                self, int(chan), chan_data["Name"], edit, self._writer, self._address
             )
