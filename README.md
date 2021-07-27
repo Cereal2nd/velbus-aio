@@ -15,5 +15,5 @@ Part of the code from the above lib is reused.
 - run: python3 -m venv venv
 - run: source venv/bin/activate
 - run: python setup.py develop
-- modify examples/load_modules.php to set the connection params
+- modify examples/load_modules.py to set the connection params
 - run: python examples/load_modules.py
