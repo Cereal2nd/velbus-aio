@@ -29,6 +29,7 @@ class Velbus:
         self._writer = None
         self._reader = None
         self._modules = {}
+        self._submodules = []
         self._send_queue = asyncio.Queue()
 
     async def add_module(self, addr, typ, data, sub_addr=None, sub_num=None):
@@ -56,6 +57,7 @@ class Velbus:
         for sub_num, sub_addr in subList.items():
             if sub_addr == 0xFF:
                 continue
+            self._submodules.append(sub_addr)
             self._modules[addr]._sub_address[sub_num] = sub_addr
             self._modules[sub_addr] = self._modules[addr]
         self._modules[addr].cleanupSubChannels()
@@ -128,12 +130,9 @@ class Velbus:
                 if mod.is_loaded():
                     mods_loaded += 1
             if mods_loaded == len(self.get_modules()):
+                self._log.info("All modules loaded")
                 return
-            print("NOT ALL MODULES LOADED YET")
-            for mod in (self.get_modules()).values():
-                if not mod.is_loaded():
-                    print(mod)
-                    print("")
+            self._log.warning("Not all modules loaded yet, waiting 20 seconds")
             await asyncio.sleep(20)
 
     async def send(self, msg):
@@ -168,3 +167,13 @@ class Velbus:
         while True:
             packet = await self._parser.wait_for_packet()
             await self._handler.handle(packet)
+
+    def get_all(self, class_name):
+        lst = []
+        for addr, mod in (self.get_modules()).items():
+            if addr in self._submodules:
+                continue
+            for chan in (mod.get_channels()).values():
+                if class_name in chan.get_categories():
+                    lst.append(chan)
+        return lst

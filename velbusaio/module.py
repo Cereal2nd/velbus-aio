@@ -77,6 +77,8 @@ class Module:
         self._log = logging.getLogger("velbus-module")
         self._log.setLevel(logging.DEBUG)
         self._writer = writer
+        for chan in self._channels.values():
+            chan._writer = writer
 
     def cleanupSubChannels(self):
         if self._sub_address == {}:
@@ -132,6 +134,23 @@ class Module:
         """
         return self._type
 
+    def get_type_name(self):
+        return self._data["Type"]
+
+    def get_serial(self):
+        return self.serial
+
+    def get_name(self):
+        return self._name
+
+    def get_sw_version(self):
+        return "{}-{}.{}.{}".format(
+            self.get_type_name(),
+            self.memory_map_version,
+            self.build_year,
+            self.build_week,
+        )
+
     def on_message(self, message):
         """
         Process received message
@@ -180,13 +199,10 @@ class Module:
                     "max": message.getMaxTemp(),
                 }
             )
-            print(self._channels[chan])
         elif isinstance(message, TempSensorStatusMessage):
             chan = self._translate_channel_name("21")
             if chan in self._channels:
-                print(self._channels[chan])
                 self._channels[chan].update({"cur": message.current_temp})
-                print(self._channels[chan])
             # self._target = message.target_temp
             # self._cmode = message.mode_str
             # self._cstatus = message.status_str
@@ -221,7 +237,6 @@ class Module:
                     "delay": message.delay,
                 }
             )
-            print(self._channels[message.channel])
         self._cache()
 
     def get_channels(self):

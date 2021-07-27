@@ -27,6 +27,27 @@ class Channel:
         self._address = address
         self._name_parts = {}
 
+    def get_module_type(self):
+        return self._module.get_type()
+
+    def get_module_type_name(self):
+        return self._module.get_type_name()
+
+    def get_module_serial(self):
+        return self._module.get_serial()
+
+    def get_module_address(self):
+        return self._module._address
+
+    def get_module_sw_version(self):
+        return self._module.get_sw_version()
+
+    def get_channel_number(self):
+        return self._num
+
+    def get_full_name(self):
+        return f"{self.get_name()} ({self._module.get_name()})"
+
     def is_loaded(self):
         """
         Is this channel loaded
@@ -66,10 +87,7 @@ class Channel:
 
     def __getstate__(self):
         d = self.__dict__
-        return {k: d[k] for k in d if k != "_writer" and k != "_module"}
-
-    def __setstate__(self, state):
-        self.__dict__ = state
+        return {k: d[k] for k in d if k != "_writer"}
 
     def __repr__(self):
         items = []
@@ -88,7 +106,6 @@ class Channel:
         for key, val in data.items():
             setattr(self, f"_{key}", val)
 
-    @property
     def get_categories(self):
         """
         Get the categories (for hass)
@@ -102,7 +119,6 @@ class Blind(Channel):
     A blind channel
     """
 
-    @property
     def get_categories(self):
         return ["cover"]
 
@@ -116,7 +132,6 @@ class Button(Channel):
     _closed = False
     _on = None
 
-    @property
     def get_categories(self):
         return ["binary_sensor", "light"]
 
@@ -139,7 +154,6 @@ class ButtonCounter(Channel):
     _counter = None
     _delay = None
 
-    @property
     def get_categories(self):
         if self._PulsePerUnits == 0:
             return ["binary_sensor"]
@@ -151,7 +165,6 @@ class Dimmer(Channel):
     A Dimmer channel
     """
 
-    @property
     def get_categories(self):
         return ["light"]
 
@@ -161,7 +174,6 @@ class EdgeLit(Channel):
     An EdgeLit channel
     """
 
-    @property
     def get_categories(self):
         return ["light"]
 
@@ -185,7 +197,6 @@ class Relay(Channel):
 
     _on = None
 
-    @property
     def get_categories(self):
         return ["switch"]
 
@@ -217,7 +228,6 @@ class Sensor(Channel):
     A Sensor channel
     """
 
-    @property
     def get_categories(self):
         return ["sensor"]
 
