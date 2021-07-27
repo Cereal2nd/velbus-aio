@@ -46,7 +46,7 @@ class Channel:
         return self._num
 
     def get_full_name(self):
-        return f"{self.get_name()} ({self._module.get_name()})"
+        return f"{self._module.get_name()} ({self._module.get_type_name()})"
 
     def is_loaded(self):
         """
@@ -211,7 +211,7 @@ class Relay(Channel):
         Send the turn on message
         """
         msg = SwitchRelayOnMessage(self._address)
-        msg.relay_channels = [self.num]
+        msg.relay_channels = [self._num]
         await self._writer(msg)
 
     async def turn_off(self):
@@ -219,7 +219,7 @@ class Relay(Channel):
         Send the turn off message
         """
         msg = SwitchRelayOffMessage(self._address)
-        msg.relay_channels = [self.num]
+        msg.relay_channels = [self._num]
         await self._writer(msg)
 
 
