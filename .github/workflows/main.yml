@@ -28,7 +28,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Run setup.py
-        run: python setup.py
+        run: python setup.py install
       - name: Build binary wheel and a source tarball
         run: python setup.py sdist
       - name: Install pypa/build
