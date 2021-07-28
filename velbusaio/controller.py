@@ -19,12 +19,16 @@ class Velbus:
     A velbus controller
     """
 
-    def __init__(self, ip, port, useSsl=False):
+    def __init__(self, port):
         self._log = logging.getLogger("velbus")
         self._log.setLevel(logging.DEBUG)
-        self._ip = ip
-        self._port = port
-        self._ssl = useSsl
+        if port.startswith("tls://"):
+            self._ssl = True
+            port = port.replace("tls://", "")
+        tmp = port.split(":")
+        self._ip = tmp[0]
+        self._port = tmp[1]
+        del tmp
         self._parser = VelbusParser()
         self._handler = PacketHandler(self.send, self)
         self._writer = None
