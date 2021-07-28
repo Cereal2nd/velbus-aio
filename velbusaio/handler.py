@@ -69,7 +69,9 @@ class PacketHandler:
                     )
                 )
         else:
-            self._log.warning("UNKNOWN modules")
+            self._log.warning(
+                "UNKNOWN module, you should iniitalize a full new velbus scan"
+            )
             print(":".join(format(x, "02x") for x in data))
             print(self._velbus.get_modules().keys())
             print(address)
