@@ -1,4 +1,2 @@
-aiocache
-aiofilecache
-aiofiles
 asyncio
+pyserial-asyncio
