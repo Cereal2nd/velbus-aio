@@ -7,6 +7,9 @@ import logging
 import pickle
 import ssl
 
+import serial
+import serial_asyncio
+
 from velbusaio.const import CACHEDIR
 from velbusaio.handler import PacketHandler
 from velbusaio.messages.module_type_request import ModuleTypeRequestMessage
@@ -19,16 +22,10 @@ class Velbus:
     A velbus controller
     """
 
-    def __init__(self, port):
+    def __init__(self, dsn):
         self._log = logging.getLogger("velbus")
         self._log.setLevel(logging.DEBUG)
-        if port.startswith("tls://"):
-            self._ssl = True
-            port = port.replace("tls://", "")
-        tmp = port.split(":")
-        self._ip = tmp[0]
-        self._port = tmp[1]
-        del tmp
+        self._dsn = dsn
         self._parser = VelbusParser()
         self._handler = PacketHandler(self.send, self)
         self._writer = None
@@ -101,13 +98,38 @@ class Velbus:
         Connect to the bus and load all the data
         """
         # connect to the bus
-        if self._ssl:
-            ctx = ssl._create_unverified_context()
+        if ":" in self._dsn:
+            # tcp/ip combination
+            if self._dsn.startswith("tls://"):
+                tmp = self._dsn.replace("tls://", "").split(":")
+                ctx = ssl._create_unverified_context()
+            else:
+                tmp = self._dsn.split(":")
+                ctx = None
+            self._reader, self._writer = await asyncio.open_connection(
+                tmp[0], tmp[1], ssl=ctx
+            )
         else:
-            ctx = None
-        self._reader, self._writer = await asyncio.open_connection(
-            self._ip, self._port, ssl=ctx
-        )
+            # serial port
+            self._reader, _ = await serial_asyncio.open_serial_connection(
+                url=self._dsn,
+                baudrate=38400,
+                bytesize=serial.EIGHTBITS,
+                parity=serial.PARITY_NONE,
+                stopbits=serial.STOPBITS_ONE,
+                xonxoff=0,
+                rtscts=1,
+            )
+            _, self._writer = await serial_asyncio.open_serial_connection(
+                url=self._dsn,
+                baudrate=38400,
+                bytesize=serial.EIGHTBITS,
+                parity=serial.PARITY_NONE,
+                stopbits=serial.STOPBITS_ONE,
+                xonxoff=0,
+                rtscts=1,
+            )
+
         # create reader, parser and writer tasks
         asyncio.Task(self._socket_read_task())
         asyncio.Task(self._socket_send_task())
