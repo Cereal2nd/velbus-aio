@@ -10,7 +10,7 @@ import ssl
 import serial
 import serial_asyncio
 
-from velbusaio.const import CACHEDIR
+from velbusaio.const import CACHEDIR, LOAD_TIMEOUT
 from velbusaio.handler import PacketHandler
 from velbusaio.messages.module_type_request import ModuleTypeRequestMessage
 from velbusaio.module import Module
@@ -135,17 +135,21 @@ class Velbus:
         asyncio.Task(self._socket_send_task())
         asyncio.Task(self._parser_task())
         # scan the bus
+        await self.scan()
+
+    async def scan(self):
         for addr in range(1, 255):
             msg = ModuleTypeRequestMessage(addr)
             await self.send(msg)
-        # wait for 60 seconds to give the modules and the tasks the time to load all the data
         await asyncio.sleep(30)
-        # for addr in self._modules:
-        #    await self._modules[addr].load()
         # create a task to wait until we have all modules loaded
-        # TODO add a timeout
         tsk = asyncio.Task(self._check_if_modules_are_loaded())
-        await tsk
+        try:
+            await asyncio.wait_for(tsk, timeout=LOAD_TIMEOUT)
+        except asyncio.TimeoutError:
+            self._log.error(
+                f"Not all modules are laoded within a timeout of {LOAD_TIMEOUT} seconds, continuing with the loaded modules"
+            )
 
     async def _check_if_modules_are_loaded(self):
         """
