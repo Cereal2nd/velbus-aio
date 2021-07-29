@@ -1,3 +1,2 @@
 asyncio
-pyserial
 pyserial-asyncio

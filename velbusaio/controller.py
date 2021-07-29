@@ -111,16 +111,7 @@ class Velbus:
             )
         else:
             # serial port
-            self._reader, _ = await serial_asyncio.open_serial_connection(
-                url=self._dsn,
-                baudrate=38400,
-                bytesize=serial.EIGHTBITS,
-                parity=serial.PARITY_NONE,
-                stopbits=serial.STOPBITS_ONE,
-                xonxoff=0,
-                rtscts=1,
-            )
-            _, self._writer = await serial_asyncio.open_serial_connection(
+            self._reader, self._writer = await serial_asyncio.open_serial_connection(
                 url=self._dsn,
                 baudrate=38400,
                 bytesize=serial.EIGHTBITS,
@@ -135,9 +126,9 @@ class Velbus:
         asyncio.Task(self._socket_send_task())
         asyncio.Task(self._parser_task())
         # scan the bus
-        await self.scan()
+        await self._scan()
 
-    async def scan(self):
+    async def _scan(self):
         for addr in range(1, 255):
             msg = ModuleTypeRequestMessage(addr)
             await self.send(msg)
