@@ -39,8 +39,11 @@ from velbusaio.messages.cover_up import CoverUpMessage, CoverUpMessage2
 from velbusaio.messages.dimmer_channel_status import DimmerChannelStatusMessage
 from velbusaio.messages.dimmer_status import DimmerStatusMessage
 from velbusaio.messages.fast_blinking_led import FastBlinkingLedMessage
+from velbusaio.messages.forced_off import ForcedOff
+from velbusaio.messages.forced_on import ForcedOn
 from velbusaio.messages.interface_status_request import InterfaceStatusRequestMessage
 from velbusaio.messages.kwh_status import KwhStatusMessage
+from velbusaio.messages.light_value_request import LightValueRequest
 from velbusaio.messages.memo_text import MemoTextMessage
 from velbusaio.messages.memory_data import MemoryDataMessage
 from velbusaio.messages.memory_data_block import MemoryDataBlockMessage
@@ -56,10 +59,12 @@ from velbusaio.messages.read_data_block_from_memory import (
     ReadDataBlockFromMemoryMessage,
 )
 from velbusaio.messages.read_data_from_memory import ReadDataFromMemoryMessage
+from velbusaio.messages.realtime_clock_status_request import RealtimeClockStatusRequest
 from velbusaio.messages.receive_buffer_full import ReceiveBufferFullMessage
 from velbusaio.messages.receive_ready import ReceiveReadyMessage
 from velbusaio.messages.relay_status import RelayStatusMessage
 from velbusaio.messages.restore_dimmer import RestoreDimmerMessage
+from velbusaio.messages.sensor_temp_request import SensorTempRequest
 from velbusaio.messages.sensor_temperature import SensorTemperatureMessage
 from velbusaio.messages.set_date import SetDate
 from velbusaio.messages.set_daylight_saving import SetDaylightSaving
@@ -77,6 +82,8 @@ from velbusaio.messages.switch_to_comfort import SwitchToComfortMessage
 from velbusaio.messages.switch_to_day import SwitchToDayMessage
 from velbusaio.messages.switch_to_night import SwitchToNightMessage
 from velbusaio.messages.switch_to_safe import SwitchToSafeMessage
+from velbusaio.messages.temp_sensor_settings_part1 import TempSensorSettingsPart1
+from velbusaio.messages.temp_sensor_settings_request import TempSensorSettingsRequest
 from velbusaio.messages.temp_sensor_status import TempSensorStatusMessage
 from velbusaio.messages.temp_set_cooling import TempSetCoolingMessage
 from velbusaio.messages.temp_set_heating import TempSetHeatingMessage
