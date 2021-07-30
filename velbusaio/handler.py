@@ -26,10 +26,17 @@ class PacketHandler:
         self._log.setLevel(logging.DEBUG)
         self._writer = writer
         self._velbus = velbus
+        self._scan_complete = False
         with open(
             pkg_resources.resource_filename(__name__, "moduleprotocol/protocol.json")
         ) as protocol_file:
             self.pdata = json.load(protocol_file)
+
+    def scan_finished(self):
+        self._scan_complete = True
+
+    def scan_started(self):
+        self._scan_complete = False
 
     async def handle(self, data):
         """
@@ -42,17 +49,22 @@ class PacketHandler:
         command_value = data[4]
         if data_size < 1:
             return
-        if command_value == 0xFF:
+        if command_value == 0xFF and not self._scan_complete:
             msg = ModuleTypeMessage()
             msg.populate(priority, address, rtr, data[5:-2])
             self._log.debug(f"Received {msg}")
             await self._handle_module_type(msg)
-        elif command_value == 0xB0:
+        elif command_value == 0xB0 and not self._scan_complete:
             msg = ModuleSubTypeMessage()
             msg.populate(priority, address, rtr, data[5:-2])
             self._log.debug(f"Received {msg}")
             await self._handle_module_subtype(msg)
-        # TODO handle global messages
+        elif command_value in self.pdata["MessagesBroadCast"]:
+            self._log.debug(
+                "Received broadcast message {} from {}, ignoring".format(
+                    self.pdata["MessageBroadCast"][command_value.upper()], address
+                )
+            )
         elif address in self._velbus.get_modules().keys():
             module_type = self._velbus.get_module(address).get_type()
             if commandRegistry.has_command(int(command_value), module_type):
@@ -68,13 +80,15 @@ class PacketHandler:
                         address, command_value, ":".join(format(x, "02x") for x in data)
                     )
                 )
-        else:
+        elif self._scan_complete:
+            # this should only happen once the scan is complete, of its not complete susppend the error message
             self._log.warning(
-                "UNKNOWN module, you should iniitalize a full new velbus scan"
+                "UNKNOWN module, you should iniitalize a full new velbus scan: packet={}, address={}, modules={}".format(
+                    ":".join(format(x, "02x") for x in data),
+                    address,
+                    self._velbus.get_modules().keys(),
+                )
             )
-            print(":".join(format(x, "02x") for x in data))
-            print(self._velbus.get_modules().keys())
-            print(address)
 
     def _per_byte(self, cmsg, msg):
         result = {}

@@ -129,10 +129,12 @@ class Velbus:
         await self._scan()
 
     async def _scan(self):
+        self._handler.scan_started()
         for addr in range(1, 255):
             msg = ModuleTypeRequestMessage(addr)
             await self.send(msg)
         await asyncio.sleep(30)
+        self._handler.scan_finished()
         # create a task to wait until we have all modules loaded
         tsk = asyncio.Task(self._check_if_modules_are_loaded())
         try:
