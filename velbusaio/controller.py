@@ -38,9 +38,6 @@ class Velbus:
         """
         Add a founc module to the module cache
         """
-        if typ in [57]:
-            # ignore signum and usbip module
-            return
         if sub_addr and sub_num:
             self._modules[addr]._sub_address[sub_num] = sub_addr
             self._modules[sub_addr] = self._modules[addr]
