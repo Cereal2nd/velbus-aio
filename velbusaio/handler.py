@@ -49,6 +49,8 @@ class PacketHandler:
         command_value = data[4]
         if data_size < 1:
             return
+        if address < 1 or address > 254:
+            return
         if command_value == 0xFF and not self._scan_complete:
             msg = ModuleTypeMessage()
             msg.populate(priority, address, rtr, data[5:-2])
