@@ -126,8 +126,26 @@ class Blind(Channel):
     A blind channel
     """
 
+    _state = None
+    _position = None
+
     def get_categories(self):
         return ["cover"]
+
+    async def get_position(self):
+        return self._position
+
+    async def open(self):
+        pass
+
+    async def close(self):
+        pass
+
+    async def stop(self):
+        pass
+
+    async def set_position(self, position):
+        pass
 
 
 class Button(Channel):
