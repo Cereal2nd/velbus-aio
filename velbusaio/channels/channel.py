@@ -5,6 +5,7 @@ author: Maikel Punie <maikel.punie@gmail.com>
 import json
 import string
 
+from velbusaio.command_registry import commandRegistry
 from velbusaio.messages.switch_relay_off import SwitchRelayOffMessage
 from velbusaio.messages.switch_relay_on import SwitchRelayOnMessage
 
@@ -132,20 +133,46 @@ class Blind(Channel):
     def get_categories(self):
         return ["cover"]
 
-    async def get_position(self):
+    def get_position(self):
         return self._position
 
+    def get_state(self):
+        return self._state
+
+    def is_closed(self):
+        if self._state == 0x02:
+            return True
+        return False
+
+    def is_open(self):
+        if self._state == 0x01:
+            return True
+        return False
+
     async def open(self):
-        pass
+        cls = commandRegistry.get_command(0x05, self._module.get_type())
+        msg = cls(self._address)
+        msg.channel = self._num
+        await self._writer(msg)
 
     async def close(self):
-        pass
+        cls = commandRegistry.get_command(0x06, self._module.get_type())
+        msg = cls(self._address)
+        msg.channel = self._num
+        await self._writer(msg)
 
     async def stop(self):
-        pass
+        cls = commandRegistry.get_command(0x04, self._module.get_type())
+        msg = cls(self._address)
+        msg.channel = self._num
+        await self._writer(msg)
 
     async def set_position(self, position):
-        pass
+        cls = commandRegistry.get_command(0x1C, self._module.get_type())
+        msg = cls(self._address)
+        msg.channel = self._num
+        msg.position = position
+        await self._writer(msg)
 
 
 class Button(Channel):
@@ -238,7 +265,8 @@ class Relay(Channel):
         """
         Send the turn on message
         """
-        msg = SwitchRelayOnMessage(self._address)
+        cls = commandRegistry.get_command(0x02, self._module.get_type())
+        msg = cls(self._address)
         msg.relay_channels = [self._num]
         await self._writer(msg)
 
@@ -246,7 +274,8 @@ class Relay(Channel):
         """
         Send the turn off message
         """
-        msg = SwitchRelayOffMessage(self._address)
+        cls = commandRegistry.get_command(0x01, self._module.get_type())
+        msg = cls(self._address)
         msg.relay_channels = [self._num]
         await self._writer(msg)
 
