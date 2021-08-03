@@ -14,11 +14,7 @@ class CommandRegistry:
         assert isinstance(command_value, int)
         assert command_value >= 0 and command_value <= 255
         assert isinstance(command_class, type)
-        assert (
-            module_name in self._module_directory.values()
-            or module_name == 0
-            or module_name[:4] == "SUB_"
-        )
+        assert module_name in self._module_directory.values() or module_name == 0
         if module_name:
             module_type = next(
                 (
@@ -28,8 +24,6 @@ class CommandRegistry:
                 ),
                 None,
             )
-            if module_type is None and module_name[:4] == "SUB_":
-                module_type = module_name
             self._register_override(command_value, command_class, module_type)
         else:
             self._register_default(command_value, command_class)
@@ -48,21 +42,13 @@ class CommandRegistry:
         else:
             raise Exception("double registration in command registry")
 
-    def has_command(self, command_value, module_type=0):
-        if module_type in self._overrides:
-            if command_value in self._overrides[module_type]:
-                return True
-        if command_value in self._default_commands:
-            return True
-        return False
-
     def get_command(self, command_value, module_type=0):
-        assert self.has_command(command_value, module_type)
         if module_type in self._overrides:
             if command_value in self._overrides[module_type]:
                 return self._overrides[module_type][command_value]
         if command_value in self._default_commands:
             return self._default_commands[command_value]
+        return None
 
 
 commandRegistry = CommandRegistry(MODULE_DIRECTORY)
