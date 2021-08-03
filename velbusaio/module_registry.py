@@ -61,17 +61,3 @@ MODULE_DIRECTORY = {
     0x41: "VMB1RYS",
     0x42: "VMBKP",
 }
-
-ModuleRegistry = {}
-
-
-def register_module(module_name, module_class):
-    """
-    :return: None
-    """
-    assert isinstance(module_name, str)
-    assert isinstance(module_class, type)
-    if module_name not in ModuleRegistry:
-        ModuleRegistry[module_name] = module_class
-    else:
-        raise Exception("double registration in module registry")
