@@ -22,7 +22,7 @@ The latest version of the library is published as a python package on [pypi](htt
 # Develop Installation
 
 1. Clone the repo
-   - git clone --recursive git@github.com:Cereal2nd/velbus-aio.git
+   - git clone --recurse-submodules https://github.com/Cereal2nd/velbus-aio
 2. cd into the cloned repo
    - cd velbus-aio
 3. create and activate a virtual enviroment

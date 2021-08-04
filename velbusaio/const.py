@@ -25,3 +25,12 @@ RTR = 0x40
 NO_RTR = 0x00
 CACHEDIR = "/tmp/velbuscache"
 LOAD_TIMEOUT = 600
+
+DEVICE_CLASS_TEMPERATURE: str = "temperature"
+TEMP_CELSIUS: str = "°C"
+ENERGY_KILO_WATT_HOUR: str = "kWh"
+ENERGY_WATT_HOUR: str = "Wh"
+VOLUME_CUBIC_METER: str = "m3"  # Not an official constant at HA yet
+VOLUME_CUBIC_METER_HOUR: str = "m3/h"  # Not an official constant at HA yet
+VOLUME_LITERS: str = "L"
+VOLUME_LITERS_HOUR: str = "L/h"  # Not an official constant at HA yet

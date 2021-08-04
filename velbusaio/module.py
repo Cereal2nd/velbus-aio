@@ -42,7 +42,11 @@ from velbusaio.messages.channel_name_part3 import (
 from velbusaio.messages.channel_name_request import ChannelNameRequestMessage
 from velbusaio.messages.counter_status import CounterStatusMessage
 from velbusaio.messages.memory_data import MemoryDataMessage
-from velbusaio.messages.module_status import ModuleStatusMessage, ModuleStatusMessage2
+from velbusaio.messages.module_status import (
+    ModuleStatusMessage,
+    ModuleStatusMessage2,
+    ModuleStatusPirMessage,
+)
 from velbusaio.messages.module_status_request import ModuleStatusRequestMessage
 from velbusaio.messages.module_subtype import ModuleSubTypeMessage
 from velbusaio.messages.module_type import ModuleTypeMessage
@@ -191,7 +195,7 @@ class Module:
         elif isinstance(message, RelayStatusMessage):
             self._channels[message.channel].update({"on": message.is_on()})
         elif isinstance(message, SensorTemperatureMessage):
-            chan = self._translate_channel_name("1")
+            chan = self._translate_channel_name(self._data["TemperatureChannel"])
             self._channels[chan].update(
                 {
                     "cur": message.getCurTemp(),
@@ -200,7 +204,8 @@ class Module:
                 }
             )
         elif isinstance(message, TempSensorStatusMessage):
-            chan = self._translate_channel_name("21")
+            # update the current temp
+            chan = self._translate_channel_name(self._data["TemperatureChannel"])
             if chan in self._channels:
                 self._channels[chan].update({"cur": message.current_temp})
             # self._target = message.target_temp
@@ -237,6 +242,8 @@ class Module:
                     "delay": message.delay,
                 }
             )
+        elif isinstance(message, ModuleStatusPirMessage):
+            self._channels[99].update({"cur": message.light_value})
         self._cache()
 
     def get_channels(self):

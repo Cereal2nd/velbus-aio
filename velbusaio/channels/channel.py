@@ -6,6 +6,16 @@ import json
 import string
 
 from velbusaio.command_registry import commandRegistry
+from velbusaio.const import (
+    DEVICE_CLASS_TEMPERATURE,
+    ENERGY_KILO_WATT_HOUR,
+    ENERGY_WATT_HOUR,
+    TEMP_CELSIUS,
+    VOLUME_CUBIC_METER,
+    VOLUME_CUBIC_METER_HOUR,
+    VOLUME_LITERS,
+    VOLUME_LITERS_HOUR,
+)
 from velbusaio.messages.switch_relay_off import SwitchRelayOffMessage
 from velbusaio.messages.switch_relay_on import SwitchRelayOnMessage
 
@@ -69,8 +79,8 @@ class Channel:
         """
         Set a part of the channel name
         """
-        if type(self._name_part) is not {}:
-            return
+        # if int(part) not in self._name_parts:
+        #    return
         self._name_parts[int(part)] = name
         if int(part) == 3:
             self._generate_name()
@@ -121,6 +131,7 @@ class Channel:
 class Blind(Channel):
     """
     A blind channel
+    HASS OK
     """
 
     _state = None
@@ -174,6 +185,7 @@ class Blind(Channel):
 class Button(Channel):
     """
     A Button channel
+    HASS OK
     """
 
     _enabled = True
@@ -181,7 +193,7 @@ class Button(Channel):
     _on = None
 
     def get_categories(self):
-        return ["binary_sensor", "light"]
+        return ["binary_sensor"]
 
     def is_closed(self):
         """
@@ -193,22 +205,56 @@ class Button(Channel):
         self._on_status_update(self.is_closed())
 
 
-class ButtonCounter(Channel):
+class ButtonCounter(Button):
     """
     A ButtonCounter channel
     This channel can act as a button and as a counter
     """
 
     _Unit = None
-    _PulsePerUnits = None
     _pulses = None
     _counter = None
     _delay = None
 
     def get_categories(self):
-        if self._PulsePerUnits == 0:
-            return ["binary_sensor"]
-        return ["sensor"]
+        if self._counter:
+            return ["sensor"]
+        return ["binary_sensor"]
+
+    def get_class(self):
+        if self._counter:
+            return "counter"
+        return None
+
+    def get_counter_unit(self):
+        return self._Unit
+
+    def get_unit(self):
+        return "W"
+
+    def get_state(self):
+        val = 0
+        # if we don't know the delay
+        # or we don't know the unit
+        # or the daly is the max value
+        #   we always return 0
+        if not self._delay or not self._Unit or self._delay == 0xFFFF:
+            return round(0, 2)
+        if self._Unit == VOLUME_LITERS_HOUR:
+            val = (1000 * 3600) / (self._delay * self._pulses)
+        elif self._Unit == VOLUME_CUBIC_METER_HOUR:
+            val = (1000 * 3600) / (self._delay * self._pulses)
+        elif self._Unit == ENERGY_KILO_WATT_HOUR:
+            val = (1000 * 1000 * 3600) / (self._delay * self._pulses)
+        else:
+            val = 0
+        return round(val, 2)
+
+    def get_counter_state(self):
+        return self._counter
+
+    def _callback(self):
+        self._on_status_update(self.get_state())
 
 
 class Dimmer(Channel):
@@ -244,6 +290,7 @@ class ThermostatChannel(Channel):
 class Relay(Channel):
     """
     A Relay channel
+    HASS OK
     """
 
     _on = None
@@ -279,22 +326,30 @@ class Relay(Channel):
         self._on_status_update(self.is_on())
 
 
-class Sensor(Channel):
+class Sensor(Button):
     """
     A Sensor channel
+    This is a bit wier, but this happens because of code sharing with openhab
+    A sensor in this case is actually a Button
     """
 
-    def get_categories(self):
-        return ["sensor"]
 
-
-class SensorNumber(Sensor):
+class SensorNumber(Channel):
     """
     A Numeric Sensor channel
     """
 
+    def get_categories(self):
+        return []
 
-class Temperature(Sensor):
+    def get_state(self):
+        return None
+
+    def _callback(self):
+        self._on_status_update(self.get_state())
+
+
+class Temperature(Channel):
     """
     A Temperature sensor channel
     """
@@ -303,8 +358,40 @@ class Temperature(Sensor):
     _max = None
     _min = None
 
+    def get_categories(self):
+        return ["sensor"]
 
-class LightSensor(Sensor):
+    def get_class(self):
+        return DEVICE_CLASS_TEMPERATURE
+
+    def get_unit(self):
+        return TEMP_CELSIUS
+
+    def get_state(self):
+        return self._cur
+
+    def _callback(self):
+        self._on_status_update(self.get_state())
+
+
+class LightSensor(Channel):
     """
     A light sensor channel
     """
+
+    _cur = None
+
+    def get_categories(self):
+        return ["sensor"]
+
+    def get_class(self):
+        return None
+
+    def get_unit(self):
+        return None
+
+    def get_state(self):
+        return self._cur
+
+    def _callback(self):
+        self._on_status_update(self.get_state())
