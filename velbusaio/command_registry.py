@@ -42,6 +42,14 @@ class CommandRegistry:
         else:
             raise Exception("double registration in command registry")
 
+    def has_command(self, command_value, module_type=0):
+        if module_type in self._overrides:
+            if command_value in self._overrides[module_type]:
+                return True
+        if command_value in self._default_commands:
+            return True
+        return False
+
     def get_command(self, command_value, module_type=0):
         if module_type in self._overrides:
             if command_value in self._overrides[module_type]:
