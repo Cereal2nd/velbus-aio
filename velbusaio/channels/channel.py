@@ -69,15 +69,11 @@ class Channel:
         """
         Set a part of the channel name
         """
-        try:
-            self._name_parts[int(part)] = name
-            if int(part) == 3:
-                self._generate_name()
-        except Exception as exception:
-            print("++++++++++++++++++++++++++++++++++++++")
-            print(exception)
-            print(part)
-            print(self._name_parts)
+        if type(self._name_part) is not {}:
+            return
+        self._name_parts[int(part)] = name
+        if int(part) == 3:
+            self._generate_name()
 
     def _generate_name(self):
         """
