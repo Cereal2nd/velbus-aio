@@ -33,6 +33,7 @@ class Velbus:
         self._modules = {}
         self._submodules = []
         self._send_queue = asyncio.Queue()
+        self._tasks = []
 
     async def add_module(self, addr, typ, data, sub_addr=None, sub_num=None):
         """
@@ -86,7 +87,13 @@ class Velbus:
             return (self._modules[addr]).get_channels()
         return None
 
-    async def connect(self):
+    async def stop(self):
+        for task in self._tasks:
+            task.cancel()
+        self._writer.close()
+        await self._writer.wait_closed()
+
+    async def connect(self, test_connect=False):
         """
         Connect to the bus and load all the data
         """
@@ -113,25 +120,32 @@ class Velbus:
                 xonxoff=0,
                 rtscts=1,
             )
-
+        if test_connect:
+            return
         # create reader, parser and writer tasks
-        asyncio.Task(self._socket_read_task())
-        asyncio.Task(self._socket_send_task())
-        asyncio.Task(self._parser_task())
+        self._tasks.append(asyncio.Task(self._socket_read_task()))
+        self._tasks.append(asyncio.Task(self._socket_send_task()))
+        self._tasks.append(asyncio.Task(self._parser_task()))
         # scan the bus
-        await self._scan()
+        await self.scan()
 
-    async def _scan(self):
+    async def scan(self):
         self._handler.scan_started()
         for addr in range(1, 255):
             msg = ModuleTypeRequestMessage(addr)
             await self.send(msg)
         await asyncio.sleep(30)
         self._handler.scan_finished()
+        # calculate how long to wait
+        calc_timeout = len(self._modules) * 30
+        if calc_timeout < LOAD_TIMEOUT:
+            timeout = calc_timeout
+        else:
+            timeout = LOAD_TIMEOUT
         # create a task to wait until we have all modules loaded
         tsk = asyncio.Task(self._check_if_modules_are_loaded())
         try:
-            await asyncio.wait_for(tsk, timeout=LOAD_TIMEOUT)
+            await asyncio.wait_for(tsk, timeout=timeout)
         except asyncio.TimeoutError:
             self._log.error(
                 f"Not all modules are laoded within a timeout of {LOAD_TIMEOUT} seconds, continuing with the loaded modules"
@@ -149,8 +163,8 @@ class Velbus:
             if mods_loaded == len(self.get_modules()):
                 self._log.info("All modules loaded")
                 return
-            self._log.warning("Not all modules loaded yet, waiting 20 seconds")
-            await asyncio.sleep(20)
+            self._log.info("Not all modules loaded yet, waiting 30 seconds")
+            await asyncio.sleep(230)
 
     async def send(self, msg):
         """

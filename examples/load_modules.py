@@ -20,6 +20,7 @@ async def main():
     for mod in (velbus.get_modules()).values():
         print(mod)
         print("")
+    await velbus.stop()
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
