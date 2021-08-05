@@ -8,6 +8,6 @@ setup(
     author="Maikel Punie",
     install_requires=["asyncio", "pyserial-asyncio"],
     author_email="maikel.punie@gmail.com",
-    packages=["velbusaio"],
+    packages=["velbusaio", "velbusaio.messages"],
     platforms="any",
 )

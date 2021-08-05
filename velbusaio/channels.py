@@ -227,7 +227,7 @@ class ButtonCounter(Button):
         return None
 
     def get_counter_unit(self):
-        return self._Unit
+        return ENERGY_KILO_WATT_HOUR
 
     def get_unit(self):
         return "W"

@@ -8,7 +8,7 @@ import pickle
 import struct
 import sys
 
-from velbusaio.channels.channel import (
+from velbusaio.channels import (
     Blind,
     Button,
     ButtonCounter,
