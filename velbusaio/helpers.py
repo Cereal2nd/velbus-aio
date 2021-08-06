@@ -1,7 +1,10 @@
 """
 Helper functions
 """
+import os
 import re
+
+from velbusaio.const import CACHEDIR
 
 
 def keys_exists(element, *keys):
@@ -84,3 +87,9 @@ def handle_match(match_dict, data):
                     val = multi
                 result[int(res["Channel"])] = {res["Value"]: val}
     return result
+
+
+def get_cache_dir() -> str:
+    """Put together the default configuration directory based on the OS."""
+    data_dir = os.getenv("APPDATA") if os.name == "nt" else os.path.expanduser("~")
+    return os.path.join(data_dir, CACHEDIR)

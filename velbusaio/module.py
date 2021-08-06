@@ -22,8 +22,8 @@ from velbusaio.channels import (
     Temperature,
     ThermostatChannel,
 )
-from velbusaio.const import CACHEDIR, PRIORITY_LOW
-from velbusaio.helpers import handle_match, keys_exists
+from velbusaio.const import PRIORITY_LOW
+from velbusaio.helpers import get_cache_dir, handle_match, keys_exists
 from velbusaio.messages.channel_name_part1 import (
     ChannelNamePart1Message,
     ChannelNamePart1Message2,
@@ -94,9 +94,9 @@ class Module:
                         del self._channels[i]
 
     def _cache(self):
-        if not os.path.isdir(CACHEDIR):
-            os.mkdir(CACHEDIR)
-        with open(f"{CACHEDIR}/{self._address}.p", "wb") as fl:
+        if not os.path.isdir(get_cache_dir()):
+            os.mkdir(get_cache_dir())
+        with open(f"{get_cache_dir()}/{self._address}.p", "wb") as fl:
             pickle.dump(self, fl)
 
     def __getstate__(self):

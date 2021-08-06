@@ -10,9 +10,13 @@ import ssl
 import serial
 import serial_asyncio
 
-from velbusaio.const import CACHEDIR, LOAD_TIMEOUT
+from velbusaio.const import LOAD_TIMEOUT
 from velbusaio.handler import PacketHandler
+from velbusaio.helpers import get_cache_dir
 from velbusaio.messages.module_type_request import ModuleTypeRequestMessage
+from velbusaio.messages.set_date import SetDate
+from velbusaio.messages.set_daylight_saving import SetDaylightSaving
+from velbusaio.messages.set_realtime_clock import SetRealtimeClock
 from velbusaio.module import Module
 from velbusaio.parser import VelbusParser
 
@@ -60,7 +64,7 @@ class Velbus:
 
     def _load_module_from_cache(self, address):
         try:
-            with open(f"{CACHEDIR}/{address}.p", "rb") as fl:
+            with open(f"{get_cache_dir()}/{address}.p", "rb") as fl:
                 return pickle.load(fl)
         except OSError:
             pass
@@ -121,7 +125,7 @@ class Velbus:
                 rtscts=1,
             )
         if test_connect:
-            return
+            return True
         # create reader, parser and writer tasks
         self._tasks.append(asyncio.Task(self._socket_read_task()))
         self._tasks.append(asyncio.Task(self._socket_send_task()))
@@ -208,3 +212,11 @@ class Velbus:
                 if class_name in chan.get_categories():
                     lst.append(chan)
         return lst
+
+    async def sync_clock(self):
+        """
+        This will send all the needed messages to sync the clock
+        """
+        await self.send(SetRealtimeClock())
+        await self.send(SetDate())
+        await self.send(SetDaylightSaving())
