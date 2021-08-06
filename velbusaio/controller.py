@@ -6,6 +6,7 @@ import asyncio
 import logging
 import pickle
 import ssl
+from typing import Union
 
 import serial
 import serial_asyncio
@@ -26,7 +27,7 @@ class Velbus:
     A velbus controller
     """
 
-    def __init__(self, dsn):
+    def __init__(self, dsn) -> None:
         self._log = logging.getLogger("velbus")
         self._log.setLevel(logging.DEBUG)
         self._dsn = dsn
@@ -39,7 +40,9 @@ class Velbus:
         self._send_queue = asyncio.Queue()
         self._tasks = []
 
-    async def add_module(self, addr, typ, data, sub_addr=None, sub_num=None):
+    async def add_module(
+        self, addr: str, typ: str, data: dict, sub_addr=None, sub_num=None
+    ) -> None:
         """
         Add a founc module to the module cache
         """
@@ -53,7 +56,7 @@ class Velbus:
         self._modules[addr].initialize(self.send)
         await self._modules[addr].load()
 
-    async def add_submodules(self, addr, subList):
+    async def add_submodules(self, addr, subList) -> None:
         for sub_num, sub_addr in subList.items():
             if sub_addr == 0xFF:
                 continue
@@ -62,20 +65,20 @@ class Velbus:
             self._modules[sub_addr] = self._modules[addr]
         self._modules[addr].cleanupSubChannels()
 
-    def _load_module_from_cache(self, address):
+    def _load_module_from_cache(self, address) -> Union[None, str]:
         try:
             with open(f"{get_cache_dir()}/{address}.p", "rb") as fl:
                 return pickle.load(fl)
         except OSError:
             pass
 
-    def get_modules(self):
+    def get_modules(self) -> dict:
         """
         Return the module cache
         """
         return self._modules
 
-    def get_module(self, addr):
+    def get_module(self, addr: str) -> Union[None, Module]:
         """
         Get a module on an address
         """
@@ -83,7 +86,7 @@ class Velbus:
             return self._modules[addr]
         return None
 
-    def get_channels(self, addr):
+    def get_channels(self, addr: str) -> Union[None, dict]:
         """
         Get the channels for an address
         """
@@ -91,13 +94,13 @@ class Velbus:
             return (self._modules[addr]).get_channels()
         return None
 
-    async def stop(self):
+    async def stop(self) -> None:
         for task in self._tasks:
             task.cancel()
         self._writer.close()
         await self._writer.wait_closed()
 
-    async def connect(self, test_connect=False):
+    async def connect(self, test_connect: bool = False) -> None:
         """
         Connect to the bus and load all the data
         """
@@ -125,7 +128,7 @@ class Velbus:
                 rtscts=1,
             )
         if test_connect:
-            return True
+            return
         # create reader, parser and writer tasks
         self._tasks.append(asyncio.Task(self._socket_read_task()))
         self._tasks.append(asyncio.Task(self._socket_send_task()))
@@ -133,7 +136,7 @@ class Velbus:
         # scan the bus
         await self.scan()
 
-    async def scan(self):
+    async def scan(self) -> None:
         self._handler.scan_started()
         for addr in range(1, 255):
             msg = ModuleTypeRequestMessage(addr)
@@ -155,7 +158,7 @@ class Velbus:
                 f"Not all modules are laoded within a timeout of {LOAD_TIMEOUT} seconds, continuing with the loaded modules"
             )
 
-    async def _check_if_modules_are_loaded(self):
+    async def _check_if_modules_are_loaded(self) -> None:
         """
         Task to wait until modules are loaded
         """
@@ -170,13 +173,13 @@ class Velbus:
             self._log.info("Not all modules loaded yet, waiting 30 seconds")
             await asyncio.sleep(230)
 
-    async def send(self, msg):
+    async def send(self, msg) -> None:
         """
         Send a packet
         """
         await self._send_queue.put(msg)
 
-    async def _socket_send_task(self):
+    async def _socket_send_task(self) -> None:
         """
         Task to send the packet from the queue to the bus
         """
@@ -187,7 +190,7 @@ class Velbus:
             self._writer.write(msg.to_binary())
             await asyncio.sleep(0.11)
 
-    async def _socket_read_task(self):
+    async def _socket_read_task(self) -> None:
         """
         Task to read from a socket and push into a queue
         """
@@ -195,7 +198,7 @@ class Velbus:
             data = await self._reader.read(10)
             self._parser.feed(data)
 
-    async def _parser_task(self):
+    async def _parser_task(self) -> None:
         """
         Task to parser the received queue
         """
@@ -203,7 +206,7 @@ class Velbus:
             packet = await self._parser.wait_for_packet()
             await self._handler.handle(packet)
 
-    def get_all(self, class_name):
+    def get_all(self, class_name: str) -> list:
         lst = []
         for addr, mod in (self.get_modules()).items():
             if addr in self._submodules:
@@ -213,7 +216,7 @@ class Velbus:
                     lst.append(chan)
         return lst
 
-    async def sync_clock(self):
+    async def sync_clock(self) -> None:
         """
         This will send all the needed messages to sync the clock
         """

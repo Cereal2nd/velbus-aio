@@ -7,7 +7,7 @@ import re
 from velbusaio.const import CACHEDIR
 
 
-def keys_exists(element, *keys):
+def keys_exists(element, *keys) -> dict:
     """
     Check if *keys (nested) exists in `element` (dict).
     """
@@ -25,7 +25,7 @@ def keys_exists(element, *keys):
     return _element
 
 
-def checksum(arr):
+def checksum(arr) -> int:
     """
     Calculate checksum of the given array.
     The checksum is calculated by summing all values in an array, then performing the two's complement.
@@ -39,14 +39,14 @@ def checksum(arr):
     return crc
 
 
-def h2(inp):
+def h2(inp) -> str:
     """
     Format as hex upercase
     """
     return format(inp, "02x").upper()
 
 
-def handle_match(match_dict, data):
+def handle_match(match_dict, data) -> dict:
     """
     Handle memory match from the module data
     """
