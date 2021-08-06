@@ -6,12 +6,14 @@ Velbus packet handler
 import json
 import logging
 import re
+from typing import Union
 
 import pkg_resources
 
 from velbusaio.command_registry import commandRegistry
 from velbusaio.const import RTR
 from velbusaio.helpers import h2, keys_exists
+from velbusaio.message import Message
 from velbusaio.messages.module_subtype import ModuleSubTypeMessage
 from velbusaio.messages.module_type import ModuleTypeMessage
 
@@ -21,7 +23,7 @@ class PacketHandler:
     The packetHandler class
     """
 
-    def __init__(self, writer, velbus):
+    def __init__(self, writer, velbus) -> None:
         self._log = logging.getLogger("velbus-packet")
         self._log.setLevel(logging.DEBUG)
         self._writer = writer
@@ -32,13 +34,13 @@ class PacketHandler:
         ) as protocol_file:
             self.pdata = json.load(protocol_file)
 
-    def scan_finished(self):
+    def scan_finished(self) -> None:
         self._scan_complete = True
 
-    def scan_started(self):
+    def scan_started(self) -> None:
         self._scan_complete = False
 
-    async def handle(self, data):
+    async def handle(self, data: str) -> None:
         """
         Handle a recievd packet
         """
@@ -92,7 +94,7 @@ class PacketHandler:
                 )
             )
 
-    def _per_byte(self, cmsg, msg):
+    def _per_byte(self, cmsg, msg) -> dict:
         result = {}
         for num, byte in enumerate(msg.data):
             num = str(num)
@@ -111,7 +113,7 @@ class PacketHandler:
                     )
         return result
 
-    def _per_byte_handle(self, result, todo, byte):
+    def _per_byte_handle(self, result: dict, todo: dict, byte: int) -> dict:
         if "Channel" in todo:
             result["Channel"] = todo["Channel"]
         if "Value" in todo:
@@ -139,7 +141,7 @@ class PacketHandler:
                 self._log.error("UNKNOWN convert requested: {}".format(todo["Convert"]))
         return result
 
-    async def _handle_module_type(self, msg):
+    async def _handle_module_type(self, msg: Message) -> None:
         """
         load the module data
         """
@@ -150,7 +152,7 @@ class PacketHandler:
         # create the module
         await self._velbus.add_module(msg.address, msg.module_type, data)
 
-    async def _handle_module_subtype(self, msg):
+    async def _handle_module_subtype(self, msg: Message) -> None:
         if msg.address not in self._velbus.get_modules():
             return
         addrList = {
@@ -161,7 +163,9 @@ class PacketHandler:
         }
         await self._velbus.add_submodules(msg.address, addrList)
 
-    def _channel_convert(self, module, channel, ctype):
+    def _channel_convert(
+        self, module: str, channel: str, ctype: str
+    ) -> Union[None, int]:
         data = keys_exists(
             self.pdata, "ModuleTypes", h2(module), "ChannelNumbers", ctype
         )

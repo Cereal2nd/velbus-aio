@@ -26,14 +26,14 @@ class Message:
     Base Velbus message
     """
 
-    def __init__(self, address=None):
+    def __init__(self, address: int = None) -> None:
         self.priority = PRIORITY_LOW
         self.address = None
         self.rtr = False
         self.data = bytearray()
         self.set_defaults(address)
 
-    def set_attributes(self, priority, address, rtr):
+    def set_attributes(self, priority: int, address: int, rtr: int) -> None:
         """
         :return: None
         """
@@ -41,13 +41,13 @@ class Message:
         self.address = address
         self.rtr = rtr
 
-    def populate(self, priority, address, rtr, data):
+    def populate(self, priority, address: int, rtr: int, data: int) -> None:
         """
         :return: None
         """
         raise NotImplementedError
 
-    def set_defaults(self, address):
+    def set_defaults(self, address) -> None:
         """
         Set defaults
 
@@ -61,7 +61,7 @@ class Message:
         self.set_low_priority()
         self.set_no_rtr()
 
-    def set_address(self, address):
+    def set_address(self, address: int) -> None:
         """
         :return: None
         """
@@ -104,7 +104,7 @@ class Message:
             "rtr": self.rtr,
         }
 
-    def to_json(self):
+    def to_json(self) -> str:
         """
         Dump object structure to JSON
 
@@ -114,10 +114,10 @@ class Message:
         """
         return json.dumps(self.to_json_basic())
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.to_json()
 
-    def byte_to_channels(self, byte):
+    def byte_to_channels(self, byte: int) -> str:
         """
         :return: list(int)
         """
@@ -128,7 +128,7 @@ class Message:
                 result.append(offset + 1)
         return result
 
-    def channels_to_byte(self, channels):
+    def channels_to_byte(self, channels) -> int:
         """
         :return: int
         """
