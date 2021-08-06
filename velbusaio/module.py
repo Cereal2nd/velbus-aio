@@ -62,7 +62,9 @@ class Module:
     Abstract class for Velbus hardware modules.
     """
 
-    def __init__(self, module_address, module_type, module_data):
+    def __init__(
+        self, module_address: int, module_type: int, module_data: dict
+    ) -> None:
         self._address = module_address
         self._type = module_type
         self._data = module_data
@@ -77,14 +79,14 @@ class Module:
         self._channels = {}
         self.loaded = False
 
-    def initialize(self, writer):
+    def initialize(self, writer: type) -> None:
         self._log = logging.getLogger("velbus-module")
         self._log.setLevel(logging.DEBUG)
         self._writer = writer
         for chan in self._channels.values():
             chan._writer = writer
 
-    def cleanupSubChannels(self):
+    def cleanupSubChannels(self) -> None:
         if self._sub_address == {}:
             assert "No subaddresses defined"
         for sub in range(1, 4):
@@ -93,21 +95,21 @@ class Module:
                     if i in self._channels:
                         del self._channels[i]
 
-    def _cache(self):
+    def _cache(self) -> None:
         if not os.path.isdir(get_cache_dir()):
             os.mkdir(get_cache_dir())
         with open(f"{get_cache_dir()}/{self._address}.p", "wb") as fl:
             pickle.dump(self, fl)
 
-    def __getstate__(self):
+    def __getstate__(self) -> dict:
         d = self.__dict__
         self_dict = {k: d[k] for k in d if k != "_writer" and k != "_log"}
         return self_dict
 
-    def __setstate__(self, state):
+    def __setstate__(self, state: dict) -> None:
         self.__dict__ = state
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
             "<{}: {{{}}} @ {{{}}} loaded:{{{}}} loading:{{{}}} channels{{:{}}}>".format(
                 self._name,
@@ -119,10 +121,10 @@ class Module:
             )
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.__repr__()
 
-    def get_addresses(self):
+    def get_addresses(self) -> list:
         """
         Get all addresses for this module
         """
@@ -132,22 +134,22 @@ class Module:
             res.append(addr)
         return res
 
-    def get_type(self):
+    def get_type(self) -> int:
         """
         Get the module type
         """
         return self._type
 
-    def get_type_name(self):
+    def get_type_name(self) -> str:
         return self._data["Type"]
 
-    def get_serial(self):
+    def get_serial(self) -> str:
         return self.serial
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self._name
 
-    def get_sw_version(self):
+    def get_sw_version(self) -> str:
         return "{}-{}.{}.{}".format(
             self.get_type_name(),
             self.memory_map_version,
@@ -155,7 +157,7 @@ class Module:
             self.build_week,
         )
 
-    def on_message(self, message):
+    def on_message(self, message) -> None:
         """
         Process received message
         """
@@ -188,10 +190,6 @@ class Module:
             self._process_channel_name_message(3, message)
         elif isinstance(message, MemoryDataMessage):
             self._process_memory_data_message(message)
-        elif isinstance(message, ModuleTypeMessage):
-            self._process_module_type_message(message)
-        elif isinstance(message, ModuleSubTypeMessage):
-            self._process_module_subtype_message(message)
         elif isinstance(message, RelayStatusMessage):
             self._channels[message.channel].update({"on": message.is_on()})
         elif isinstance(message, SensorTemperatureMessage):
@@ -246,13 +244,13 @@ class Module:
             self._channels[99].update({"cur": message.light_value})
         self._cache()
 
-    def get_channels(self):
+    def get_channels(self) -> list:
         """
         List all channels for this module
         """
         return self._channels
 
-    async def load(self):
+    async def load(self) -> None:
         """
         Retrieve names of channels
         """
@@ -278,12 +276,13 @@ class Module:
         # stop the loading
         self._is_loading = False
 
-    def _load(self):
+    def _load(self) -> None:
         """
         Method for per module type loading
         """
+        pass
 
-    def number_of_channels(self):
+    def number_of_channels(self) -> int:
         """
         Retrieve the number of available channels in this module
 
@@ -293,7 +292,7 @@ class Module:
             return 0
         return max(self._channels.keys())
 
-    def _process_memory_data_message(self, message):
+    def _process_memory_data_message(self, message) -> None:
         addr = "{high:02X}{low:02X}".format(
             high=message.high_address, low=message.low_address
         )
@@ -317,13 +316,13 @@ class Module:
         except KeyError:
             print("KEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEY")
 
-    def _process_channel_name_message(self, part, message):
+    def _process_channel_name_message(self, part, message) -> None:
         channel = self._translate_channel_name(message.channel)
         if channel not in self._channels:
             return
         self._channels[channel].set_name_part(part, message.name)
 
-    def _translate_channel_name(self, channel):
+    def _translate_channel_name(self, channel: str) -> int:
         if keys_exists(
             self._data,
             "ChannelNumbers",
@@ -336,16 +335,7 @@ class Module:
             )
         return int(channel)
 
-    def _process_module_type_message(self, message):
-        self.serial = message.serial
-        self.memory_map_version = int(message.memory_map_version)
-        self.build_year = int(message.build_year)
-        self.build_week = int(message.build_week)
-
-    def _process_module_subtype_message(self, message):
-        self.serial = message.serial
-
-    def is_loaded(self):
+    def is_loaded(self) -> bool:
         """
         Check if all name messages have been received
         """
@@ -366,13 +356,13 @@ class Module:
         self._cache()
         return True
 
-    async def _request_module_status(self):
+    async def _request_module_status(self) -> None:
         # request the module status (if available for this module
         msg = ModuleStatusRequestMessage(self._address)
         msg.channels = list(range(1, 9))
         await self._writer(msg)
 
-    async def _request_channel_name(self):
+    async def _request_channel_name(self) -> None:
         # request the module channel names
         if keys_exists(self._data, "AllChannelStatus"):
             msg = ChannelNameRequestMessage(self._address)
@@ -385,7 +375,7 @@ class Module:
             msg.channels = list(range(1, (self.number_of_channels() + 1)))
             await self._writer(msg)
 
-    async def __load_memory(self):
+    async def __load_memory(self) -> None:
         """
         Request all needed memory addresses
         """
@@ -405,7 +395,7 @@ class Module:
                     msg.low_address = addr[1]
                     await self._writer(msg)
 
-    def __load_default_channels(self):
+    def __load_default_channels(self) -> None:
         if "Channels" not in self._data:
             return
 
