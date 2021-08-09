@@ -41,7 +41,14 @@ class Velbus:
         self._tasks = []
 
     async def add_module(
-        self, addr: str, typ: str, data: dict, sub_addr=None, sub_num=None
+        self,
+        addr: str,
+        typ: str,
+        data: dict,
+        serial=None,
+        memorymap=None,
+        build_year=None,
+        build_week=None,
     ) -> None:
         """
         Add a founc module to the module cache
@@ -52,7 +59,15 @@ class Velbus:
             self._modules[addr] = mod
         else:
             self._log.info(f"Load NEW module: {typ} @ {addr}")
-            self._modules[addr] = Module(addr, typ, data)
+            self._modules[addr] = Module(
+                addr,
+                typ,
+                data,
+                serial=serial,
+                build_year=build_year,
+                build_week=build_week,
+                memorymap=memorymap,
+            )
         self._modules[addr].initialize(self.send)
         await self._modules[addr].load()
 

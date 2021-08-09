@@ -40,7 +40,9 @@ from velbusaio.messages.channel_name_part3 import (
     ChannelNamePart3Message3,
 )
 from velbusaio.messages.channel_name_request import ChannelNameRequestMessage
+from velbusaio.messages.clear_led import ClearLedMessage
 from velbusaio.messages.counter_status import CounterStatusMessage
+from velbusaio.messages.fast_blinking_led import FastBlinkingLedMessage
 from velbusaio.messages.memory_data import MemoryDataMessage
 from velbusaio.messages.module_status import (
     ModuleStatusMessage,
@@ -54,7 +56,10 @@ from velbusaio.messages.push_button_status import PushButtonStatusMessage
 from velbusaio.messages.read_data_from_memory import ReadDataFromMemoryMessage
 from velbusaio.messages.relay_status import RelayStatusMessage
 from velbusaio.messages.sensor_temperature import SensorTemperatureMessage
+from velbusaio.messages.set_led import SetLedMessage
+from velbusaio.messages.slow_blinking_led import SlowBlinkingLedMessage
 from velbusaio.messages.temp_sensor_status import TempSensorStatusMessage
+from velbusaio.messages.update_led_status import UpdateLedStatusMessage
 
 
 class Module:
@@ -63,7 +68,14 @@ class Module:
     """
 
     def __init__(
-        self, module_address: int, module_type: int, module_data: dict
+        self,
+        module_address: int,
+        module_type: int,
+        module_data: dict,
+        serial=None,
+        memorymap=None,
+        build_year=None,
+        build_week=None,
     ) -> None:
         self._address = module_address
         self._type = module_type
@@ -71,10 +83,10 @@ class Module:
 
         self._name = {}
         self._sub_address = {}
-        self.serial = 0
-        self.memory_map_version = 0
-        self.build_year = 0
-        self.build_week = 0
+        self.serial = serial
+        self.memory_map_version = memorymap
+        self.build_year = build_year
+        self.build_week = build_week
         self._is_loading = False
         self._channels = {}
         self.loaded = False
@@ -151,13 +163,13 @@ class Module:
 
     def get_sw_version(self) -> str:
         return "{}-{}.{}.{}".format(
-            self.get_type_name(),
+            self.serial,
             self.memory_map_version,
             self.build_year,
             self.build_week,
         )
 
-    def on_message(self, message) -> None:
+    async def on_message(self, message) -> None:
         """
         Process received message
         """
@@ -189,12 +201,12 @@ class Module:
         ):
             self._process_channel_name_message(3, message)
         elif isinstance(message, MemoryDataMessage):
-            self._process_memory_data_message(message)
+            await self._process_memory_data_message(message)
         elif isinstance(message, RelayStatusMessage):
-            self._channels[message.channel].update({"on": message.is_on()})
+            await self._channels[message.channel].update({"on": message.is_on()})
         elif isinstance(message, SensorTemperatureMessage):
             chan = self._translate_channel_name(self._data["TemperatureChannel"])
-            self._channels[chan].update(
+            await self._channels[chan].update(
                 {
                     "cur": message.getCurTemp(),
                     "min": message.getMinTemp(),
@@ -205,35 +217,35 @@ class Module:
             # update the current temp
             chan = self._translate_channel_name(self._data["TemperatureChannel"])
             if chan in self._channels:
-                self._channels[chan].update({"cur": message.current_temp})
+                await self._channels[chan].update({"cur": message.current_temp})
             # self._target = message.target_temp
             # self._cmode = message.mode_str
             # self._cstatus = message.status_str
         elif isinstance(message, PushButtonStatusMessage):
             for channel in message.closed:
-                self._channels[channel].update({"closed": True})
+                await self._channels[channel].update({"closed": True})
             for channel in message.opened:
-                self._channels[channel].update({"closed": False})
+                await self._channels[channel].update({"closed": False})
         elif isinstance(message, ModuleStatusMessage):
             for channel in self._channels.keys():
                 if channel in message.closed:
-                    self._channels[channel].update({"closed": True})
+                    await self._channels[channel].update({"closed": True})
                 elif isinstance(self._channels[channel], (Button, ButtonCounter)):
-                    self._channels[channel].update({"closed": False})
+                    await self._channels[channel].update({"closed": False})
         elif isinstance(message, ModuleStatusMessage2):
             for channel in self._channels.keys():
                 if channel in message.closed:
-                    self._channels[channel].update({"closed": True})
+                    await self._channels[channel].update({"closed": True})
                 elif isinstance(self._channels[channel], (Button, ButtonCounter)):
-                    self._channels[channel].update({"closed": False})
+                    await self._channels[channel].update({"closed": False})
                 if channel in message.enabled:
-                    self._channels[channel].update({"enabled": True})
+                    await self._channels[channel].update({"enabled": True})
                 elif isinstance(self._channels[channel], (Button, ButtonCounter)):
-                    self._channels[channel].update({"enabled": False})
+                    await self._channels[channel].update({"enabled": False})
         elif isinstance(message, CounterStatusMessage) and isinstance(
             self._channels[message.channel], ButtonCounter
         ):
-            self._channels[message.channel].update(
+            await self._channels[message.channel].update(
                 {
                     "pulses": message.pulses,
                     "counter": message.counter,
@@ -241,7 +253,37 @@ class Module:
                 }
             )
         elif isinstance(message, ModuleStatusPirMessage):
-            self._channels[99].update({"cur": message.light_value})
+            await self._channels[99].update({"cur": message.light_value})
+        elif isinstance(message, UpdateLedStatusMessage):
+            for channel in self._channels.keys():
+                if channel in message.led_slow_blinking:
+                    await self._channels[channel].update({"led_state": "slow"})
+                if channel in message.led_fast_blinking:
+                    await self._channels[channel].update({"led_state": "fast"})
+                if channel in message.led_on:
+                    await self._channels[channel].update({"led_state": "on"})
+                if (
+                    channel not in message.led_slow_blinking
+                    and channel not in message.led_fast_blinking
+                    and channel not in message.led_on
+                ):
+                    await self._channels[channel].update({"led_state": "off"})
+        elif isinstance(message, SetLedMessage):
+            for channel in self._channels.keys():
+                if channel in message.leds:
+                    await self._channels[channel].update({"led_state": "on"})
+        elif isinstance(message, ClearLedMessage):
+            for channel in self._channels.keys():
+                if channel in message.leds:
+                    await self._channels[channel].update({"led_state": "off"})
+        elif isinstance(message, SlowBlinkingLedMessage):
+            for channel in self._channels.keys():
+                if channel in message.leds:
+                    await self._channels[channel].update({"led_state": "slow"})
+        elif isinstance(message, FastBlinkingLedMessage):
+            for channel in self._channels.keys():
+                if channel in message.leds:
+                    await self._channels[channel].update({"led_state": "fast"})
         self._cache()
 
     def get_channels(self) -> list:
@@ -292,7 +334,7 @@ class Module:
             return 0
         return max(self._channels.keys())
 
-    def _process_memory_data_message(self, message) -> None:
+    async def _process_memory_data_message(self, message) -> None:
         addr = "{high:02X}{low:02X}".format(
             high=message.high_address, low=message.low_address
         )
@@ -312,7 +354,7 @@ class Module:
                     mdata["Match"], message.data
                 ).items():
                     data = chan_data.copy()
-                    self._channels[chan].update(data)
+                    await self._channels[chan].update(data)
         except KeyError:
             print("KEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEY")
 

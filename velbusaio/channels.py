@@ -26,9 +26,6 @@ class Channel:
     This is the basic abstract class of a velbus channel
     """
 
-    _on_status_update = None
-    _name_parts = {}
-
     def __init__(self, module, num, name, nameEditable, writer, address):
         self._num = num
         self._module = module
@@ -39,6 +36,8 @@ class Channel:
             self._is_loaded = False
         self._writer = writer
         self._address = address
+        self._on_status_update = []
+        self._name_parts = {}
 
     def get_module_type(self):
         return self._module.get_type()
@@ -69,6 +68,9 @@ class Channel:
         """
         return self._is_loaded
 
+    def is_counter_channel(self) -> bool:
+        return False
+
     def get_name(self):
         """
         :return: the channel name
@@ -98,6 +100,10 @@ class Channel:
         d = self.__dict__
         return {k: d[k] for k in d if k != "_writer" and k != "_on_status_update"}
 
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self._on_status_update = []
+
     def __repr__(self):
         items = []
         for k, v in self.__dict__.items():
@@ -108,14 +114,14 @@ class Channel:
     def __str__(self):
         return self.__repr__()
 
-    def update(self, data):
+    async def update(self, data):
         """
         Set the attributes of this channel
         """
         for key, val in data.items():
             setattr(self, f"_{key}", val)
-        if self._on_status_update:
-            self._callback()
+        for m in self._on_status_update:
+            await m()
 
     def get_categories(self):
         """
@@ -125,7 +131,7 @@ class Channel:
         return []
 
     def on_status_update(self, meth):
-        self._on_status_update = meth
+        self._on_status_update.append(meth)
 
 
 class Blind(Channel):
@@ -154,6 +160,9 @@ class Blind(Channel):
     def is_open(self):
         if self._state == 0x01:
             return True
+        return False
+
+    def support_position(self):
         return False
 
     async def open(self):
@@ -190,10 +199,10 @@ class Button(Channel):
 
     _enabled = True
     _closed = False
-    _on = None
+    _led_state = None
 
     def get_categories(self):
-        return ["binary_sensor"]
+        return ["binary_sensor", "led"]
 
     def is_closed(self):
         """
@@ -201,14 +210,41 @@ class Button(Channel):
         """
         return self._closed
 
-    def _callback(self):
-        self._on_status_update(self.is_closed())
+    def is_on(self) -> bool:
+        """
+        Return if this relay is on
+        """
+        if self._led_state == "on":
+            return True
+        return False
+
+    async def set_led_state(self, state):
+        """
+        Set led
+
+        :return: None
+        """
+        if state == "on":
+            code = 0xF6
+        elif state == "slow":
+            code = 0xF7
+        elif state == "fast":
+            code = 0xF8
+        elif state == "off":
+            code = 0xF5
+        else:
+            return
+        cls = commandRegistry.get_command(code, self._module.get_type())
+        msg = cls(self._address)
+        msg.leds = [self._num]
+        await self._writer(msg)
 
 
 class ButtonCounter(Button):
     """
     A ButtonCounter channel
     This channel can act as a button and as a counter
+    HASS OK
     """
 
     _Unit = None
@@ -216,23 +252,17 @@ class ButtonCounter(Button):
     _counter = None
     _delay = None
 
-    def get_categories(self):
+    def get_categories(self) -> list:
         if self._counter:
             return ["sensor"]
         return ["binary_sensor"]
 
-    def get_class(self):
+    def is_counter_channel(self) -> bool:
         if self._counter:
-            return "counter"
-        return None
+            return True
+        return False
 
-    def get_counter_unit(self):
-        return ENERGY_KILO_WATT_HOUR
-
-    def get_unit(self):
-        return "W"
-
-    def get_state(self):
+    def get_state(self) -> int:
         val = 0
         # if we don't know the delay
         # or we don't know the unit
@@ -250,11 +280,14 @@ class ButtonCounter(Button):
             val = 0
         return round(val, 2)
 
-    def get_counter_state(self):
-        return self._counter
+    def get_unit(self) -> str:
+        return "W"
 
-    def _callback(self):
-        self._on_status_update(self.get_state())
+    def get_counter_state(self) -> int:
+        return round((self._counter / self._pulses), 2)
+
+    def get_counter_unit(self) -> str:
+        return ENERGY_KILO_WATT_HOUR
 
 
 class Dimmer(Channel):
@@ -262,8 +295,8 @@ class Dimmer(Channel):
     A Dimmer channel
     """
 
-    def get_categories(self):
-        return ["light"]
+    # def get_categories(self):
+    #    return ["light"]
 
 
 class EdgeLit(Channel):
@@ -271,8 +304,8 @@ class EdgeLit(Channel):
     An EdgeLit channel
     """
 
-    def get_categories(self):
-        return ["light"]
+    # def get_categories(self):
+    #    return ["light"]
 
 
 class Memo(Channel):
@@ -281,10 +314,40 @@ class Memo(Channel):
     """
 
 
-class ThermostatChannel(Channel):
+class ThermostatChannel(Button):
     """
     A Thermostat channel
     """
+
+
+# _mode = None
+# _target = None
+# _cur = None
+#
+# def get_categories(self):
+#    return ["climate"]
+#
+# async def set_temp(self, temp) -> None:
+#    cls = commandRegistry.get_command(0xE4, self._module.get_type())
+#    msg = cls(self._address)
+#    msg.temp = temp * 2
+#    await self._writer(msg)
+#
+# async def set_mode(self, mode) -> None:
+#    if mode == "safe":
+#        code = 0xDE
+#    elif mode == "comfort":
+#        code = 0xDB
+#    elif mode == "day":
+#        code = 0xDC
+#    elif mode == "night":
+#        code = 0xDD
+#    cls = commandRegistry.get_command(code, self._module.get_type())
+#    msg = cls(self._address)
+#    await self._writer(msg)
+#
+# def get_state(self) -> int:
+#    return round(self._cur, 2)
 
 
 class Relay(Channel):
@@ -295,16 +358,16 @@ class Relay(Channel):
 
     _on = None
 
-    def get_categories(self):
+    def get_categories(self) -> list:
         return ["switch"]
 
-    def is_on(self):
+    def is_on(self) -> bool:
         """
         Return if this relay is on
         """
         return self._on
 
-    async def turn_on(self):
+    async def turn_on(self) -> None:
         """
         Send the turn on message
         """
@@ -313,7 +376,7 @@ class Relay(Channel):
         msg.relay_channels = [self._num]
         await self._writer(msg)
 
-    async def turn_off(self):
+    async def turn_off(self) -> None:
         """
         Send the turn off message
         """
@@ -321,9 +384,6 @@ class Relay(Channel):
         msg = cls(self._address)
         msg.relay_channels = [self._num]
         await self._writer(msg)
-
-    def _callback(self):
-        self._on_status_update(self.is_on())
 
 
 class Sensor(Button):
@@ -345,9 +405,6 @@ class SensorNumber(Channel):
     def get_state(self):
         return None
 
-    def _callback(self):
-        self._on_status_update(self.get_state())
-
 
 class Temperature(Channel):
     """
@@ -358,20 +415,17 @@ class Temperature(Channel):
     _max = None
     _min = None
 
-    def get_categories(self):
+    def get_categories(self) -> list:
         return ["sensor"]
 
-    def get_class(self):
+    def get_class(self) -> str:
         return DEVICE_CLASS_TEMPERATURE
 
-    def get_unit(self):
+    def get_unit(self) -> str:
         return TEMP_CELSIUS
 
-    def get_state(self):
-        return self._cur
-
-    def _callback(self):
-        self._on_status_update(self.get_state())
+    def get_state(self) -> int:
+        return round(self._cur, 2)
 
 
 class LightSensor(Channel):
@@ -392,6 +446,3 @@ class LightSensor(Channel):
 
     def get_state(self):
         return self._cur
-
-    def _callback(self):
-        self._on_status_update(self.get_state())

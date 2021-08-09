@@ -77,7 +77,7 @@ class PacketHandler:
                 msg.populate(priority, address, rtr, data[5:-2])
                 self._log.debug(f"Received {msg}")
                 # send the message to the modules
-                (self._velbus.get_module(msg.address)).on_message(msg)
+                await (self._velbus.get_module(msg.address)).on_message(msg)
             else:
                 self._log.warning(
                     "NOT FOUND IN command_registry: addr={} cmd={} packet={}".format(
@@ -150,7 +150,15 @@ class PacketHandler:
             self._log.warning(f"Module not recognized: {msg.module_type}")
             return
         # create the module
-        await self._velbus.add_module(msg.address, msg.module_type, data)
+        await self._velbus.add_module(
+            msg.address,
+            msg.module_type,
+            data,
+            memorymap=msg.memory_map_version,
+            build_year=msg.build_year,
+            build_week=msg.build_week,
+            serial=msg.serial,
+        )
 
     async def _handle_module_subtype(self, msg: Message) -> None:
         if msg.address not in self._velbus.get_modules():
