@@ -3,9 +3,10 @@ from os import listdir
 from os.path import isfile, join
 
 from velbusaio.const import CACHEDIR
+from velbusaio.helpers import get_cache_dir
 
-for fil in [f for f in listdir(CACHEDIR) if isfile(join(CACHEDIR, f))]:
+for fil in [f for f in listdir(get_cache_dir()) if isfile(join(get_cache_dir(), f))]:
     print("")
     print(fil)
-    fl = open(f"{CACHEDIR}/{fil}", "rb")
+    fl = open(f"{get_cache_dir()}/{fil}", "rb")
     print(pickle.load(fl))
