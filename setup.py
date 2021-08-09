@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="velbus-aio",
-    version="2021.8.5",
+    version="2021.8.6",
     url="https://github.com/Cereal2nd/velbus-aio",
     license="MIT",
     author="Maikel Punie",
