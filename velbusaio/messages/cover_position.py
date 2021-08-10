@@ -1,6 +1,8 @@
 """
 :author: Maikel Punie <maikel.punie@gmail.com>
 """
+from __future__ import annotations
+
 import json
 import struct
 

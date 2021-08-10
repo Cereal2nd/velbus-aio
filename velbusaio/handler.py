@@ -2,11 +2,11 @@
 Velbus packet handler
 :Author maikel punie <maikel.punie@gmail.com>
 """
+from __future__ import annotations
 
 import json
 import logging
 import re
-from typing import Union
 
 import pkg_resources
 
@@ -171,9 +171,7 @@ class PacketHandler:
         }
         await self._velbus.add_submodules(msg.address, addrList)
 
-    def _channel_convert(
-        self, module: str, channel: str, ctype: str
-    ) -> Union[None, int]:
+    def _channel_convert(self, module: str, channel: str, ctype: str) -> None | int:
         data = keys_exists(
             self.pdata, "ModuleTypes", h2(module), "ChannelNumbers", ctype
         )

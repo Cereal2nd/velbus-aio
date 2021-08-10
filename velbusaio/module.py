@@ -1,6 +1,7 @@
 """
 This represents a velbus module
 """
+from __future__ import annotations
 
 import logging
 import os
@@ -42,6 +43,8 @@ from velbusaio.messages.channel_name_part3 import (
 from velbusaio.messages.channel_name_request import ChannelNameRequestMessage
 from velbusaio.messages.clear_led import ClearLedMessage
 from velbusaio.messages.counter_status import CounterStatusMessage
+from velbusaio.messages.dimmer_channel_status import DimmerChannelStatusMessage
+from velbusaio.messages.dimmer_status import DimmerStatusMessage
 from velbusaio.messages.fast_blinking_led import FastBlinkingLedMessage
 from velbusaio.messages.memory_data import MemoryDataMessage
 from velbusaio.messages.module_status import (
@@ -57,6 +60,7 @@ from velbusaio.messages.read_data_from_memory import ReadDataFromMemoryMessage
 from velbusaio.messages.relay_status import RelayStatusMessage
 from velbusaio.messages.sensor_temperature import SensorTemperatureMessage
 from velbusaio.messages.set_led import SetLedMessage
+from velbusaio.messages.slider_status import SliderStatusMessage
 from velbusaio.messages.slow_blinking_led import SlowBlinkingLedMessage
 from velbusaio.messages.temp_sensor_status import TempSensorStatusMessage
 from velbusaio.messages.update_led_status import UpdateLedStatusMessage
@@ -284,6 +288,18 @@ class Module:
             for channel in self._channels.keys():
                 if channel in message.leds:
                     await self._channels[channel].update({"led_state": "fast"})
+        elif isinstance(message, DimmerChannelStatusMessage):
+            await self._channels[message.channel].update(
+                {"state": message.cur_dimmer_state()}
+            )
+        elif isinstance(message, SliderStatusMessage):
+            await self._channels[message.channel].update(
+                {"state": message.cur_slider_state()}
+            )
+        elif isinstance(message, DimmerStatusMessage):
+            await self._channels[message.channel].update(
+                {"state": message.cur_dimmer_state()}
+            )
         self._cache()
 
     def get_channels(self) -> list:

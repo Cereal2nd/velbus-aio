@@ -1,7 +1,7 @@
 """
 :author: Maikel Punie <maikel.punie@gmail.com> and Thomas Delaet <thomas@delaet.org>
 """
-from typing import Union
+from __future__ import annotations
 
 from velbusaio.module_registry import MODULE_DIRECTORY
 
@@ -54,9 +54,7 @@ class CommandRegistry:
             return True
         return False
 
-    def get_command(
-        self, command_value: int, module_type: int = 0
-    ) -> Union[None, type]:
+    def get_command(self, command_value: int, module_type: int = 0) -> None | type:
         if module_type in self._overrides:
             if command_value in self._overrides[module_type]:
                 return self._overrides[module_type][command_value]

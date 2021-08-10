@@ -29,6 +29,7 @@ NO_RTR: Final = 0x00
 CACHEDIR: Final = ".velbuscache"
 LOAD_TIMEOUT: Final = 600
 
+DEVICE_CLASS_ILLUMINANCE: Final = "illuminance"
 DEVICE_CLASS_TEMPERATURE: Final = "temperature"
 TEMP_CELSIUS: Final = "°C"
 ENERGY_KILO_WATT_HOUR: Final = "kWh"

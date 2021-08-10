@@ -1,6 +1,8 @@
 """
 :author: Tom Dupré <gitd8400@gmail.com>
 """
+from __future__ import annotations
+
 import json
 import struct
 

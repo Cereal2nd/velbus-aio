@@ -1,6 +1,8 @@
 """
 :author: Frank van Breugel
 """
+from __future__ import annotations
+
 import json
 import struct
 
@@ -8,23 +10,15 @@ from velbusaio.command_registry import register_command
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xB8
-
 CHANNEL_NORMAL = 0x00
-
 CHANNEL_INHIBITED = 0x01
-
 CHANNEL_FORCED_ON = 0x02
-
 CHANNEL_DISABLED = 0x03
 
 LED_OFF = 0
-
 LED_ON = 1 << 7
-
 LED_SLOW_BLINKING = 1 << 6
-
 LED_FAST_BLINKING = 1 << 5
-
 LED_VERY_FAST_BLINKING = 1 << 4
 
 

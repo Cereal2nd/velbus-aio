@@ -1,6 +1,8 @@
 """
 :author: Thomas Delaet <thomas@delaet.org>
 """
+from __future__ import annotations
+
 import json
 
 from velbusaio.command_registry import register_command

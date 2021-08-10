@@ -1,9 +1,9 @@
 """
 :author: Thomas Delaet <thomas@delaet.org>
 """
-from velbusaio.messages.blind_status import BlindStatusMessage, BlindStatusNgMessage
+from __future__ import annotations
 
-# pylint: disable-msg=C0301
+from velbusaio.messages.blind_status import BlindStatusMessage, BlindStatusNgMessage
 from velbusaio.messages.bus_active import BusActiveMessage
 from velbusaio.messages.bus_error_counter_status import BusErrorCounterStatusMessage
 from velbusaio.messages.bus_error_counter_status_request import (
@@ -94,3 +94,5 @@ from velbusaio.messages.write_memory_block import WriteMemoryBlockMessage
 from velbusaio.messages.write_module_address_and_serial_number import (
     WriteModuleAddressAndSerialNumberMessage,
 )
+
+# pylint: disable-msg=C0301

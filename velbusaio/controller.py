@@ -1,12 +1,12 @@
 """
 Main interface for the velbusaio lib
 """
+from __future__ import annotations
 
 import asyncio
 import logging
 import pickle
 import ssl
-from typing import Union
 
 import serial
 import serial_asyncio
@@ -80,7 +80,7 @@ class Velbus:
             self._modules[sub_addr] = self._modules[addr]
         self._modules[addr].cleanupSubChannels()
 
-    def _load_module_from_cache(self, address) -> Union[None, str]:
+    def _load_module_from_cache(self, address) -> None | str:
         try:
             with open(f"{get_cache_dir()}/{address}.p", "rb") as fl:
                 return pickle.load(fl)
@@ -93,7 +93,7 @@ class Velbus:
         """
         return self._modules
 
-    def get_module(self, addr: str) -> Union[None, Module]:
+    def get_module(self, addr: str) -> None | Module:
         """
         Get a module on an address
         """
@@ -101,7 +101,7 @@ class Velbus:
             return self._modules[addr]
         return None
 
-    def get_channels(self, addr: str) -> Union[None, dict]:
+    def get_channels(self, addr: str) -> None | dict:
         """
         Get the channels for an address
         """
