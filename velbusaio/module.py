@@ -9,6 +9,8 @@ import pickle
 import struct
 import sys
 
+from velbus.messages.blind_status import BlindStatusMessage, BlindStatusNgMessage
+
 from velbusaio.channels import (
     Blind,
     Button,
@@ -300,6 +302,13 @@ class Module:
             await self._channels[message.channel].update(
                 {"state": message.cur_dimmer_state()}
             )
+        elif isinstance(message, BlindStatusNgMessage):
+            await self._channels[message.channel].update(
+                {"state": message.status, "position": message.position}
+            )
+        elif isinstance(message, BlindStatusMessage):
+            await self._channels[message.channel].update({"state": message.status})
+
         self._cache()
 
     def get_channels(self) -> list:
