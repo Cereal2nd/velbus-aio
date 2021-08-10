@@ -240,6 +240,7 @@ class Button(Channel):
         msg = cls(self._address)
         msg.leds = [self._num]
         await self._writer(msg)
+        await self.update({"led_state": state})
 
 
 class ButtonCounter(Button):
