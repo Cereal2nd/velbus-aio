@@ -151,7 +151,7 @@ class Blind(Channel):
     """
 
     _state = None
-    _position = None
+    _position = 0
 
     def get_categories(self) -> list:
         return ["cover"]
