@@ -73,6 +73,9 @@ class Channel:
     def is_counter_channel(self) -> bool:
         return False
 
+    def is_temperature(self) -> bool:
+        return False
+
     def get_name(self) -> str:
         """
         :return: the channel name
@@ -383,6 +386,9 @@ class Temperature(Channel):
 
     def get_state(self) -> int:
         return round(self._cur, 2)
+
+    def is_temperature(self) -> bool:
+        return True
 
 
 class SensorNumber(Channel):

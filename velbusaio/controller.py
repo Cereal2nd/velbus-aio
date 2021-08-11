@@ -12,6 +12,7 @@ import serial
 import serial_asyncio
 
 from velbusaio.const import LOAD_TIMEOUT
+from velbusaio.exceptions import VelbuConnectionFailed, VelbuConnectionTerminated
 from velbusaio.handler import PacketHandler
 from velbusaio.helpers import get_cache_dir
 from velbusaio.messages.module_type_request import ModuleTypeRequestMessage
@@ -128,20 +129,29 @@ class Velbus:
             else:
                 tmp = self._dsn.split(":")
                 ctx = None
-            self._reader, self._writer = await asyncio.open_connection(
-                tmp[0], tmp[1], ssl=ctx
-            )
+            try:
+                self._reader, self._writer = await asyncio.open_connection(
+                    tmp[0], tmp[1], ssl=ctx
+                )
+            except ConnectionRefusedError as err:
+                raise VelbuConnectionFailed() from err
         else:
             # serial port
-            self._reader, self._writer = await serial_asyncio.open_serial_connection(
-                url=self._dsn,
-                baudrate=38400,
-                bytesize=serial.EIGHTBITS,
-                parity=serial.PARITY_NONE,
-                stopbits=serial.STOPBITS_ONE,
-                xonxoff=0,
-                rtscts=1,
-            )
+            try:
+                (
+                    self._reader,
+                    self._writer,
+                ) = await serial_asyncio.open_serial_connection(
+                    url=self._dsn,
+                    baudrate=38400,
+                    bytesize=serial.EIGHTBITS,
+                    parity=serial.PARITY_NONE,
+                    stopbits=serial.STOPBITS_ONE,
+                    xonxoff=0,
+                    rtscts=1,
+                )
+            except FileNotFoundError as err:
+                raise VelbuConnectionFailed() from err
         if test_connect:
             return
         # create reader, parser and writer tasks
@@ -202,7 +212,10 @@ class Velbus:
             msg = await self._send_queue.get()
             self._log.debug(f"SENDING message: {msg}")
             # print(':'.join('{:02X}'.format(x) for x in msg.to_binary()))
-            self._writer.write(msg.to_binary())
+            try:
+                self._writer.write(msg.to_binary())
+            except Exception:
+                raise VelbuConnectionTerminated()
             await asyncio.sleep(0.11)
 
     async def _socket_read_task(self) -> None:
@@ -210,7 +223,10 @@ class Velbus:
         Task to read from a socket and push into a queue
         """
         while True:
-            data = await self._reader.read(10)
+            try:
+                data = await self._reader.read(10)
+            except Exception:
+                raise VelbuConnectionTerminated()
             self._parser.feed(data)
 
     async def _parser_task(self) -> None:
