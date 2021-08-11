@@ -86,7 +86,7 @@ class Channel:
         # if int(part) not in self._name_parts:
         #    return
         self._name_parts[int(part)] = name
-        if int(part) == 3:
+        if len(self._name_parts) == 3:
             self._generate_name()
 
     def _generate_name(self) -> None:
@@ -96,15 +96,20 @@ class Channel:
         name = self._name_parts[1] + self._name_parts[2] + self._name_parts[3]
         self._name = "".join(filter(lambda x: x in string.printable, name))
         self._is_loaded = True
-        self._name_parts = None
+        self._name_parts = {}
 
     def __getstate__(self):
         d = self.__dict__
-        return {k: d[k] for k in d if k != "_writer" and k != "_on_status_update"}
+        return {
+            k: d[k]
+            for k in d
+            if k != "_writer" and k != "_on_status_update" and k != "_name_parts"
+        }
 
     def __setstate__(self, state):
         self.__dict__.update(state)
         self._on_status_update = []
+        self._name_parts = {}
 
     def __repr__(self):
         items = []

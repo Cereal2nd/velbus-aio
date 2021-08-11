@@ -9,8 +9,6 @@ import pickle
 import struct
 import sys
 
-from velbus.messages.blind_status import BlindStatusMessage, BlindStatusNgMessage
-
 from velbusaio.channels import (
     Blind,
     Button,
@@ -27,6 +25,7 @@ from velbusaio.channels import (
 )
 from velbusaio.const import PRIORITY_LOW
 from velbusaio.helpers import get_cache_dir, handle_match, keys_exists
+from velbusaio.messages.blind_status import BlindStatusMessage, BlindStatusNgMessage
 from velbusaio.messages.channel_name_part1 import (
     ChannelNamePart1Message,
     ChannelNamePart1Message2,
