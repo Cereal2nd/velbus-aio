@@ -228,17 +228,21 @@ class Module:
             # self._cstatus = message.status_str
         elif isinstance(message, PushButtonStatusMessage):
             for channel in message.closed:
+                channel = self._translate_channel_name(channel)
                 await self._channels[channel].update({"closed": True})
             for channel in message.opened:
+                channel = self._translate_channel_name(channel)
                 await self._channels[channel].update({"closed": False})
         elif isinstance(message, ModuleStatusMessage):
             for channel in self._channels.keys():
+                channel = self._translate_channel_name(channel)
                 if channel in message.closed:
                     await self._channels[channel].update({"closed": True})
                 elif isinstance(self._channels[channel], (Button, ButtonCounter)):
                     await self._channels[channel].update({"closed": False})
         elif isinstance(message, ModuleStatusMessage2):
             for channel in self._channels.keys():
+                channel = self._translate_channel_name(channel)
                 if channel in message.closed:
                     await self._channels[channel].update({"closed": True})
                 elif isinstance(self._channels[channel], (Button, ButtonCounter)):
