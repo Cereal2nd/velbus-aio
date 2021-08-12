@@ -12,7 +12,7 @@ import serial
 import serial_asyncio
 
 from velbusaio.const import LOAD_TIMEOUT
-from velbusaio.exceptions import VelbuConnectionFailed, VelbuConnectionTerminated
+from velbusaio.exceptions import VelbusConnectionFailed, VelbusConnectionTerminated
 from velbusaio.handler import PacketHandler
 from velbusaio.helpers import get_cache_dir
 from velbusaio.messages.module_type_request import ModuleTypeRequestMessage
@@ -134,7 +134,7 @@ class Velbus:
                     tmp[0], tmp[1], ssl=ctx
                 )
             except ConnectionRefusedError as err:
-                raise VelbuConnectionFailed() from err
+                raise VelbusConnectionFailed() from err
         else:
             # serial port
             try:
@@ -151,7 +151,7 @@ class Velbus:
                     rtscts=1,
                 )
             except FileNotFoundError as err:
-                raise VelbuConnectionFailed() from err
+                raise VelbusConnectionFailed() from err
         if test_connect:
             return
         # create reader, parser and writer tasks
@@ -215,7 +215,7 @@ class Velbus:
             try:
                 self._writer.write(msg.to_binary())
             except Exception:
-                raise VelbuConnectionTerminated()
+                raise VelbusConnectionTerminated()
             await asyncio.sleep(0.11)
 
     async def _socket_read_task(self) -> None:
@@ -226,7 +226,7 @@ class Velbus:
             try:
                 data = await self._reader.read(10)
             except Exception:
-                raise VelbuConnectionTerminated()
+                raise VelbusConnectionTerminated()
             self._parser.feed(data)
 
     async def _parser_task(self) -> None:

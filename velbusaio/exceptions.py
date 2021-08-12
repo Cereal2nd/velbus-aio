@@ -12,11 +12,11 @@ class VelbusException(Exception):
         return repr(self.value)
 
 
-class VelbuConnectionFailed(VelbusException):
+class VelbusConnectionFailed(VelbusException):
     def __init__(self):
         super().__init__("Connection setup failed")
 
 
-class VelbuConnectionTerminated(VelbusException):
+class VelbusConnectionTerminated(VelbusException):
     def __init__(self):
         super().__init__("Connection terminated")
