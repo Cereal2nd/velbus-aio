@@ -249,27 +249,27 @@ class Module:
                     }
                 )
         elif isinstance(message, PushButtonStatusMessage):
-            for channel in message.closed:
-                channel = self._translate_channel_name(channel)
-                await self._channels[channel].update({"closed": True})
-            for channel in message.opened:
-                channel = self._translate_channel_name(channel)
-                await self._channels[channel].update({"closed": False})
-        elif isinstance(message, ModuleStatusMessage):
-            for channel in self._channels.keys():
-                channel = self._translate_channel_name(channel)
-                if channel in message.closed:
+            _update_buttons = False
+            for channel_types in self._data["Channels"]:
+                if keys_exists(self._data, "Channels", channel_types, "Type"):
+                    if self._data["Channels"][channel_types]["Type"] == "Button":
+                        _update_buttons = True
+                        break
+            if _update_buttons:
+                for channel_id in range(1, 9):
+                    channel = self._translate_channel_name(channel_id + _channel_offset)
+                    if channel_id in message.closed:
+                        await self._channels[channel].update({"closed": True})
+                    if channel_id in message.opened:
+                        await self._channels[channel].update({"closed": False})
+        elif isinstance(message, (ModuleStatusMessage, ModuleStatusMessage2)):
+            for channel_id in range(1, 9):
+                channel = self._translate_channel_name(channel_id + _channel_offset)
+                if channel_id in message.closed:
                     await self._channels[channel].update({"closed": True})
                 elif isinstance(self._channels[channel], (Button, ButtonCounter)):
                     await self._channels[channel].update({"closed": False})
-        elif isinstance(message, ModuleStatusMessage2):
-            for channel in self._channels.keys():
-                channel = self._translate_channel_name(channel)
-                if channel in message.closed:
-                    await self._channels[channel].update({"closed": True})
-                elif isinstance(self._channels[channel], (Button, ButtonCounter)):
-                    await self._channels[channel].update({"closed": False})
-                if channel in message.enabled:
+                if channel_id in message.enabled:
                     await self._channels[channel].update({"enabled": True})
                 elif isinstance(self._channels[channel], (Button, ButtonCounter)):
                     await self._channels[channel].update({"enabled": False})
