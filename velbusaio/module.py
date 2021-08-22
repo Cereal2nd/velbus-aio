@@ -254,7 +254,8 @@ class Module:
         elif isinstance(message, CounterStatusMessage) and isinstance(
             self._channels[message.channel], ButtonCounter
         ):
-            await self._channels[message.channel].update(
+            channel = self._translate_channel_name(message.channel)
+            await self._channels[channel].update(
                 {
                     "pulses": message.pulses,
                     "counter": message.counter,
@@ -265,6 +266,7 @@ class Module:
             await self._channels[99].update({"cur": message.light_value})
         elif isinstance(message, UpdateLedStatusMessage):
             for channel in self._channels.keys():
+                channel = self._translate_channel_name(message.channel)
                 if channel in message.led_slow_blinking:
                     await self._channels[channel].update({"led_state": "slow"})
                 if channel in message.led_fast_blinking:
@@ -280,37 +282,46 @@ class Module:
         elif isinstance(message, SetLedMessage):
             for channel in self._channels.keys():
                 if channel in message.leds:
+                    channel = self._translate_channel_name(channel)
                     await self._channels[channel].update({"led_state": "on"})
         elif isinstance(message, ClearLedMessage):
             for channel in self._channels.keys():
                 if channel in message.leds:
+                    channel = self._translate_channel_name(channel)
                     await self._channels[channel].update({"led_state": "off"})
         elif isinstance(message, SlowBlinkingLedMessage):
             for channel in self._channels.keys():
                 if channel in message.leds:
+                    channel = self._translate_channel_name(channel)
                     await self._channels[channel].update({"led_state": "slow"})
         elif isinstance(message, FastBlinkingLedMessage):
             for channel in self._channels.keys():
                 if channel in message.leds:
+                    channel = self._translate_channel_name(channel)
                     await self._channels[channel].update({"led_state": "fast"})
         elif isinstance(message, DimmerChannelStatusMessage):
-            await self._channels[message.channel].update(
+            channel = self._translate_channel_name(message.channel)
+            await self._channels[channel].update(
                 {"state": message.cur_dimmer_state()}
             )
         elif isinstance(message, SliderStatusMessage):
-            await self._channels[message.channel].update(
+            channel = self._translate_channel_name(message.channel)
+            await self._channels[channel].update(
                 {"state": message.cur_slider_state()}
             )
         elif isinstance(message, DimmerStatusMessage):
-            await self._channels[message.channel].update(
+            channel = self._translate_channel_name(message.channel)
+            await self._channels[channel].update(
                 {"state": message.cur_dimmer_state()}
             )
         elif isinstance(message, BlindStatusNgMessage):
-            await self._channels[message.channel].update(
+            channel = self._translate_channel_name(message.channel)
+            await self._channels[channel].update(
                 {"state": message.status, "position": message.position}
             )
         elif isinstance(message, BlindStatusMessage):
-            await self._channels[message.channel].update({"state": message.status})
+            channel = self._translate_channel_name(message.channel)
+            await self._channels[channel].update({"state": message.status})
 
         self._cache()
 
