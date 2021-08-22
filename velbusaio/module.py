@@ -44,6 +44,7 @@ from velbusaio.messages.channel_name_part3 import (
 from velbusaio.messages.channel_name_request import ChannelNameRequestMessage
 from velbusaio.messages.clear_led import ClearLedMessage
 from velbusaio.messages.counter_status import CounterStatusMessage
+from velbusaio.messages.counter_status_request import CounterStatusRequestMessage
 from velbusaio.messages.dimmer_channel_status import DimmerChannelStatusMessage
 from velbusaio.messages.dimmer_status import DimmerStatusMessage
 from velbusaio.messages.fast_blinking_led import FastBlinkingLedMessage
@@ -467,6 +468,12 @@ class Module:
         msg = ModuleStatusRequestMessage(self._address)
         msg.channels = list(range(1, 9))
         await self._writer(msg)
+        # request counter status
+        for chan, chan_data in self._data["Channels"].items():
+            if chan_data["Type"] == "ButtonCounter":
+                msg = CounterStatusRequestMessage(self._address)
+                msg.channels.append(int(chan))
+                await self._writer(msg)
 
     async def _request_channel_name(self) -> None:
         # request the module channel names
