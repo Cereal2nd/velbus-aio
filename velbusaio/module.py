@@ -349,7 +349,7 @@ class Module:
         """
         return self._channels
 
-    async def load(self) -> None:
+    async def load(self, from_cache=False) -> None:
         """
         Retrieve names of channels
         """
@@ -358,6 +358,8 @@ class Module:
         # as the submodule address maps to the main module
         # this method can be called multiple times
         if self._is_loading or self.loaded:
+            if from_cache:
+                await self._request_module_status()
             return
         self._log.info("Load Module")
         # start the loading

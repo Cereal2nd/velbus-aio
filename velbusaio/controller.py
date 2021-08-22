@@ -55,9 +55,11 @@ class Velbus:
         Add a founc module to the module cache
         """
         mod = self._load_module_from_cache(addr)
-        if mod:
+        if mod != None:
             self._log.info(f"Load module from CACHE: {addr}")
             self._modules[addr] = mod
+            self._modules[addr].initialize(self.send)
+            await self._modules[addr].load(True)
         else:
             self._log.info(f"Load NEW module: {typ} @ {addr}")
             self._modules[addr] = Module(
@@ -69,8 +71,8 @@ class Velbus:
                 build_week=build_week,
                 memorymap=memorymap,
             )
-        self._modules[addr].initialize(self.send)
-        await self._modules[addr].load()
+            self._modules[addr].initialize(self.send)
+            await self._modules[addr].load()
 
     async def add_submodules(self, addr, subList) -> None:
         for sub_num, sub_addr in subList.items():
