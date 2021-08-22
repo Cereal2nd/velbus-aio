@@ -128,10 +128,27 @@ class Channel:
         """
         Set the attributes of this channel
         """
-        for key, val in data.items():
-            setattr(self, f"_{key}", val)
-        for m in self._on_status_update:
-            await m()
+        for key, new_val in data.items():
+            cur_val = getattr(self, f"_{key}", None)
+            if cur_val is None or cur_val != new_val:
+                self._log.info(
+                    "Channels - update | %s - %s : %s, %s => %s",
+                    self.__class__.__name__,
+                    self.get_name(),
+                    key,
+                    str(getattr(self, f"_{key}")),
+                    str(new_val),
+                )
+                setattr(self, f"_{key}", new_val)
+                for m in self._on_status_update:
+                    self._log.info(
+                        "Channels - update | %s - %s : %s, callback => %s",
+                        self.__class__.__name__,
+                        self.get_name(),
+                        key,
+                        m.__name__,
+                    )
+                    await m()
 
     def get_categories(self) -> list:
         """
