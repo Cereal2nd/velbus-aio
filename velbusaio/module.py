@@ -174,10 +174,21 @@ class Module:
             self.build_week,
         )
 
+    def _calc_channel_offset(self, address) -> int:
+        _channel_offset = 0
+        if self._address != address:
+            for _sub_addr_key, _sub_addr_val in self._sub_address.items():
+                if _sub_addr_val == address:
+                    _channel_offset = 8 * _sub_addr_key
+                    break
+        return _channel_offset
+
     async def on_message(self, message) -> None:
         """
         Process received message
         """
+        _channel_offset = self._calc_channel_offset(message.address)
+
         if isinstance(
             message,
             (
@@ -278,39 +289,39 @@ class Module:
                 {"cur": message.light_value}
             )
         elif isinstance(message, UpdateLedStatusMessage):
-            for channel in self._channels.keys():
-                channel = self._translate_channel_name(message.channel)
-                if channel in message.led_slow_blinking:
+            for channel_id in range(1, 9):
+                channel = self._translate_channel_name(channel_id + _channel_offset)
+                if channel_id in message.led_slow_blinking:
                     await self._channels[channel].update({"led_state": "slow"})
-                if channel in message.led_fast_blinking:
+                if channel_id in message.led_fast_blinking:
                     await self._channels[channel].update({"led_state": "fast"})
-                if channel in message.led_on:
+                if channel_id in message.led_on:
                     await self._channels[channel].update({"led_state": "on"})
                 if (
-                    channel not in message.led_slow_blinking
-                    and channel not in message.led_fast_blinking
-                    and channel not in message.led_on
+                    channel_id not in message.led_slow_blinking
+                    and channel_id not in message.led_fast_blinking
+                    and channel_id not in message.led_on
                 ):
                     await self._channels[channel].update({"led_state": "off"})
         elif isinstance(message, SetLedMessage):
-            for channel in self._channels.keys():
-                if channel in message.leds:
-                    channel = self._translate_channel_name(channel)
+            for channel_id in range(1, 9):
+                channel = self._translate_channel_name(channel_id + _channel_offset)
+                if channel_id in message.leds:
                     await self._channels[channel].update({"led_state": "on"})
         elif isinstance(message, ClearLedMessage):
-            for channel in self._channels.keys():
-                if channel in message.leds:
-                    channel = self._translate_channel_name(channel)
+            for channel_id in range(1, 9):
+                channel = self._translate_channel_name(channel_id + _channel_offset)
+                if channel_id in message.leds:
                     await self._channels[channel].update({"led_state": "off"})
         elif isinstance(message, SlowBlinkingLedMessage):
-            for channel in self._channels.keys():
-                if channel in message.leds:
-                    channel = self._translate_channel_name(channel)
+            for channel_id in range(1, 9):
+                channel = self._translate_channel_name(channel_id + _channel_offset)
+                if channel_id in message.leds:
                     await self._channels[channel].update({"led_state": "slow"})
         elif isinstance(message, FastBlinkingLedMessage):
-            for channel in self._channels.keys():
-                if channel in message.leds:
-                    channel = self._translate_channel_name(channel)
+            for channel_id in range(1, 9):
+                channel = self._translate_channel_name(channel_id + _channel_offset)
+                if channel_id in message.leds:
                     await self._channels[channel].update({"led_state": "fast"})
         elif isinstance(message, DimmerChannelStatusMessage):
             channel = self._translate_channel_name(message.channel)
