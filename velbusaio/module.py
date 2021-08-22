@@ -301,19 +301,13 @@ class Module:
                     await self._channels[channel].update({"led_state": "fast"})
         elif isinstance(message, DimmerChannelStatusMessage):
             channel = self._translate_channel_name(message.channel)
-            await self._channels[channel].update(
-                {"state": message.cur_dimmer_state()}
-            )
+            await self._channels[channel].update({"state": message.cur_dimmer_state()})
         elif isinstance(message, SliderStatusMessage):
             channel = self._translate_channel_name(message.channel)
-            await self._channels[channel].update(
-                {"state": message.cur_slider_state()}
-            )
+            await self._channels[channel].update({"state": message.cur_slider_state()})
         elif isinstance(message, DimmerStatusMessage):
             channel = self._translate_channel_name(message.channel)
-            await self._channels[channel].update(
-                {"state": message.cur_dimmer_state()}
-            )
+            await self._channels[channel].update({"state": message.cur_dimmer_state()})
         elif isinstance(message, BlindStatusNgMessage):
             channel = self._translate_channel_name(message.channel)
             await self._channels[channel].update(
