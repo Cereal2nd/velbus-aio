@@ -481,7 +481,21 @@ class EdgeLit(Channel):
 class Memo(Channel):
     """
     A Memo text
+    HASS OK
     """
+
+    async def set(self, txt: str) -> None:
+        cls = commandRegistry.get_command(0xAC, self._module.get_type())
+        msg = cls(self._address)
+        msgcntr = 0
+        for char in txt:
+            msg.memo_text += char
+            if len(msg.memo_text) >= 5:
+                msgcntr += 5
+                await self._writer(msg)
+                msg = cls(self._address)
+                msg.start = msgcntr
+        await self._writer(msg)
 
 
 # _mode = None

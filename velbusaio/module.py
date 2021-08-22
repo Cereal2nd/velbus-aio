@@ -23,7 +23,7 @@ from velbusaio.channels import (
     Temperature,
     ThermostatChannel,
 )
-from velbusaio.const import PRIORITY_LOW
+from velbusaio.const import CHANNEL_LIGHT_VALUE, CHANNEL_MEMO_TEXT, PRIORITY_LOW
 from velbusaio.helpers import get_cache_dir, handle_match, keys_exists
 from velbusaio.messages.blind_status import BlindStatusMessage, BlindStatusNgMessage
 from velbusaio.messages.channel_name_part1 import (
@@ -263,7 +263,9 @@ class Module:
                 }
             )
         elif isinstance(message, ModuleStatusPirMessage):
-            await self._channels[99].update({"cur": message.light_value})
+            await self._channels[CHANNEL_LIGHT_VALUE].update(
+                {"cur": message.light_value}
+            )
         elif isinstance(message, UpdateLedStatusMessage):
             for channel in self._channels.keys():
                 channel = self._translate_channel_name(message.channel)
@@ -366,6 +368,11 @@ class Module:
         if not len(self._channels):
             return 0
         return max(self._channels.keys())
+
+    async def set_memo_text(self, txt: str) -> None:
+        if CHANNEL_MEMO_TEXT not in self._channels.keys():
+            return
+        await self._channels[CHANNEL_MEMO_TEXT].set(txt)
 
     async def _process_memory_data_message(self, message) -> None:
         addr = "{high:02X}{low:02X}".format(
