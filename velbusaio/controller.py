@@ -55,7 +55,7 @@ class Velbus:
         Add a founc module to the module cache
         """
         mod = self._load_module_from_cache(addr)
-        if mod != None:
+        if mod is not None:
             self._log.info(f"Load module from CACHE: {addr}")
             self._modules[addr] = mod
             self._modules[addr].initialize(self.send)
