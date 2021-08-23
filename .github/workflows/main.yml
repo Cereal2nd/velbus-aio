@@ -32,7 +32,7 @@ jobs:
       - name: Install pytest
         run: pip install pytest
       - name: Run testcases
-        runt: pytest
+        run: pytest
       - name: Install package
         run: pip install .
       - name: Build binary wheel and a source tarball
