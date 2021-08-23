@@ -31,10 +31,10 @@ jobs:
         run: pip install -r requirements.txt
       - name: Install pytest
         run: pip install pytest
-      - name: Run testcases
-        run: pytest
       - name: Install package
         run: pip install .
+      - name: Run testcases
+        run: pytest
       - name: Build binary wheel and a source tarball
         run: python setup.py sdist
       - name: Install pypa/build
