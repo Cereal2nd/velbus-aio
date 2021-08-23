@@ -1,9 +1,4 @@
-import sys
-
 from setuptools import setup
-
-if sys.version_info < (3, 7):
-    sys.exit("Sorry, Python < 3.7 is not supported")
 
 setup(
     name="velbus-aio",
@@ -16,4 +11,6 @@ setup(
     packages=["velbusaio", "velbusaio.messages"],
     include_package_data=True,
     platforms="any",
+    python_requires="~=3.7",
+    test_suite="tests",
 )
