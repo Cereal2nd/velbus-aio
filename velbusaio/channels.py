@@ -212,7 +212,9 @@ class Button(Channel):
     _led_state = None
 
     def get_categories(self) -> list:
-        return ["binary_sensor", "led"]
+        if self._enabled:
+            return ["binary_sensor", "led"]
+        return []
 
     def is_closed(self) -> bool:
         """
@@ -390,6 +392,12 @@ class Temperature(Channel):
     def is_temperature(self) -> bool:
         return True
 
+    def get_max(self) -> int:
+        return round(self._max, 2)
+
+    def get_min(self) -> int:
+        return round(self._min, 2)
+
 
 class SensorNumber(Channel):
     """
@@ -440,15 +448,30 @@ class Relay(Channel):
     """
 
     _on = None
+    _enabled = True
+    _inhibit = False
+    _forced_on = False
+    _disabled = False
 
     def get_categories(self) -> list:
-        return ["switch"]
+        if self._enabled:
+            return ["switch"]
+        return []
 
     def is_on(self) -> bool:
         """
         Return if this relay is on
         """
         return self._on
+
+    def is_inhibit(self) -> bool:
+        return self._inhibit
+
+    def is_forced_on(self) -> bool:
+        return self._forced_on
+
+    def is_disabled(self) -> bool:
+        return self._disabled
 
     async def turn_on(self) -> None:
         """

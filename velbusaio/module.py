@@ -208,7 +208,14 @@ class Module:
         elif isinstance(message, MemoryDataMessage):
             await self._process_memory_data_message(message)
         elif isinstance(message, RelayStatusMessage):
-            await self._channels[message.channel].update({"on": message.is_on()})
+            await self._channels[message.channel].update(
+                {
+                    "on": message.is_on(),
+                    "inhibit": message.is_inhibited(),
+                    "forced_on": message.is_forced_on(),
+                    "disabled": message.is_disabled(),
+                }
+            )
         elif isinstance(message, SensorTemperatureMessage):
             chan = self._translate_channel_name(self._data["TemperatureChannel"])
             await self._channels[chan].update(
@@ -222,10 +229,14 @@ class Module:
             # update the current temp
             chan = self._translate_channel_name(self._data["TemperatureChannel"])
             if chan in self._channels:
-                await self._channels[chan].update({"cur": message.current_temp})
-            # self._target = message.target_temp
-            # self._cmode = message.mode_str
-            # self._cstatus = message.status_str
+                await self._channels[chan].update(
+                    {
+                        "cur": message.current_temp,
+                        "target": message.target_temp,
+                        "cmode": message.mode_str,
+                        "cstatus": message.status_str,
+                    }
+                )
         elif isinstance(message, PushButtonStatusMessage):
             for channel in message.closed:
                 channel = self._translate_channel_name(channel)
