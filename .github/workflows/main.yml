@@ -29,6 +29,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install requirements
         run: pip install -r requirements.txt
+      - name: Install pytest
+        run: pip install pytest
+      - name: Run testcases
+        runt: pytest
       - name: Install package
         run: pip install .
       - name: Build binary wheel and a source tarball

@@ -15,7 +15,8 @@ class CommandRegistry:
     def register_command(
         self, command_value: int, command_class: type, module_name: str = 0
     ) -> None:
-        assert command_value >= 0 and command_value <= 255
+        if command_value < 0 or command_value > 255:
+            raise ValueError("Command_value should be >=0 and <=255")
         assert module_name in self._module_directory.values() or module_name == 0
         if module_name:
             module_type = next(
