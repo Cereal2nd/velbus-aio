@@ -52,7 +52,7 @@ class Velbus:
         build_week=None,
     ) -> None:
         """
-        Add a founc module to the module cache
+        Add a found module to the module cache
         """
         mod = self._load_module_from_cache(addr)
         if mod is not None:

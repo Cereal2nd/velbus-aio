@@ -281,7 +281,7 @@ class ButtonCounter(Button):
         val = 0
         # if we don't know the delay
         # or we don't know the unit
-        # or the daly is the max value
+        # or the delay is the max value
         #   we always return 0
         if not self._delay or not self._Unit or self._delay == 0xFFFF:
             return round(0, 2)
@@ -315,7 +315,7 @@ class Sensor(Button):
     """
     A Sensor channel
     HASS OK
-    This is a bit wierd, but this happens because of code sharing with openhab
+    This is a bit weird, but this happens because of code sharing with openhab
     A sensor in this case is actually a Button
     """
 
