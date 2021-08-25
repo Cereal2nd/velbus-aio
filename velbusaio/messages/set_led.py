@@ -3,6 +3,8 @@
 """
 from __future__ import annotations
 
+import json
+
 from velbusaio.command_registry import register_command
 from velbusaio.message import Message
 
@@ -29,6 +31,14 @@ class SetLedMessage(Message):
         self.needs_data(data, 1)
         self.set_attributes(priority, address, rtr)
         self.leds = self.byte_to_channels(data[0])
+
+    def to_json(self):
+        """
+        :return: str
+        """
+        json_dict = self.to_json_basic()
+        json_dict["leds_on"] = self.leds
+        return json.dumps(json_dict)
 
     def data_to_binary(self):
         """
