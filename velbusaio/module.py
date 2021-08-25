@@ -175,7 +175,7 @@ class Module:
             self.build_week,
         )
 
-    def _calc_channel_offset(self, address) -> int:
+    def calc_channel_offset(self, address) -> int:
         _channel_offset = 0
         if self._address != address:
             for _sub_addr_key, _sub_addr_val in self._sub_address.items():
@@ -188,7 +188,7 @@ class Module:
         """
         Process received message
         """
-        _channel_offset = self._calc_channel_offset(message.address)
+        _channel_offset = self.calc_channel_offset(message.address)
 
         if isinstance(
             message,

@@ -50,8 +50,16 @@ class Channel:
     def get_module_serial(self) -> str:
         return self._module.get_serial()
 
-    def get_module_address(self) -> int:
-        return self._module._address
+    def get_module_address(self, chan_type="") -> int:
+        """Return (sub)module address for channel"""
+        _mod_address = self._address
+        if chan_type == "Button" and self._num > 8:
+            _mod_address = self._module.get_addresses()[1]
+            if self._num > 16:
+                _mod_address = self._module.get_addresses()[2]
+                if self._num > 24:
+                    _mod_address = self._module.get_addresses()[3]
+        return _mod_address
 
     def get_module_sw_version(self) -> str:
         return self._module.get_sw_version()
@@ -248,9 +256,12 @@ class Button(Channel):
             code = 0xF5
         else:
             return
+
+        _mod_add = self.get_module_address("Button")
+        _chn_num = self._num - self._module.calc_channel_offset(_mod_add)
         cls = commandRegistry.get_command(code, self._module.get_type())
-        msg = cls(self._address)
-        msg.leds = [self._num]
+        msg = cls(_mod_add)
+        msg.leds = [_chn_num]
         await self._writer(msg)
         await self.update({"led_state": state})
 
