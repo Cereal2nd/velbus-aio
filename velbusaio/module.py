@@ -222,7 +222,7 @@ class Module:
         elif isinstance(message, RelayStatusMessage):
             await self._channels[message.channel].update(
                 {
-                    "on": message.is_on(),
+                    "on": message.channel_is_on(),
                     "inhibit": message.is_inhibited(),
                     "forced_on": message.is_forced_on(),
                     "disabled": message.is_disabled(),
