@@ -412,9 +412,13 @@ class Temperature(Channel):
         return True
 
     def get_max(self) -> int:
+        if self._max is None:
+            return None
         return round(self._max, 2)
 
     def get_min(self) -> int:
+        if self._min is None:
+            return None
         return round(self._min, 2)
 
 
