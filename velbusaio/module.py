@@ -464,16 +464,19 @@ class Module:
         return True
 
     async def _request_module_status(self) -> None:
-        # request the module status (if available for this module
-        msg = ModuleStatusRequestMessage(self._address)
-        msg.channels = list(range(1, 9))
-        await self._writer(msg)
-        # request counter status
+        """Request current state of channels."""
+        mod_stat_req_msg = ModuleStatusRequestMessage(self._address)
+        counter_msg = None
         for chan, chan_data in self._data["Channels"].items():
+            if int(chan) < 9 and chan_data["Type"] in ("Blind", "Dimmer", "Relay"):
+                mod_stat_req_msg.channels.append(int(chan))
             if chan_data["Type"] == "ButtonCounter":
-                msg = CounterStatusRequestMessage(self._address)
-                msg.channels.append(int(chan))
-                await self._writer(msg)
+                if counter_msg is None:
+                    counter_msg = CounterStatusRequestMessage(self._address)
+                counter_msg.channels.append(int(chan))
+        await self._writer(mod_stat_req_msg)
+        if counter_msg is not None:
+            await self._writer(counter_msg)
 
     async def _request_channel_name(self) -> None:
         # request the module channel names
