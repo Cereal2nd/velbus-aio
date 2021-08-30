@@ -30,7 +30,7 @@ class Velbus:
 
     def __init__(self, dsn) -> None:
         self._log = logging.getLogger("velbus")
-        self._log.setLevel(logging.DEBUG)
+        self._log.setLevel(logging.WARNING)
         self._dsn = dsn
         self._parser = VelbusParser()
         self._handler = PacketHandler(self.send, self)

@@ -25,7 +25,7 @@ class PacketHandler:
 
     def __init__(self, writer, velbus) -> None:
         self._log = logging.getLogger("velbus-packet")
-        self._log.setLevel(logging.DEBUG)
+        self._log.setLevel(logging.WARNING)
         self._writer = writer
         self._velbus = velbus
         self._scan_complete = False

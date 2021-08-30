@@ -99,7 +99,7 @@ class Module:
 
     def initialize(self, writer: type) -> None:
         self._log = logging.getLogger("velbus-module")
-        self._log.setLevel(logging.DEBUG)
+        self._log.setLevel(logging.WARNING)
         self._writer = writer
         for chan in self._channels.values():
             chan._writer = writer
