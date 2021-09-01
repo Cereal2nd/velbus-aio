@@ -17,6 +17,7 @@ class CounterStatusRequestMessage(Message):
 
     def __init__(self, address=None):
         Message.__init__(self)
+        self.channels = []
         self.wait_after_send = 500
         self.set_defaults(address)
 
@@ -26,14 +27,14 @@ class CounterStatusRequestMessage(Message):
         """
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
-        self.needs_data(data, 1)
+        self.needs_data(data, 2)
         self.set_attributes(priority, address, rtr)
 
     def data_to_binary(self):
         """
         :return: bytes
         """
-        return bytes([COMMAND_CODE, 0x0F, 0x00])
+        return bytes([COMMAND_CODE, self.channels_to_byte(self.channels), 0x00])
 
 
 register_command(COMMAND_CODE, CounterStatusRequestMessage, "VMB7IN")

@@ -50,8 +50,16 @@ class Channel:
     def get_module_serial(self) -> str:
         return self._module.get_serial()
 
-    def get_module_address(self) -> int:
-        return self._module._address
+    def get_module_address(self, chan_type="") -> int:
+        """Return (sub)module address for channel"""
+        _mod_address = self._address
+        if chan_type == "Button" and self._num > 8:
+            _mod_address = self._module.get_addresses()[1]
+            if self._num > 16:
+                _mod_address = self._module.get_addresses()[2]
+                if self._num > 24:
+                    _mod_address = self._module.get_addresses()[3]
+        return _mod_address
 
     def get_module_sw_version(self) -> str:
         return self._module.get_sw_version()
@@ -128,10 +136,12 @@ class Channel:
         """
         Set the attributes of this channel
         """
-        for key, val in data.items():
-            setattr(self, f"_{key}", val)
-        for m in self._on_status_update:
-            await m()
+        for key, new_val in data.items():
+            cur_val = getattr(self, f"_{key}", None)
+            if cur_val is None or cur_val != new_val:
+                setattr(self, f"_{key}", new_val)
+                for m in self._on_status_update:
+                    await m()
 
     def get_categories(self) -> list:
         """
@@ -246,9 +256,12 @@ class Button(Channel):
             code = 0xF5
         else:
             return
+
+        _mod_add = self.get_module_address("Button")
+        _chn_num = self._num - self._module.calc_channel_offset(_mod_add)
         cls = commandRegistry.get_command(code, self._module.get_type())
-        msg = cls(self._address)
-        msg.leds = [self._num]
+        msg = cls(_mod_add)
+        msg.leds = [_chn_num]
         await self._writer(msg)
         await self.update({"led_state": state})
 
@@ -279,7 +292,7 @@ class ButtonCounter(Button):
         val = 0
         # if we don't know the delay
         # or we don't know the unit
-        # or the daly is the max value
+        # or the delay is the max value
         #   we always return 0
         if not self._delay or not self._Unit or self._delay == 0xFFFF:
             return round(0, 2)
@@ -294,20 +307,26 @@ class ButtonCounter(Button):
         return round(val, 2)
 
     def get_unit(self) -> str:
-        return "W"
+        if self._Unit in (
+            VOLUME_LITERS_HOUR,
+            VOLUME_CUBIC_METER_HOUR,
+            ENERGY_KILO_WATT_HOUR,
+        ):
+            return self._Unit
+        return None
 
     def get_counter_state(self) -> int:
         return round((self._counter / self._pulses), 2)
 
     def get_counter_unit(self) -> str:
-        return ENERGY_KILO_WATT_HOUR
+        return self._Unit
 
 
 class Sensor(Button):
     """
     A Sensor channel
     HASS OK
-    This is a bit wierd, but this happens because of code sharing with openhab
+    This is a bit weird, but this happens because of code sharing with openhab
     A sensor in this case is actually a Button
     """
 
@@ -393,9 +412,13 @@ class Temperature(Channel):
         return True
 
     def get_max(self) -> int:
+        if self._max is None:
+            return None
         return round(self._max, 2)
 
     def get_min(self) -> int:
+        if self._min is None:
+            return None
         return round(self._min, 2)
 
 

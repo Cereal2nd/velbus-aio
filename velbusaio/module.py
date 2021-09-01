@@ -44,6 +44,7 @@ from velbusaio.messages.channel_name_part3 import (
 from velbusaio.messages.channel_name_request import ChannelNameRequestMessage
 from velbusaio.messages.clear_led import ClearLedMessage
 from velbusaio.messages.counter_status import CounterStatusMessage
+from velbusaio.messages.counter_status_request import CounterStatusRequestMessage
 from velbusaio.messages.dimmer_channel_status import DimmerChannelStatusMessage
 from velbusaio.messages.dimmer_status import DimmerStatusMessage
 from velbusaio.messages.fast_blinking_led import FastBlinkingLedMessage
@@ -98,7 +99,7 @@ class Module:
 
     def initialize(self, writer: type) -> None:
         self._log = logging.getLogger("velbus-module")
-        self._log.setLevel(logging.DEBUG)
+        self._log.setLevel(logging.WARNING)
         self._writer = writer
         for chan in self._channels.values():
             chan._writer = writer
@@ -174,10 +175,21 @@ class Module:
             self.build_week,
         )
 
+    def calc_channel_offset(self, address) -> int:
+        _channel_offset = 0
+        if self._address != address:
+            for _sub_addr_key, _sub_addr_val in self._sub_address.items():
+                if _sub_addr_val == address:
+                    _channel_offset = 8 * _sub_addr_key
+                    break
+        return _channel_offset
+
     async def on_message(self, message) -> None:
         """
         Process received message
         """
+        _channel_offset = self.calc_channel_offset(message.address)
+
         if isinstance(
             message,
             (
@@ -210,7 +222,7 @@ class Module:
         elif isinstance(message, RelayStatusMessage):
             await self._channels[message.channel].update(
                 {
-                    "on": message.is_on(),
+                    "on": message.channel_is_on(),
                     "inhibit": message.is_inhibited(),
                     "forced_on": message.is_forced_on(),
                     "disabled": message.is_disabled(),
@@ -238,27 +250,27 @@ class Module:
                     }
                 )
         elif isinstance(message, PushButtonStatusMessage):
-            for channel in message.closed:
-                channel = self._translate_channel_name(channel)
-                await self._channels[channel].update({"closed": True})
-            for channel in message.opened:
-                channel = self._translate_channel_name(channel)
-                await self._channels[channel].update({"closed": False})
-        elif isinstance(message, ModuleStatusMessage):
-            for channel in self._channels.keys():
-                channel = self._translate_channel_name(channel)
-                if channel in message.closed:
+            _update_buttons = False
+            for channel_types in self._data["Channels"]:
+                if keys_exists(self._data, "Channels", channel_types, "Type"):
+                    if self._data["Channels"][channel_types]["Type"] == "Button":
+                        _update_buttons = True
+                        break
+            if _update_buttons:
+                for channel_id in range(1, 9):
+                    channel = self._translate_channel_name(channel_id + _channel_offset)
+                    if channel_id in message.closed:
+                        await self._channels[channel].update({"closed": True})
+                    if channel_id in message.opened:
+                        await self._channels[channel].update({"closed": False})
+        elif isinstance(message, (ModuleStatusMessage, ModuleStatusMessage2)):
+            for channel_id in range(1, 9):
+                channel = self._translate_channel_name(channel_id + _channel_offset)
+                if channel_id in message.closed:
                     await self._channels[channel].update({"closed": True})
                 elif isinstance(self._channels[channel], (Button, ButtonCounter)):
                     await self._channels[channel].update({"closed": False})
-        elif isinstance(message, ModuleStatusMessage2):
-            for channel in self._channels.keys():
-                channel = self._translate_channel_name(channel)
-                if channel in message.closed:
-                    await self._channels[channel].update({"closed": True})
-                elif isinstance(self._channels[channel], (Button, ButtonCounter)):
-                    await self._channels[channel].update({"closed": False})
-                if channel in message.enabled:
+                if channel_id in message.enabled:
                     await self._channels[channel].update({"enabled": True})
                 elif isinstance(self._channels[channel], (Button, ButtonCounter)):
                     await self._channels[channel].update({"enabled": False})
@@ -278,49 +290,46 @@ class Module:
                 {"cur": message.light_value}
             )
         elif isinstance(message, UpdateLedStatusMessage):
-            for channel in self._channels.keys():
-                channel = self._translate_channel_name(message.channel)
-                if channel in message.led_slow_blinking:
+            for channel_id in range(1, 9):
+                channel = self._translate_channel_name(channel_id + _channel_offset)
+                if channel_id in message.led_slow_blinking:
                     await self._channels[channel].update({"led_state": "slow"})
-                if channel in message.led_fast_blinking:
+                if channel_id in message.led_fast_blinking:
                     await self._channels[channel].update({"led_state": "fast"})
-                if channel in message.led_on:
+                if channel_id in message.led_on:
                     await self._channels[channel].update({"led_state": "on"})
                 if (
-                    channel not in message.led_slow_blinking
-                    and channel not in message.led_fast_blinking
-                    and channel not in message.led_on
+                    channel_id not in message.led_slow_blinking
+                    and channel_id not in message.led_fast_blinking
+                    and channel_id not in message.led_on
                 ):
                     await self._channels[channel].update({"led_state": "off"})
         elif isinstance(message, SetLedMessage):
-            for channel in self._channels.keys():
-                if channel in message.leds:
-                    channel = self._translate_channel_name(channel)
+            for channel_id in range(1, 9):
+                channel = self._translate_channel_name(channel_id + _channel_offset)
+                if channel_id in message.leds:
                     await self._channels[channel].update({"led_state": "on"})
         elif isinstance(message, ClearLedMessage):
-            for channel in self._channels.keys():
-                if channel in message.leds:
-                    channel = self._translate_channel_name(channel)
+            for channel_id in range(1, 9):
+                channel = self._translate_channel_name(channel_id + _channel_offset)
+                if channel_id in message.leds:
                     await self._channels[channel].update({"led_state": "off"})
         elif isinstance(message, SlowBlinkingLedMessage):
-            for channel in self._channels.keys():
-                if channel in message.leds:
-                    channel = self._translate_channel_name(channel)
+            for channel_id in range(1, 9):
+                channel = self._translate_channel_name(channel_id + _channel_offset)
+                if channel_id in message.leds:
                     await self._channels[channel].update({"led_state": "slow"})
         elif isinstance(message, FastBlinkingLedMessage):
-            for channel in self._channels.keys():
-                if channel in message.leds:
-                    channel = self._translate_channel_name(channel)
+            for channel_id in range(1, 9):
+                channel = self._translate_channel_name(channel_id + _channel_offset)
+                if channel_id in message.leds:
                     await self._channels[channel].update({"led_state": "fast"})
-        elif isinstance(message, DimmerChannelStatusMessage):
+        elif isinstance(message, (DimmerChannelStatusMessage, DimmerStatusMessage)):
             channel = self._translate_channel_name(message.channel)
             await self._channels[channel].update({"state": message.cur_dimmer_state()})
         elif isinstance(message, SliderStatusMessage):
             channel = self._translate_channel_name(message.channel)
             await self._channels[channel].update({"state": message.cur_slider_state()})
-        elif isinstance(message, DimmerStatusMessage):
-            channel = self._translate_channel_name(message.channel)
-            await self._channels[channel].update({"state": message.cur_dimmer_state()})
         elif isinstance(message, BlindStatusNgMessage):
             channel = self._translate_channel_name(message.channel)
             await self._channels[channel].update(
@@ -338,7 +347,7 @@ class Module:
         """
         return self._channels
 
-    async def load(self) -> None:
+    async def load(self, from_cache=False) -> None:
         """
         Retrieve names of channels
         """
@@ -347,6 +356,8 @@ class Module:
         # as the submodule address maps to the main module
         # this method can be called multiple times
         if self._is_loading or self.loaded:
+            if from_cache:
+                await self._request_module_status()
             return
         self._log.info("Load Module")
         # start the loading
@@ -450,10 +461,19 @@ class Module:
         return True
 
     async def _request_module_status(self) -> None:
-        # request the module status (if available for this module
-        msg = ModuleStatusRequestMessage(self._address)
-        msg.channels = list(range(1, 9))
-        await self._writer(msg)
+        """Request current state of channels."""
+        mod_stat_req_msg = ModuleStatusRequestMessage(self._address)
+        counter_msg = None
+        for chan, chan_data in self._data["Channels"].items():
+            if int(chan) < 9 and chan_data["Type"] in ("Blind", "Dimmer", "Relay"):
+                mod_stat_req_msg.channels.append(int(chan))
+            if chan_data["Type"] == "ButtonCounter":
+                if counter_msg is None:
+                    counter_msg = CounterStatusRequestMessage(self._address)
+                counter_msg.channels.append(int(chan))
+        await self._writer(mod_stat_req_msg)
+        if counter_msg is not None:
+            await self._writer(counter_msg)
 
     async def _request_channel_name(self) -> None:
         # request the module channel names

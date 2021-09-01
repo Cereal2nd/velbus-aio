@@ -25,7 +25,7 @@ class PacketHandler:
 
     def __init__(self, writer, velbus) -> None:
         self._log = logging.getLogger("velbus-packet")
-        self._log.setLevel(logging.DEBUG)
+        self._log.setLevel(logging.WARNING)
         self._writer = writer
         self._velbus = velbus
         self._scan_complete = False
@@ -42,7 +42,7 @@ class PacketHandler:
 
     async def handle(self, data: str) -> None:
         """
-        Handle a recievd packet
+        Handle a received packet
         """
         priority = data[1]
         address = int(data[2])
@@ -85,9 +85,9 @@ class PacketHandler:
                     )
                 )
         elif self._scan_complete:
-            # this should only happen once the scan is complete, of its not complete susppend the error message
+            # this should only happen once the scan is complete, of its not complete suspended the error message
             self._log.warning(
-                "UNKNOWN module, you should iniitalize a full new velbus scan: packet={}, address={}, modules={}".format(
+                "UNKNOWN module, you should initialize a full new velbus scan: packet={}, address={}, modules={}".format(
                     ":".join(format(x, "02x") for x in data),
                     address,
                     self._velbus.get_modules().keys(),
