@@ -23,7 +23,12 @@ from velbusaio.channels import (
     Temperature,
     ThermostatChannel,
 )
-from velbusaio.const import CHANNEL_LIGHT_VALUE, CHANNEL_MEMO_TEXT, PRIORITY_LOW
+from velbusaio.const import (
+    CHANNEL_LIGHT_VALUE,
+    CHANNEL_MEMO_TEXT,
+    LOG_LEVEL,
+    PRIORITY_LOW,
+)
 from velbusaio.helpers import get_cache_dir, handle_match, keys_exists
 from velbusaio.messages.blind_status import BlindStatusMessage, BlindStatusNgMessage
 from velbusaio.messages.channel_name_part1 import (
@@ -99,7 +104,7 @@ class Module:
 
     def initialize(self, writer: type) -> None:
         self._log = logging.getLogger("velbus-module")
-        self._log.setLevel(logging.WARNING)
+        self._log.setLevel(LOG_LEVEL)
         self._writer = writer
         for chan in self._channels.values():
             chan._writer = writer

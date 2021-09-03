@@ -11,7 +11,7 @@ import ssl
 import serial
 import serial_asyncio
 
-from velbusaio.const import LOAD_TIMEOUT
+from velbusaio.const import LOAD_TIMEOUT, LOG_LEVEL
 from velbusaio.exceptions import VelbusConnectionFailed, VelbusConnectionTerminated
 from velbusaio.handler import PacketHandler
 from velbusaio.helpers import get_cache_dir
@@ -30,7 +30,7 @@ class Velbus:
 
     def __init__(self, dsn) -> None:
         self._log = logging.getLogger("velbus")
-        self._log.setLevel(logging.WARNING)
+        self._log.setLevel(LOG_LEVEL)
         self._dsn = dsn
         self._parser = VelbusParser()
         self._handler = PacketHandler(self.send, self)

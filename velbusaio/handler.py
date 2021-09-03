@@ -11,7 +11,7 @@ import re
 import pkg_resources
 
 from velbusaio.command_registry import commandRegistry
-from velbusaio.const import RTR
+from velbusaio.const import LOG_LEVEL, RTR
 from velbusaio.helpers import h2, keys_exists
 from velbusaio.message import Message
 from velbusaio.messages.module_subtype import ModuleSubTypeMessage
@@ -25,7 +25,7 @@ class PacketHandler:
 
     def __init__(self, writer, velbus) -> None:
         self._log = logging.getLogger("velbus-packet")
-        self._log.setLevel(logging.WARNING)
+        self._log.setLevel(LOG_LEVEL)
         self._writer = writer
         self._velbus = velbus
         self._scan_complete = False
