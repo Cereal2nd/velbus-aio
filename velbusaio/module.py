@@ -461,6 +461,9 @@ class Module:
 
     async def _request_module_status(self) -> None:
         """Request current state of channels."""
+        if "Channels" not in self._data:
+            # some modules have no channels
+            return
         mod_stat_req_msg = ModuleStatusRequestMessage(self._address)
         counter_msg = None
         for chan, chan_data in self._data["Channels"].items():
