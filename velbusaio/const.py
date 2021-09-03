@@ -3,11 +3,7 @@ Author: Maikel Punie <maikel.punie@gmail.com>
 """
 from __future__ import annotations
 
-import logging
 from typing import Final
-
-# LOG_LEVEL = logging.WARNING
-LOG_LEVEL = logging.DEBUG
 
 PRIORITY_HIGH: Final = 0xF8
 PRIORITY_FIRMWARE: Final = 0xF9
