@@ -221,7 +221,7 @@ class Module:
         elif isinstance(message, RelayStatusMessage):
             await self._channels[message.channel].update(
                 {
-                    "on": message.channel_is_on(),
+                    "on": message.is_on(),
                     "inhibit": message.is_inhibited(),
                     "forced_on": message.is_forced_on(),
                     "disabled": message.is_disabled(),
@@ -262,7 +262,16 @@ class Module:
                         await self._channels[channel].update({"closed": True})
                     if channel_id in message.opened:
                         await self._channels[channel].update({"closed": False})
-        elif isinstance(message, (ModuleStatusMessage, ModuleStatusMessage2)):
+        elif isinstance(message, (ModuleStatusMessage)):
+            for channel_id in range(1, 9):
+                channel = self._translate_channel_name(channel_id + _channel_offset)
+                if channel_id in message.closed:
+                    await self._channels[channel].update({"closed": True})
+                elif channel in self._channels and isinstance(
+                    self._channels[channel], (Button, ButtonCounter)
+                ):
+                    await self._channels[channel].update({"closed": False})
+        elif isinstance(message, (ModuleStatusMessage2)):
             for channel_id in range(1, 9):
                 channel = self._translate_channel_name(channel_id + _channel_offset)
                 if channel_id in message.closed:
@@ -271,7 +280,9 @@ class Module:
                     await self._channels[channel].update({"closed": False})
                 if channel_id in message.enabled:
                     await self._channels[channel].update({"enabled": True})
-                elif isinstance(self._channels[channel], (Button, ButtonCounter)):
+                elif channel in self._channels and isinstance(
+                    self._channels[channel], (Button, ButtonCounter)
+                ):
                     await self._channels[channel].update({"enabled": False})
         elif isinstance(message, CounterStatusMessage) and isinstance(
             self._channels[message.channel], ButtonCounter
