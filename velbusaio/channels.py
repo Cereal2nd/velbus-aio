@@ -145,7 +145,7 @@ class Channel:
 
     def get_categories(self) -> list:
         """
-        Get the categories (for hass)
+        Get the categories (mainly for home-assistant)
         """
         # COMPONENT_TYPES = ["switch", "sensor", "binary_sensor", "cover", "climate", "light"]
         return []
@@ -157,7 +157,6 @@ class Channel:
 class Blind(Channel):
     """
     A blind channel
-    HASS OK
     """
 
     _state = None
@@ -214,7 +213,6 @@ class Blind(Channel):
 class Button(Channel):
     """
     A Button channel
-    HASS OK
     """
 
     _enabled = True
@@ -270,7 +268,6 @@ class ButtonCounter(Button):
     """
     A ButtonCounter channel
     This channel can act as a button and as a counter
-    HASS OK
     """
 
     _Unit = None
@@ -325,7 +322,6 @@ class ButtonCounter(Button):
 class Sensor(Button):
     """
     A Sensor channel
-    HASS OK
     This is a bit weird, but this happens because of code sharing with openhab
     A sensor in this case is actually a Button
     """
@@ -335,14 +331,12 @@ class ThermostatChannel(Button):
     """
     A Thermostat channel
     These are the booster/heater/alarms
-    HASS OK
     """
 
 
 class Dimmer(Channel):
     """
     A Dimmer channel
-    HASS OK
     """
 
     _state: int = 0
@@ -389,7 +383,6 @@ class Dimmer(Channel):
 class Temperature(Channel):
     """
     A Temperature sensor channel
-    HASS OK
     """
 
     _cur = 0
@@ -425,7 +418,6 @@ class Temperature(Channel):
 class SensorNumber(Channel):
     """
     A Numeric Sensor channel
-    HASS OK
     """
 
     _cur = 0
@@ -446,7 +438,6 @@ class SensorNumber(Channel):
 class LightSensor(Channel):
     """
     A light sensor channel
-    HASS OK
     """
 
     _cur = 0
@@ -467,7 +458,6 @@ class LightSensor(Channel):
 class Relay(Channel):
     """
     A Relay channel
-    HASS OK
     """
 
     _on = None
@@ -527,7 +517,6 @@ class EdgeLit(Channel):
 class Memo(Channel):
     """
     A Memo text
-    HASS OK
     """
 
     async def set(self, txt: str) -> None:

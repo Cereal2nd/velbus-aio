@@ -11,6 +11,13 @@ repos:
         args:
           - --safe
           - --quiet
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.0.0
+    hooks:
+      - id: codespell
+        args:
+          - --skip="./.*,*.csv,*.json"
+          - --quiet-level=2
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.9.2
     hooks:
@@ -23,6 +30,15 @@ repos:
           - flake8-comprehensions==3.5.0
           - flake8-noqa==1.1.0
           - mccabe==0.6.1
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.0
+    hooks:
+      - id: bandit
+        args:
+          - --quiet
+          - --format=custom
+          - --configfile=tests/bandit.yaml
+        files: ^.*/.+\.py$
   - repo: https://github.com/PyCQA/isort
     rev: 5.9.3
     hooks:
@@ -32,6 +48,7 @@ repos:
     rev: v4.0.1 # Use the ref you want to point at
     hooks:
       - id: check-ast
+      - id: check-json
       - id: check-builtin-literals
       - id: check-case-conflict
       - id: end-of-file-fixer

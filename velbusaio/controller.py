@@ -181,7 +181,7 @@ class Velbus:
             await asyncio.wait_for(tsk, timeout=timeout)
         except asyncio.TimeoutError:
             self._log.error(
-                f"Not all modules are laoded within a timeout of {LOAD_TIMEOUT} seconds, continuing with the loaded modules"
+                f"Not all modules are loaded within a timeout of {LOAD_TIMEOUT} seconds, continuing with the loaded modules"
             )
 
     async def _check_if_modules_are_loaded(self) -> None:
