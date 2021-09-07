@@ -1,4 +1,6 @@
-from setuptools import setup
+from setuptools import find_packages, setup
+
+PACKAGES = find_packages(exclude=["tests", "tests.*"])
 
 setup(
     name="velbus-aio",
@@ -8,7 +10,7 @@ setup(
     author="Maikel Punie",
     install_requires=["pyserial-asyncio"],
     author_email="maikel.punie@gmail.com",
-    packages=["velbusaio", "velbusaio.messages"],
+    packages=PACKAGES,
     include_package_data=True,
     platforms="any",
     python_requires="~=3.7",

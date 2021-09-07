@@ -107,21 +107,6 @@ class RelayStatusMessage(Message):
         """
         return self.status == RELAY_ON
 
-    def is_off(self):
-        """
-        :return: bool
-        """
-        return self.status == RELAY_OFF
-
-    def channel_is_on(self):
-        """
-        :return: bool
-        """
-        if (self.status >> (self.channel - 1)) & 1 != 0:
-            return True
-        else:
-            return False
-
     def has_interval_timer_on(self):
         """
         :return: bool
@@ -146,4 +131,16 @@ class RelayStatusMessage(Message):
         )
 
 
+class RelayStatusMessage2(RelayStatusMessage):
+    def is_on(self):
+        """
+        :return: bool
+        """
+        if (self.status >> (self.channel - 1)) & 1 != 0:
+            return True
+        else:
+            return False
+
+
 register_command(COMMAND_CODE, RelayStatusMessage)
+register_command(COMMAND_CODE, RelayStatusMessage2, "VMB4RY")

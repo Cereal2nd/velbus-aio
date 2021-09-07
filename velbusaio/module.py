@@ -59,7 +59,7 @@ from velbusaio.messages.module_subtype import ModuleSubTypeMessage
 from velbusaio.messages.module_type import ModuleTypeMessage
 from velbusaio.messages.push_button_status import PushButtonStatusMessage
 from velbusaio.messages.read_data_from_memory import ReadDataFromMemoryMessage
-from velbusaio.messages.relay_status import RelayStatusMessage
+from velbusaio.messages.relay_status import RelayStatusMessage, RelayStatusMessage2
 from velbusaio.messages.sensor_temperature import SensorTemperatureMessage
 from velbusaio.messages.set_led import SetLedMessage
 from velbusaio.messages.slider_status import SliderStatusMessage
@@ -218,7 +218,7 @@ class Module:
             self._process_channel_name_message(3, message)
         elif isinstance(message, MemoryDataMessage):
             await self._process_memory_data_message(message)
-        elif isinstance(message, RelayStatusMessage):
+        elif isinstance(message, RelayStatusMessage, RelayStatusMessage2):
             await self._channels[message.channel].update(
                 {
                     "on": message.is_on(),
