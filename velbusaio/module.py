@@ -218,7 +218,7 @@ class Module:
             self._process_channel_name_message(3, message)
         elif isinstance(message, MemoryDataMessage):
             await self._process_memory_data_message(message)
-        elif isinstance(message, RelayStatusMessage, RelayStatusMessage2):
+        elif isinstance(message, (RelayStatusMessage, RelayStatusMessage2)):
             await self._channels[message.channel].update(
                 {
                     "on": message.is_on(),
