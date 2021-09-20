@@ -28,7 +28,7 @@ class Velbus:
     A velbus controller
     """
 
-    def __init__(self, dsn) -> None:
+    def __init__(self, dsn, cache_dir=get_cache_dir()) -> None:
         self._log = logging.getLogger("velbus")
         self._dsn = dsn
         self._parser = VelbusParser()
@@ -39,6 +39,7 @@ class Velbus:
         self._submodules = []
         self._send_queue = asyncio.Queue()
         self._tasks = []
+        self._cache_dir = cache_dir
 
     async def add_module(
         self,
@@ -53,7 +54,7 @@ class Velbus:
         """
         Add a found module to the module cache
         """
-        mod = self._load_module_from_cache(addr)
+        mod = self._load_module_from_cache(self._cache_dir, addr)
         if mod is not None:
             self._log.info(f"Load module from CACHE: {addr}")
             self._modules[addr] = mod
@@ -69,6 +70,7 @@ class Velbus:
                 build_year=build_year,
                 build_week=build_week,
                 memorymap=memorymap,
+                cache_dir=self._cache_dir,
             )
             self._modules[addr].initialize(self.send)
             await self._modules[addr].load()
@@ -82,9 +84,9 @@ class Velbus:
             self._modules[sub_addr] = self._modules[addr]
         self._modules[addr].cleanupSubChannels()
 
-    def _load_module_from_cache(self, address) -> None | str:
+    def _load_module_from_cache(self, cache_dir, address) -> None | str:
         try:
-            with open(f"{get_cache_dir()}/{address}.p", "rb") as fl:
+            with open(f"{cache_dir}/{address}.p", "rb") as fl:
                 return pickle.load(fl)
         except OSError:
             pass

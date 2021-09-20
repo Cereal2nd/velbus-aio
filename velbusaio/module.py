@@ -24,7 +24,7 @@ from velbusaio.channels import (
     ThermostatChannel,
 )
 from velbusaio.const import CHANNEL_LIGHT_VALUE, CHANNEL_MEMO_TEXT, PRIORITY_LOW
-from velbusaio.helpers import get_cache_dir, handle_match, keys_exists
+from velbusaio.helpers import handle_match, keys_exists
 from velbusaio.messages.blind_status import BlindStatusMessage, BlindStatusNgMessage
 from velbusaio.messages.channel_name_part1 import (
     ChannelNamePart1Message,
@@ -82,6 +82,7 @@ class Module:
         memorymap=None,
         build_year=None,
         build_week=None,
+        cache_dir=None,
     ) -> None:
         self._address = module_address
         self._type = module_type
@@ -93,6 +94,7 @@ class Module:
         self.memory_map_version = memorymap
         self.build_year = build_year
         self.build_week = build_week
+        self._cache_dir = cache_dir
         self._is_loading = False
         self._channels = {}
         self.loaded = False
@@ -113,9 +115,9 @@ class Module:
                         del self._channels[i]
 
     def _cache(self) -> None:
-        if not os.path.isdir(get_cache_dir()):
-            os.mkdir(get_cache_dir())
-        with open(f"{get_cache_dir()}/{self._address}.p", "wb") as fl:
+        if not os.path.isdir(self._cache_dir):
+            os.mkdir(self._cache_dir)
+        with open(f"{self._cache_dir}/{self._address}.p", "wb") as fl:
             pickle.dump(self, fl)
 
     def __getstate__(self) -> dict:
