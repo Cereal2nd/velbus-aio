@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import logging
 import os
+import pathlib
 import pickle
 import struct
 import sys
@@ -115,9 +116,8 @@ class Module:
                         del self._channels[i]
 
     def _cache(self) -> None:
-        if not os.path.isdir(self._cache_dir):
-            os.mkdir(self._cache_dir)
-        with open(f"{self._cache_dir}/{self._address}.p", "wb") as fl:
+        cfile = pathlib.Path(f"{self._cache_dir}/{self._address}.p")
+        with cfile.open("wb") as fl:
             pickle.dump(self, fl)
 
     def __getstate__(self) -> dict:

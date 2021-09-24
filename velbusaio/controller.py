@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import pathlib
 import pickle
 import ssl
 
@@ -40,6 +41,8 @@ class Velbus:
         self._send_queue = asyncio.Queue()
         self._tasks = []
         self._cache_dir = cache_dir
+        # make sure the cachedir exists
+        pathlib.Path(self._cache_dir).mkdir(parents=True, exist_ok=True)
 
     async def add_module(
         self,
@@ -86,7 +89,8 @@ class Velbus:
 
     def _load_module_from_cache(self, cache_dir, address) -> None | str:
         try:
-            with open(f"{cache_dir}/{address}.p", "rb") as fl:
+            cfile = pathlib.Path(f"{cache_dir}/{address}.p")
+            with cfile.open("rb") as fl:
                 return pickle.load(fl)
         except OSError:
             pass

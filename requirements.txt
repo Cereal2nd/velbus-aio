@@ -1,1 +1,2 @@
+pathlib
 pyserial-asyncio
