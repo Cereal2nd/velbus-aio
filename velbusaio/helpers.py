@@ -27,20 +27,6 @@ def keys_exists(element, *keys) -> dict:
     return _element
 
 
-def checksum(arr) -> int:
-    """
-    Calculate checksum of the given array.
-    The checksum is calculated by summing all values in an array, then performing the two's complement.
-    :param arr: The array of bytes of which the checksum has to be calculated of.
-    :return: The checksum of the given array.
-    """
-    crc = sum(arr)
-    crc = crc ^ 255
-    crc = crc + 1
-    crc = crc & 255
-    return crc
-
-
 def h2(inp) -> str:
     """
     Format as hex upercase

@@ -38,7 +38,7 @@ MODULE_DIRECTORY = {
     0x22: "VMB7IN",
     0x28: "VMBGPOD",
     0x29: "VMB1RYNOS",
-    0x2A: "VMBIRM",
+    0x2A: "VMBPIRM",
     0x2B: "VMBIRC",
     0x2C: "VMBIRO",
     0x2D: "VMBGP4PIR",
