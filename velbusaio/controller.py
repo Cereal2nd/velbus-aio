@@ -60,7 +60,7 @@ class Velbus:
         """Respond to Protocol connection lost."""
         if self._auto_reconnect and not self._closing:
             self._log.debug("Reconnecting to transport")
-            asyncio.ensure_future(self._conn.reconnect(), loop=self._loop)
+            asyncio.ensure_future(self.connect(), loop=self._loop)
 
     async def add_module(
         self,
