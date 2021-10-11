@@ -118,7 +118,7 @@ def _parse(rawmessage: bytearray) -> Tuple[Optional[RawMessage], bytearray]:
             f" but got {checksum:02x} in {binascii.hexlify(rawmessage)}"
         )
 
-    data = rawmessage[HEADER_LENGTH : HEADER_LENGTH + data_size]
+    data = bytes(rawmessage[HEADER_LENGTH : HEADER_LENGTH + data_size])
 
     return (
         RawMessage(priority, address, rtr, data),
