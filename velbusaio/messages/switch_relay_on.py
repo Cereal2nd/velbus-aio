@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import json
-import logging
 
 from velbusaio.command_registry import register_command
 from velbusaio.message import Message
@@ -21,7 +20,6 @@ class SwitchRelayOnMessage(Message):
     def __init__(self, address=None):
         Message.__init__(self)
         self.relay_channels = []
-        self.logger = logging.getLogger("velbus")
         self.set_defaults(address)
 
     def set_defaults(self, address):

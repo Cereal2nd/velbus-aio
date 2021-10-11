@@ -22,9 +22,9 @@ from velbusaio.messages.set_date import SetDate
 from velbusaio.messages.set_daylight_saving import SetDaylightSaving
 from velbusaio.messages.set_realtime_clock import SetRealtimeClock
 from velbusaio.module import Module
-
 from velbusaio.protocol import VelbusProtocol
 from velbusaio.raw_message import RawMessage
+
 
 class Velbus:
     """
@@ -38,8 +38,7 @@ class Velbus:
         self._protocol = VelbusProtocol(
             message_received_callback=self._on_message_received,
             connection_lost_callback=self._on_connection_lost,
-            loop = self._loop,
-            poll_devices=True
+            loop=self._loop,
         )
         self._closing = False
         self._auto_reconnect = True
@@ -155,9 +154,8 @@ class Velbus:
                 ctx = None
             try:
                 _transport, _protocol = await self._loop.create_connection(
-                lambda: self._protocol,
-                host=host, port=port, ssl=ctx
-            )
+                    lambda: self._protocol, host=host, port=port, ssl=ctx
+                )
 
             except ConnectionRefusedError as err:
                 raise VelbusConnectionFailed() from err
@@ -226,13 +224,14 @@ class Velbus:
         """
         Send a packet
         """
-        await self._protocol.send_message(RawMessage(
-            priority=msg.priority,
-            address=msg.address,
-            rtr=msg.rtr,
-            data=msg.data_to_binary()
-        ))
-
+        await self._protocol.send_message(
+            RawMessage(
+                priority=msg.priority,
+                address=msg.address,
+                rtr=msg.rtr,
+                data=msg.data_to_binary(),
+            )
+        )
 
     def get_all(self, class_name: str) -> list:
         lst = []

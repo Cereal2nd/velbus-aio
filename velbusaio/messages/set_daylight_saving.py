@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import json
-import logging
 import time
 
 from velbusaio.command_registry import register_command
@@ -20,7 +19,6 @@ class SetDaylightSaving(Message):
 
     def __init__(self, address=0x00):
         Message.__init__(self)
-        self.logger = logging.getLogger("velbus")
         self._ds = None
         self.set_defaults(address)
 

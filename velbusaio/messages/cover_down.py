@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import json
-import logging
 import struct
 
 from velbusaio.command_registry import register_command
@@ -71,7 +70,6 @@ class CoverDownMessage2(Message):
         Message.__init__(self)
         self.channel = 0
         self.delay_time = 0
-        self.logger = logging.getLogger("velbus")
         self.set_defaults(address)
 
     def populate(self, priority, address, rtr, data):

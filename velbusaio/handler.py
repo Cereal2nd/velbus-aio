@@ -44,11 +44,16 @@ class PacketHandler:
         """
         Handle a received packet
         """
+        if rawmsg.address < 1 or rawmsg.address > 254:
+            return
+        if not rawmsg.command:
+            return
+
         priority = rawmsg.priority
         address = rawmsg.address
         rtr = rawmsg.rtr
-        command_value = rawmsg.data[0]
-        data = rawmsg.data[1:]
+        command_value = rawmsg.command
+        data = rawmsg.data_only
 
         if command_value == 0xFF and not self._scan_complete:
             msg = ModuleTypeMessage()
