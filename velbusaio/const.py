@@ -17,15 +17,17 @@ PRIORITIES: Final = [
 ]
 
 
-HEADER_LENGTH : Final= 4 # Header: [Start Byte, priority, address, RTR+data length]
-TAIL_LENGTH : Final= 2 # Tail: [CRC, End Byte]
-MAX_BODY_SIZE : Final= 8 # Maximum amount of data bytes in a packet
+HEADER_LENGTH: Final = 4  # Header: [Start Byte, priority, address, RTR+data length]
+TAIL_LENGTH: Final = 2  # Tail: [CRC, End Byte]
+MAX_BODY_SIZE: Final = 8  # Maximum amount of data bytes in a packet
 
-MINIMUM_MESSAGE_SIZE : Final= HEADER_LENGTH + TAIL_LENGTH # Smallest possible packet: [Start Byte, priority, address, RTR+data length, CRC, End Byte]
-MAXIMUM_MESSAGE_SIZE : Final= MINIMUM_MESSAGE_SIZE + MAX_BODY_SIZE
+MINIMUM_MESSAGE_SIZE: Final = (
+    HEADER_LENGTH + TAIL_LENGTH
+)  # Smallest possible packet: [Start Byte, priority, address, RTR+data length, CRC, End Byte]
+MAXIMUM_MESSAGE_SIZE: Final = MINIMUM_MESSAGE_SIZE + MAX_BODY_SIZE
 
-START_BYTE : Final= 0x0F
-END_BYTE : Final= 0x04
+START_BYTE: Final = 0x0F
+END_BYTE: Final = 0x04
 
 
 LENGTH_MASK: Final = 0x0F

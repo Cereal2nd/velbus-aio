@@ -5,12 +5,7 @@ from __future__ import annotations
 
 import json
 
-from velbusaio.const import (
-    PRIORITY_FIRMWARE,
-    PRIORITY_HIGH,
-    PRIORITY_LOW,
-    RTR
-)
+from velbusaio.const import PRIORITY_FIRMWARE, PRIORITY_HIGH, PRIORITY_LOW, RTR
 
 
 class ParserError(Exception):
@@ -64,7 +59,6 @@ class Message:
         :return: None
         """
         self.address = address
-
 
     def data_to_binary(self):
         """
