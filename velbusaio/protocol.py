@@ -102,8 +102,21 @@ class VelbusProtocol(asyncio.BufferedProtocol):
     def get_buffer(self, sizehint):
         return self._buffer_view[self._buffer_pos :]
 
+    def data_received(self, data):
+        """Receive data from the Streaming protocol.
+        Called when asyncio.Protocol detects received data from serial port.
+        """
+        self._buffer_pos += len(data)
+        _new_data = bytearray()
+        for x in self._buffer:
+            _new_data.append(x)
+
+        for y in data:
+            _new_data.append(int(y))
+        self._check_buffer(_new_data)
+
     def buffer_updated(self, nbytes: int) -> None:
-        """Receive data from the protocol.
+        """Receive data from the Buffered Streaming protocol.
         Called when asyncio.BufferedProtocol detects received data from network.
         """
         self._buffer_pos += nbytes
@@ -115,10 +128,12 @@ class VelbusProtocol(asyncio.BufferedProtocol):
                 ),
             )
         )
+        self._check_buffer(self._buffer)
 
+    def _check_buffer(self, buffer: bytearray):
         if self._buffer_pos > MINIMUM_MESSAGE_SIZE:
             # try to construct a Velbus message from the buffer
-            msg, remaining_data = create_message_info(self._buffer)
+            msg, remaining_data = create_message_info(buffer)
 
             if msg:
                 asyncio.ensure_future(self._process_message(msg), loop=self._loop)
