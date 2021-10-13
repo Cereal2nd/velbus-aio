@@ -15,7 +15,7 @@ async def main():
     #   velbus = Velbus("192.168.1.9:27015")
     # example via serial device
     #   velbus = Velbus("/dev/ttyAMA0")
-    velbus = Velbus("tls://192.168.1.9:27015")
+    velbus = Velbus("192.168.1.254:8445")
     await velbus.connect()
     for mod in (velbus.get_modules()).values():
         print(mod)

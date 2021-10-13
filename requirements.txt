@@ -1,1 +1,4 @@
-pyserial-asyncio
+backoff>=1.10.0
+backoff>=1.10.0,<1.11
+pyserial==3.5.0
+pyserial-asyncio>=0.5

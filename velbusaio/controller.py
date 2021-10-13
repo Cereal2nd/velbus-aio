@@ -16,12 +16,14 @@ from velbusaio.const import LOAD_TIMEOUT
 from velbusaio.exceptions import VelbusConnectionFailed, VelbusConnectionTerminated
 from velbusaio.handler import PacketHandler
 from velbusaio.helpers import get_cache_dir
+from velbusaio.message import Message
 from velbusaio.messages.module_type_request import ModuleTypeRequestMessage
 from velbusaio.messages.set_date import SetDate
 from velbusaio.messages.set_daylight_saving import SetDaylightSaving
 from velbusaio.messages.set_realtime_clock import SetRealtimeClock
 from velbusaio.module import Module
-from velbusaio.parser import VelbusParser
+from velbusaio.protocol import VelbusProtocol
+from velbusaio.raw_message import RawMessage
 
 
 class Velbus:
@@ -31,18 +33,33 @@ class Velbus:
 
     def __init__(self, dsn, cache_dir=get_cache_dir()) -> None:
         self._log = logging.getLogger("velbus")
+        self._loop = asyncio.get_event_loop()
+
+        self._protocol = VelbusProtocol(
+            message_received_callback=self._on_message_received,
+            connection_lost_callback=self._on_connection_lost,
+            loop=self._loop,
+        )
+        self._closing = False
+        self._auto_reconnect = True
+
         self._dsn = dsn
-        self._parser = VelbusParser()
         self._handler = PacketHandler(self.send, self)
-        self._writer = None
-        self._reader = None
         self._modules = {}
         self._submodules = []
         self._send_queue = asyncio.Queue()
-        self._tasks = []
         self._cache_dir = cache_dir
         # make sure the cachedir exists
         pathlib.Path(self._cache_dir).mkdir(parents=True, exist_ok=True)
+
+    async def _on_message_received(self, msg: RawMessage):
+        await self._handler.handle(msg)
+
+    def _on_connection_lost(self, exc: Exception):
+        """Respond to Protocol connection lost."""
+        if self._auto_reconnect and not self._closing:
+            self._log.debug("Reconnecting to transport")
+            asyncio.ensure_future(self.connect(), loop=self._loop)
 
     async def add_module(
         self,
@@ -118,10 +135,9 @@ class Velbus:
         return None
 
     async def stop(self) -> None:
-        for task in self._tasks:
-            task.cancel()
-        self._writer.close()
-        await self._writer.wait_closed()
+        self._closing = True
+        self._auto_reconnect = False
+        self._protocol.close()
 
     async def connect(self, test_connect: bool = False) -> None:
         """
@@ -131,24 +147,24 @@ class Velbus:
         if ":" in self._dsn:
             # tcp/ip combination
             if self._dsn.startswith("tls://"):
-                tmp = self._dsn.replace("tls://", "").split(":")
+                host, port = self._dsn.replace("tls://", "").split(":")
                 ctx = ssl._create_unverified_context()
             else:
-                tmp = self._dsn.split(":")
+                host, port = self._dsn.split(":")
                 ctx = None
             try:
-                self._reader, self._writer = await asyncio.open_connection(
-                    tmp[0], tmp[1], ssl=ctx
+                _transport, _protocol = await self._loop.create_connection(
+                    lambda: self._protocol, host=host, port=port, ssl=ctx
                 )
+
             except ConnectionRefusedError as err:
                 raise VelbusConnectionFailed() from err
         else:
             # serial port
             try:
-                (
-                    self._reader,
-                    self._writer,
-                ) = await serial_asyncio.open_serial_connection(
+                _transport, _protocol = await serial_asyncio.create_serial_connection(
+                    self._loop,
+                    lambda: self._protocol,
                     url=self._dsn,
                     baudrate=38400,
                     bytesize=serial.EIGHTBITS,
@@ -161,10 +177,7 @@ class Velbus:
                 raise VelbusConnectionFailed() from err
         if test_connect:
             return
-        # create reader, parser and writer tasks
-        self._tasks.append(asyncio.Task(self._socket_read_task()))
-        self._tasks.append(asyncio.Task(self._socket_send_task()))
-        self._tasks.append(asyncio.Task(self._parser_task()))
+
         # scan the bus
         await self.scan()
 
@@ -173,7 +186,7 @@ class Velbus:
         for addr in range(1, 255):
             msg = ModuleTypeRequestMessage(addr)
             await self.send(msg)
-        await asyncio.sleep(30)
+        await asyncio.sleep(15)
         self._handler.scan_finished()
         # calculate how long to wait
         calc_timeout = len(self._modules) * 30
@@ -199,50 +212,26 @@ class Velbus:
             for mod in (self.get_modules()).values():
                 if mod.is_loaded():
                     mods_loaded += 1
+                else:
+                    self._log.warning(f"Waiting for module {mod._address}")
             if mods_loaded == len(self.get_modules()):
                 self._log.info("All modules loaded")
                 return
             self._log.info("Not all modules loaded yet, waiting 30 seconds")
             await asyncio.sleep(230)
 
-    async def send(self, msg) -> None:
+    async def send(self, msg: Message) -> None:
         """
         Send a packet
         """
-        await self._send_queue.put(msg)
-
-    async def _socket_send_task(self) -> None:
-        """
-        Task to send the packet from the queue to the bus
-        """
-        while self._send_queue:
-            msg = await self._send_queue.get()
-            self._log.debug(f"SENDING message: {msg}")
-            # print(':'.join('{:02X}'.format(x) for x in msg.to_binary()))
-            try:
-                self._writer.write(msg.to_binary())
-            except Exception:
-                raise VelbusConnectionTerminated()
-            await asyncio.sleep(0.11)
-
-    async def _socket_read_task(self) -> None:
-        """
-        Task to read from a socket and push into a queue
-        """
-        while True:
-            try:
-                data = await self._reader.read(10)
-            except Exception:
-                raise VelbusConnectionTerminated()
-            self._parser.feed(data)
-
-    async def _parser_task(self) -> None:
-        """
-        Task to parser the received queue
-        """
-        while True:
-            packet = await self._parser.wait_for_packet()
-            await self._handler.handle(packet)
+        await self._protocol.send_message(
+            RawMessage(
+                priority=msg.priority,
+                address=msg.address,
+                rtr=msg.rtr,
+                data=msg.data_to_binary(),
+            )
+        )
 
     def get_all(self, class_name: str) -> list:
         lst = []

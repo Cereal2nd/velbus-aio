@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import json
-import logging
 
 from velbusaio.command_registry import register_command
 from velbusaio.message import Message
@@ -21,7 +20,6 @@ class SetDimmerMessage(Message):
     def __init__(self, address=None):
         Message.__init__(self)
         self.dimmer_channels = []
-        self.logger = logging.getLogger("velbus")
         self.dimmer_state = 0
         self.dimmer_transitiontime = 0
         self.set_defaults(address)

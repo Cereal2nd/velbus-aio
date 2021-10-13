@@ -16,6 +16,7 @@ from velbusaio.helpers import h2, keys_exists
 from velbusaio.message import Message
 from velbusaio.messages.module_subtype import ModuleSubTypeMessage
 from velbusaio.messages.module_type import ModuleTypeMessage
+from velbusaio.raw_message import RawMessage
 
 
 class PacketHandler:
@@ -39,27 +40,29 @@ class PacketHandler:
     def scan_started(self) -> None:
         self._scan_complete = False
 
-    async def handle(self, data: str) -> None:
+    async def handle(self, rawmsg: RawMessage) -> None:
         """
         Handle a received packet
         """
-        priority = data[1]
-        address = int(data[2])
-        rtr = data[3] & RTR == RTR
-        data_size = data[3] & 0x0F
-        command_value = data[4]
-        if data_size < 1:
+        if rawmsg.address < 1 or rawmsg.address > 254:
             return
-        if address < 1 or address > 254:
+        if not rawmsg.command:
             return
+
+        priority = rawmsg.priority
+        address = rawmsg.address
+        rtr = rawmsg.rtr
+        command_value = rawmsg.command
+        data = rawmsg.data_only
+
         if command_value == 0xFF and not self._scan_complete:
             msg = ModuleTypeMessage()
-            msg.populate(priority, address, rtr, data[5:-2])
+            msg.populate(priority, address, rtr, data)
             self._log.debug(f"Received {msg}")
             await self._handle_module_type(msg)
         elif command_value == 0xB0 and not self._scan_complete:
             msg = ModuleSubTypeMessage()
-            msg.populate(priority, address, rtr, data[5:-2])
+            msg.populate(priority, address, rtr, data)
             self._log.debug(f"Received {msg}")
             await self._handle_module_subtype(msg)
         elif command_value in self.pdata["MessagesBroadCast"]:
@@ -73,7 +76,7 @@ class PacketHandler:
             if commandRegistry.has_command(int(command_value), module_type):
                 command = commandRegistry.get_command(command_value, module_type)
                 msg = command()
-                msg.populate(priority, address, rtr, data[5:-2])
+                msg.populate(priority, address, rtr, data)
                 self._log.debug(f"Received {msg}")
                 # send the message to the modules
                 await (self._velbus.get_module(msg.address)).on_message(msg)

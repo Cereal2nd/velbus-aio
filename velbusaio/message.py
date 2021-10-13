@@ -5,15 +5,7 @@ from __future__ import annotations
 
 import json
 
-from velbusaio.const import (
-    ETX,
-    PRIORITY_FIRMWARE,
-    PRIORITY_HIGH,
-    PRIORITY_LOW,
-    RTR,
-    STX,
-)
-from velbusaio.helpers import checksum
+from velbusaio.const import PRIORITY_FIRMWARE, PRIORITY_HIGH, PRIORITY_LOW, RTR
 
 
 class ParserError(Exception):
@@ -68,24 +60,6 @@ class Message:
         """
         self.address = address
 
-    def to_binary(self):
-        """
-        :return: bytes
-        """
-        data_bytes = self.data_to_binary()
-        if self.rtr:
-            rtr_and_size = RTR | len(data_bytes)
-        else:
-            rtr_and_size = len(data_bytes)
-        header = bytearray([STX, self.priority, self.address, rtr_and_size])
-        checksum_string = checksum(header + data_bytes)
-        return (
-            header
-            + data_bytes
-            + bytearray.fromhex(f"{checksum_string:02x}")
-            + bytearray([ETX])
-        )
-
     def data_to_binary(self):
         """
         :return: bytes
@@ -101,7 +75,7 @@ class Message:
         return {
             "name": self.__class__.__name__,
             "priority": self.priority,
-            "address": self.address,
+            "address": f"{self.address:x}",
             "rtr": self.rtr,
         }
 

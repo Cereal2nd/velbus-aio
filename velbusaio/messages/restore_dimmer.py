@@ -38,7 +38,7 @@ class RestoreDimmerMessage(Message):
         self.set_attributes(priority, address, rtr)
         self.dimmer_channels = self.byte_to_channels(data[0])
         self.dimmer_transitiontime = int.from_bytes(
-            data[[2, 3]], byteorder="big", signed=False
+            data[2:3], byteorder="big", signed=False
         )
 
     def to_json(self):

@@ -15,17 +15,26 @@ PRIORITIES: Final = [
     PRIORITY_LOW,
     PRIORITY_THIRDPARTY,
 ]
-STX: Final = 0x0F
-ETX: Final = 0x04
+
+
+HEADER_LENGTH: Final = 4  # Header: [Start Byte, priority, address, RTR+data length]
+TAIL_LENGTH: Final = 2  # Tail: [CRC, End Byte]
+MAX_BODY_SIZE: Final = 8  # Maximum amount of data bytes in a packet
+
+MINIMUM_MESSAGE_SIZE: Final = (
+    HEADER_LENGTH + TAIL_LENGTH
+)  # Smallest possible packet: [Start Byte, priority, address, RTR+data length, CRC, End Byte]
+MAXIMUM_MESSAGE_SIZE: Final = MINIMUM_MESSAGE_SIZE + MAX_BODY_SIZE
+
+START_BYTE: Final = 0x0F
+END_BYTE: Final = 0x04
+
+
 LENGTH_MASK: Final = 0x0F
-HEADER_LENGTH: Final = 4  # Header: [STX, priority, address, RTR+data length]
-MAX_DATA_AMOUNT: Final = 8  # Maximum amount of data bytes in a packet
-MIN_PACKET_LENGTH: Final = (
-    6  # Smallest possible packet: [STX, priority, address, RTR+data length, CRC, ETC]
-)
-MAX_PACKET_LENGTH: Final = MIN_PACKET_LENGTH + MAX_DATA_AMOUNT
+
 RTR: Final = 0x40
 NO_RTR: Final = 0x00
+
 CACHEDIR: Final = ".velbuscache"
 LOAD_TIMEOUT: Final = 600
 
@@ -42,3 +51,5 @@ VOLUME_LITERS_HOUR: Final = "L/h"  # Not an official constant at HA yet
 CHANNEL_EDGE_LIT: Final = 97
 CHANNEL_MEMO_TEXT: Final = 98
 CHANNEL_LIGHT_VALUE: Final = 99
+
+SLEEP_TIME = 60 / 1000
