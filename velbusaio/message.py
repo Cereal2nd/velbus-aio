@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import json
 
-from velbusaio.const import PRIORITY_FIRMWARE, PRIORITY_HIGH, PRIORITY_LOW, RTR
+from velbusaio.const import PRIORITY_FIRMWARE, PRIORITY_HIGH, PRIORITY_LOW
 
 
 class ParserError(Exception):

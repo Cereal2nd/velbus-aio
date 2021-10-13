@@ -7,7 +7,6 @@ from asyncio import transports
 import backoff
 
 from velbusaio.const import MAXIMUM_MESSAGE_SIZE, MINIMUM_MESSAGE_SIZE, SLEEP_TIME
-from velbusaio.messages.module_type_request import ModuleTypeRequestMessage
 from velbusaio.raw_message import RawMessage
 from velbusaio.raw_message import create as create_message_info
 
