@@ -42,6 +42,7 @@ class VelbusProtocol(asyncio.BufferedProtocol):
         self._buffer_view = memoryview(self._buffer)
         self._buffer_pos = 0
 
+        self._serial_buf = bytes()
         self.transport = None
 
         # everything for writing to Velbus
@@ -101,18 +102,27 @@ class VelbusProtocol(asyncio.BufferedProtocol):
     def get_buffer(self, sizehint):
         return self._buffer_view[self._buffer_pos :]
 
-    def data_received(self, data):
+    def data_received(self, data: bytes):
         """Receive data from the Streaming protocol.
         Called when asyncio.Protocol detects received data from serial port.
         """
-        self._buffer_pos += len(data)
-        _new_data = bytearray()
-        for x in self._buffer:
-            _new_data.append(x)
+        self._serial_buf += data
+        _recheck = True
 
-        for y in data:
-            _new_data.append(int(y))
-        self._check_buffer(_new_data)
+        while len(self._serial_buf) > MINIMUM_MESSAGE_SIZE and _recheck:
+            # try to construct a Velbus message from the buffer
+
+            _remaining_buf = self._serial_buf[MAXIMUM_MESSAGE_SIZE:]
+            msg, remaining_data = create_message_info(
+                bytearray(self._serial_buf[:MAXIMUM_MESSAGE_SIZE])
+            )
+
+            if msg is not None:
+                asyncio.ensure_future(self._process_message(msg), loop=self._loop)
+                _recheck = True
+            else:
+                _recheck = False
+            self._serial_buf = _remaining_buf + bytes(remaining_data)
 
     def buffer_updated(self, nbytes: int) -> None:
         """Receive data from the Buffered Streaming protocol.
@@ -127,14 +137,12 @@ class VelbusProtocol(asyncio.BufferedProtocol):
                 ),
             )
         )
-        self._check_buffer(self._buffer)
 
-    def _check_buffer(self, buffer: bytearray):
         if self._buffer_pos > MINIMUM_MESSAGE_SIZE:
             # try to construct a Velbus message from the buffer
-            msg, remaining_data = create_message_info(buffer)
+            msg, remaining_data = create_message_info(self._buffer)
 
-            if msg:
+            if msg is not None:
                 asyncio.ensure_future(self._process_message(msg), loop=self._loop)
 
             self._new_buffer(remaining_data)
