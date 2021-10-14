@@ -45,7 +45,7 @@ class PacketHandler:
         """
         if rawmsg.address < 1 or rawmsg.address > 254:
             return
-        if not rawmsg.command:
+        if rawmsg.command is None:
             return
 
         priority = rawmsg.priority
