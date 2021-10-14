@@ -1,8 +1,6 @@
 name: Python checks
 
-on:
-  push:
-  pull_request:
+on: [push, pull_request]
 
 jobs:
   build:
@@ -11,10 +9,6 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.7", "3.8", "3.9", "3.10"]
-        include: # define single matrix case that performs upload
-          - os: ubuntu-latest
-            python: 3.9
-            upload: true
     steps:
       - name: Checkout reposistory
         uses: actions/checkout@master
