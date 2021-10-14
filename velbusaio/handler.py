@@ -11,7 +11,6 @@ import re
 import pkg_resources
 
 from velbusaio.command_registry import commandRegistry
-from velbusaio.const import RTR
 from velbusaio.helpers import h2, keys_exists
 from velbusaio.message import Message
 from velbusaio.messages.module_subtype import ModuleSubTypeMessage

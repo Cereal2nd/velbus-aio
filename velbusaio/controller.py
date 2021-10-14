@@ -13,7 +13,7 @@ import serial
 import serial_asyncio
 
 from velbusaio.const import LOAD_TIMEOUT
-from velbusaio.exceptions import VelbusConnectionFailed, VelbusConnectionTerminated
+from velbusaio.exceptions import VelbusConnectionFailed
 from velbusaio.handler import PacketHandler
 from velbusaio.helpers import get_cache_dir
 from velbusaio.message import Message

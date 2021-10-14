@@ -3,7 +3,6 @@ author: Maikel Punie <maikel.punie@gmail.com>
 """
 from __future__ import annotations
 
-import json
 import string
 
 from velbusaio.command_registry import commandRegistry
@@ -11,15 +10,10 @@ from velbusaio.const import (
     DEVICE_CLASS_ILLUMINANCE,
     DEVICE_CLASS_TEMPERATURE,
     ENERGY_KILO_WATT_HOUR,
-    ENERGY_WATT_HOUR,
     TEMP_CELSIUS,
-    VOLUME_CUBIC_METER,
     VOLUME_CUBIC_METER_HOUR,
-    VOLUME_LITERS,
     VOLUME_LITERS_HOUR,
 )
-from velbusaio.messages.switch_relay_off import SwitchRelayOffMessage
-from velbusaio.messages.switch_relay_on import SwitchRelayOnMessage
 
 
 class Channel:
