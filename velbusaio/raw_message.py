@@ -67,10 +67,9 @@ def create(rawmessage: bytearray) -> Tuple[Optional[RawMessage], bytearray]:
             return None, rawmessage
 
         try:
-            logging.debug(f"Receive: {rawmessage}")
             return _parse(rawmessage)
         except ParseError:
-            logging.exception(
+            logging.error(
                 f"Could not parse the message {binascii.hexlify(rawmessage)}. Truncating invalid data."
             )
             rawmessage = _trim_buffer_garbage(
