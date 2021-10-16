@@ -128,7 +128,7 @@ class VelbusProtocol(asyncio.BufferedProtocol):
                 _recheck = True
             else:
                 _recheck = False
-            self._serial_buf = _remaining_buf + bytes(remaining_data)
+            self._serial_buf = bytes(remaining_data) + _remaining_buf
 
     def buffer_updated(self, nbytes: int) -> None:
         """Receive data from the Buffered Streaming protocol.
