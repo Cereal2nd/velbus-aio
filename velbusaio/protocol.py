@@ -107,6 +107,12 @@ class VelbusProtocol(asyncio.BufferedProtocol):
         Called when asyncio.Protocol detects received data from serial port.
         """
         self._serial_buf += data
+        self._log.debug(
+            "Received {nbytes} bytes from Velbus: {data_hex}".format(
+                nbytes=len(data),
+                data_hex=binascii.hexlify(self._serial_buf[: len(data)], " "),
+            )
+        )
         _recheck = True
 
         while len(self._serial_buf) > MINIMUM_MESSAGE_SIZE and _recheck:
@@ -122,7 +128,7 @@ class VelbusProtocol(asyncio.BufferedProtocol):
                 _recheck = True
             else:
                 _recheck = False
-            self._serial_buf = _remaining_buf + bytes(remaining_data)
+            self._serial_buf = bytes(remaining_data) + _remaining_buf
 
     def buffer_updated(self, nbytes: int) -> None:
         """Receive data from the Buffered Streaming protocol.
