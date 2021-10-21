@@ -9,7 +9,7 @@ setup(
     license="MIT",
     author="Maikel Punie",
     install_requires=[
-        "pyserial==3.5.0",
+        "pyserial>=3.5.0",
         "pyserial-asyncio>=0.5",
         "backoff>=1.10.0",
     ],
