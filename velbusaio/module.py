@@ -511,6 +511,10 @@ class Module:
             self._name = None
             return
 
+        if self._type == 0x0C:
+            self._name = None
+            return
+
         for _memory_key, memory_part in self._data["Memory"].items():
             if "Address" in memory_part:
                 for addr_int in memory_part["Address"].keys():

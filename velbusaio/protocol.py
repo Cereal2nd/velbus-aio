@@ -135,14 +135,14 @@ class VelbusProtocol(asyncio.BufferedProtocol):
         Called when asyncio.BufferedProtocol detects received data from network.
         """
         self._buffer_pos += nbytes
-        self._log.debug(
-            "Received {nbytes} bytes from Velbus: {data_hex}".format(
-                nbytes=nbytes,
-                data_hex=binascii.hexlify(
-                    self._buffer[self._buffer_pos - nbytes : self._buffer_pos], " "
-                ),
-            )
-        )
+        # self._log.debug(
+        #    "Received {nbytes} bytes from Velbus: {data_hex}".format(
+        #        nbytes=nbytes,
+        #        data_hex=binascii.hexlify(
+        #            self._buffer[self._buffer_pos - nbytes : self._buffer_pos], " "
+        #        ),
+        #    )
+        # )
 
         if self._buffer_pos > MINIMUM_MESSAGE_SIZE:
             # try to construct a Velbus message from the buffer

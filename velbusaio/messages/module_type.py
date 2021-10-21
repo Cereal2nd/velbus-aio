@@ -18,6 +18,8 @@ MODULES_WITHOUT_SERIAL = {
     0x08: "VMB4RY",
     0x09: "VMB2BL",
     0x0C: "VMB1TS",
+    0x0D: "VMB1TH",
+    0x0E: "VMB1TC",
     0x0F: "VMB1LED",
     0x14: "VMBDME",
 }
@@ -55,7 +57,6 @@ class ModuleTypeMessage(Message):
         """
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
-        self.needs_data(data, 4)
         self.set_attributes(priority, address, rtr)
         self.module_type = data[0]
         if data[0] not in MODULES_WITHOUT_SERIAL:
