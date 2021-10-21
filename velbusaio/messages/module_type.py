@@ -57,7 +57,6 @@ class ModuleTypeMessage(Message):
         """
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
-        self.needs_data(data, 4)
         self.set_attributes(priority, address, rtr)
         self.module_type = data[0]
         if data[0] not in MODULES_WITHOUT_SERIAL:
