@@ -511,7 +511,7 @@ class Module:
             self._name = None
             return
 
-        if self._type == 0X0C:
+        if self._type == 0x0C:
             self._name = None
             return
 
