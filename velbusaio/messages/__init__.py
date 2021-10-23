@@ -83,6 +83,9 @@ from velbusaio.messages.switch_to_day import SwitchToDayMessage
 from velbusaio.messages.switch_to_night import SwitchToNightMessage
 from velbusaio.messages.switch_to_safe import SwitchToSafeMessage
 from velbusaio.messages.temp_sensor_settings_part1 import TempSensorSettingsPart1
+from velbusaio.messages.temp_sensor_settings_part2 import TempSensorSettingsPart2
+from velbusaio.messages.temp_sensor_settings_part3 import TempSensorSettingsPart3
+from velbusaio.messages.temp_sensor_settings_part4 import TempSensorSettingsPart4
 from velbusaio.messages.temp_sensor_settings_request import TempSensorSettingsRequest
 from velbusaio.messages.temp_sensor_status import TempSensorStatusMessage
 from velbusaio.messages.temp_set_cooling import TempSetCoolingMessage
