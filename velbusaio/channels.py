@@ -382,8 +382,14 @@ class Temperature(Channel):
     _cur = 0
     _max = None
     _min = None
+    _target = 0
+    _cmode = None
+    _cstatus = None
+    _thermostat = False
 
     def get_categories(self) -> list:
+        if self._thermostat:
+            return ["climate"]
         return ["sensor"]
 
     def get_class(self) -> str:
@@ -408,6 +414,42 @@ class Temperature(Channel):
             return None
         return round(self._min, 2)
 
+    def get_climate_target(self) -> int:
+        return round(self._target, 2)
+
+    def get_climate_preset(self) -> str:
+        return self._cmode
+
+    def get_climate_mode(self) -> str:
+        return self._cstatus
+
+    async def set_temp(self, temp) -> None:
+        cls = commandRegistry.get_command(0xE4, self._module.get_type())
+        msg = cls(self._address)
+        msg.temp = temp * 2
+        await self._writer(msg)
+
+    async def set_preset(self, mode) -> None:
+        if mode == "safe":
+            code = 0xDE
+        elif mode == "comfort":
+            code = 0xDB
+        elif mode == "day":
+            code = 0xDC
+        elif mode == "night":
+            code = 0xDD
+        cls = commandRegistry.get_command(code, self._module.get_type())
+        msg = cls(self._address)
+        await self._writer(msg)
+
+    async def set_mode(self, mode) -> None:
+        if mode == "heat":
+            code = 0xE0
+        elif mode == "cool":
+            code = 0xDF
+        cls = commandRegistry.get_command(code, self._module.get_type())
+        msg = cls(self._address)
+        await self._writer(msg)
 
 class SensorNumber(Channel):
     """
@@ -525,33 +567,3 @@ class Memo(Channel):
                 msg = cls(self._address)
                 msg.start = msgcntr
         await self._writer(msg)
-
-
-# _mode = None
-# _target = None
-# _cur = None
-#
-# def get_categories(self):
-#    return ["climate"]
-#
-# async def set_temp(self, temp) -> None:
-#    cls = commandRegistry.get_command(0xE4, self._module.get_type())
-#    msg = cls(self._address)
-#    msg.temp = temp * 2
-#    await self._writer(msg)
-#
-# async def set_mode(self, mode) -> None:
-#    if mode == "safe":
-#        code = 0xDE
-#    elif mode == "comfort":
-#        code = 0xDB
-#    elif mode == "day":
-#        code = 0xDC
-#    elif mode == "night":
-#        code = 0xDD
-#    cls = commandRegistry.get_command(code, self._module.get_type())
-#    msg = cls(self._address)
-#    await self._writer(msg)
-#
-# def get_state(self) -> int:
-#    return round(self._cur, 2)

@@ -23,6 +23,7 @@ from velbusaio.channels import (
     SensorNumber,
     Temperature,
     ThermostatChannel,
+    Thermostat
 )
 from velbusaio.const import CHANNEL_LIGHT_VALUE, CHANNEL_MEMO_TEXT, PRIORITY_LOW
 from velbusaio.helpers import handle_match, keys_exists
@@ -375,7 +376,7 @@ class Module:
         # start the loading
         self._is_loading = True
         # load default channels
-        self.__load_default_channels()
+        await self.__load_default_channels()
         # load the data from memory ( the stuff that we need)
         await self.__load_memory()
         # load the module status
@@ -527,7 +528,7 @@ class Module:
                     msg.low_address = addr[1]
                     await self._writer(msg)
 
-    def __load_default_channels(self) -> None:
+    async def __load_default_channels(self) -> None:
         if "Channels" not in self._data:
             return
 
@@ -539,3 +540,8 @@ class Module:
             self._channels[int(chan)] = cls(
                 self, int(chan), chan_data["Name"], edit, self._writer, self._address
             )
+            if chan_data["Type"] == "Temperature":
+                print("Thermostat" in self._data)
+                print("ThermostatAddr" in self._data)
+                if ("Thermostat" in self._data or ("ThermostatAddr" in self._data and self._data["ThermostatAddr"] != 0)):
+                    await self._channels[int(chan)].update({'thermostat': True})
