@@ -23,7 +23,6 @@ from velbusaio.channels import (
     SensorNumber,
     Temperature,
     ThermostatChannel,
-    Thermostat
 )
 from velbusaio.const import CHANNEL_LIGHT_VALUE, CHANNEL_MEMO_TEXT, PRIORITY_LOW
 from velbusaio.helpers import handle_match, keys_exists
