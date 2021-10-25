@@ -451,6 +451,7 @@ class Temperature(Channel):
         msg = cls(self._address)
         await self._writer(msg)
 
+
 class SensorNumber(Channel):
     """
     A Numeric Sensor channel

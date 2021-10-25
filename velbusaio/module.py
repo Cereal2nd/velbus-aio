@@ -542,5 +542,7 @@ class Module:
             if chan_data["Type"] == "Temperature":
                 print("Thermostat" in self._data)
                 print("ThermostatAddr" in self._data)
-                if ("Thermostat" in self._data or ("ThermostatAddr" in self._data and self._data["ThermostatAddr"] != 0)):
-                    await self._channels[int(chan)].update({'thermostat': True})
+                if "Thermostat" in self._data or (
+                    "ThermostatAddr" in self._data and self._data["ThermostatAddr"] != 0
+                ):
+                    await self._channels[int(chan)].update({"thermostat": True})
