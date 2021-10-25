@@ -217,8 +217,8 @@ class Velbus:
             if mods_loaded == len(self.get_modules()):
                 self._log.info("All modules loaded")
                 return
-            self._log.info("Not all modules loaded yet, waiting 30 seconds")
-            await asyncio.sleep(230)
+            self._log.info("Not all modules loaded yet, waiting 15 seconds")
+            await asyncio.sleep(15)
 
     async def send(self, msg: Message) -> None:
         """
