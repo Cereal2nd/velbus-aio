@@ -540,8 +540,6 @@ class Module:
                 self, int(chan), chan_data["Name"], edit, self._writer, self._address
             )
             if chan_data["Type"] == "Temperature":
-                print("Thermostat" in self._data)
-                print("ThermostatAddr" in self._data)
                 if "Thermostat" in self._data or (
                     "ThermostatAddr" in self._data and self._data["ThermostatAddr"] != 0
                 ):

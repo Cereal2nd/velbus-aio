@@ -389,7 +389,7 @@ class Temperature(Channel):
 
     def get_categories(self) -> list:
         if self._thermostat:
-            return ["climate"]
+            return ["sensor", "climate"]
         return ["sensor"]
 
     def get_class(self) -> str:
