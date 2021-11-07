@@ -185,7 +185,11 @@ class VelbusProtocol(asyncio.BufferedProtocol):
             try:
                 while not message_sent:
                     message_sent = await self._write_message(msg_info)
-                await asyncio.sleep(SLEEP_TIME, loop=self._loop)
+                if msg_info.command == 0xEF: # 'channel name request' command provokes in worst case 99 answer packets from VMBGPOD
+                    queue_sleep_time = SLEEP_TIME * 33
+                else:
+                    queue_sleep_time = SLEEP_TIME
+                await asyncio.sleep(queue_sleep_time, loop=self._loop)
             except (asyncio.CancelledError, GeneratorExit) as exc:
                 if not self._closing:
                     self._log.error(f"Stopping Velbus writer due to {exc!r}")
