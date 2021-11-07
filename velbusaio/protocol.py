@@ -185,7 +185,8 @@ class VelbusProtocol(asyncio.BufferedProtocol):
             try:
                 while not message_sent:
                     message_sent = await self._write_message(msg_info)
-                if msg_info.command == 0xEF: # 'channel name request' command provokes in worst case 99 answer packets from VMBGPOD
+                # 'channel name request' command provokes in worst case 99 answer packets from VMBGPOD
+                if msg_info.command == 0xEF:
                     queue_sleep_time = SLEEP_TIME * 33
                 else:
                     queue_sleep_time = SLEEP_TIME
