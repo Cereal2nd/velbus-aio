@@ -4,6 +4,7 @@ author: Maikel Punie <maikel.punie@gmail.com>
 from __future__ import annotations
 
 import string
+from typing import Any, Callable
 
 from velbusaio.command_registry import commandRegistry
 from velbusaio.const import (
@@ -144,7 +145,7 @@ class Channel:
         # COMPONENT_TYPES = ["switch", "sensor", "binary_sensor", "cover", "climate", "light"]
         return []
 
-    def on_status_update(self, meth: Callable[[], Coroutine[Any, Any, None]]) -> None:
+    def on_status_update(self, meth: Callable) -> None:
         self._on_status_update.append(meth)
 
     def get_counter_state(self):
