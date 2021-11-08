@@ -79,7 +79,7 @@ class Module:
         module_address: int,
         module_type: int,
         module_data: dict,
-        serial=None,
+        serial: str ="",
         memorymap=None,
         build_year=None,
         build_week=None,
@@ -91,7 +91,7 @@ class Module:
 
         self._name = {}
         self._sub_address = {}
-        self.serial = serial
+        self.serial: str = serial
         self.memory_map_version = memorymap
         self.build_year = build_year
         self.build_week = build_week
@@ -162,7 +162,7 @@ class Module:
     def get_type_name(self) -> str:
         return self._data["Type"]
 
-    def get_serial(self) -> str:
+    def get_serial(self) -> str | None:
         return self.serial
 
     def get_name(self) -> str:
