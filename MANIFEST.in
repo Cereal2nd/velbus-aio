@@ -1,5 +1,5 @@
 include LICENSE
 include README.md
 include requirements.txt
-imclude velbusaio/py.typed
+include velbusaio/py.typed
 include velbusaio/moduleprotocol/protocol.json
