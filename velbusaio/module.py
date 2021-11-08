@@ -79,7 +79,7 @@ class Module:
         module_address: int,
         module_type: int,
         module_data: dict,
-        serial: str ="",
+        serial: str = "",
         memorymap=None,
         build_year=None,
         build_week=None,
