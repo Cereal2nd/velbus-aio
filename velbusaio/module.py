@@ -50,6 +50,7 @@ from velbusaio.messages.dimmer_channel_status import DimmerChannelStatusMessage
 from velbusaio.messages.dimmer_status import DimmerStatusMessage
 from velbusaio.messages.fast_blinking_led import FastBlinkingLedMessage
 from velbusaio.messages.memory_data import MemoryDataMessage
+from velbusaio.messages.meteo_raw import MeteoRawMessage
 from velbusaio.messages.module_status import (
     ModuleStatusMessage,
     ModuleStatusMessage2,
@@ -350,6 +351,10 @@ class Module:
         elif isinstance(message, BlindStatusMessage):
             channel = self._translate_channel_name(message.channel)
             await self._channels[channel].update({"state": message.status})
+        elif isinstance(message, MeteoRawMessage):
+            await self._channels[11].update({"cur": message.rain})
+            await self._channels[12].update({"cur": message.light})
+            await self._channels[13].update({"cur": message.wind})
 
         self._cache()
 
