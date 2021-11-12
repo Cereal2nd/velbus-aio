@@ -4,6 +4,7 @@ author: Maikel Punie <maikel.punie@gmail.com>
 from __future__ import annotations
 
 import string
+from typing import Any, Callable
 
 from velbusaio.command_registry import commandRegistry
 from velbusaio.const import (
@@ -144,8 +145,14 @@ class Channel:
         # COMPONENT_TYPES = ["switch", "sensor", "binary_sensor", "cover", "climate", "light"]
         return []
 
-    def on_status_update(self, meth: type) -> None:
+    def on_status_update(self, meth: Callable) -> None:
         self._on_status_update.append(meth)
+
+    def get_counter_state(self):
+        return None
+
+    def get_counter_unit(self):
+        return None
 
 
 class Blind(Channel):
@@ -159,7 +166,7 @@ class Blind(Channel):
     def get_categories(self) -> list:
         return ["cover"]
 
-    def get_position(self) -> str:
+    def get_position(self) -> int:
         return self._position
 
     def get_state(self) -> str:
