@@ -4,10 +4,10 @@ Velbus packet handler
 """
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import re
-import asyncio
 
 import pkg_resources
 
