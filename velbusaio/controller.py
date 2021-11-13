@@ -38,6 +38,7 @@ class Velbus:
         self._protocol = VelbusProtocol(
             message_received_callback=self._on_message_received,
             connection_lost_callback=self._on_connection_lost,
+            end_of_scan_callback=self._on_end_of_scan,
             loop=self._loop,
         )
         self._closing = False
@@ -60,6 +61,9 @@ class Velbus:
         if self._auto_reconnect and not self._closing:
             self._log.debug("Reconnecting to transport")
             asyncio.ensure_future(self.connect(), loop=self._loop)
+
+    def _on_end_of_scan(self):
+        self._handler.scan_finished()
 
     async def add_module(
         self,
@@ -183,11 +187,10 @@ class Velbus:
 
     async def scan(self) -> None:
         self._handler.scan_started()
-        for addr in range(1, 255):
+        for addr in range(1, 256):
             msg = ModuleTypeRequestMessage(addr)
             await self.send(msg)
-        await asyncio.sleep(15)
-        self._handler.scan_finished()
+        await self._handler._scan_complete_event.wait()
         # calculate how long to wait
         calc_timeout = len(self._modules) * 30
         if calc_timeout < LOAD_TIMEOUT:

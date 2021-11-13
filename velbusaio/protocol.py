@@ -30,12 +30,14 @@ class VelbusProtocol(asyncio.BufferedProtocol):
         loop,
         message_received_callback: t.Callable[[RawMessage], None],
         connection_lost_callback=None,
+        end_of_scan_callback=None,
     ) -> None:
         super().__init__()
         self._log = logging.getLogger("velbus-protocol")
         self._loop = loop
         self._message_received_callback = message_received_callback
         self._connection_lost_callback = connection_lost_callback
+        self._end_of_scan_callback = end_of_scan_callback
 
         # everything for reading from Velbus
         self._buffer = bytearray(MAXIMUM_MESSAGE_SIZE)
@@ -185,11 +187,13 @@ class VelbusProtocol(asyncio.BufferedProtocol):
             try:
                 while not message_sent:
                     message_sent = await self._write_message(msg_info)
-                # 'channel name request' command provokes in worst case 99 answer packets from VMBGPOD
                 if msg_info.command == 0xEF:
+                    # 'channel name request' command provokes in worst case 99 answer packets from VMBGPOD
                     queue_sleep_time = SLEEP_TIME * 33
                 else:
                     queue_sleep_time = SLEEP_TIME
+                if msg_info.rtr and msg_info.address == 0xFF:
+                    self._end_of_scan_callback()
                 await asyncio.sleep(queue_sleep_time, loop=self._loop)
             except (asyncio.CancelledError, GeneratorExit) as exc:
                 if not self._closing:
