@@ -4,6 +4,7 @@ Velbus packet handler
 """
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import re
@@ -28,6 +29,7 @@ class PacketHandler:
         self._writer = writer
         self._velbus = velbus
         self._scan_complete = False
+        self._scan_complete_event = asyncio.Event()
         with open(
             pkg_resources.resource_filename(__name__, "moduleprotocol/protocol.json")
         ) as protocol_file:
@@ -35,9 +37,12 @@ class PacketHandler:
 
     def scan_finished(self) -> None:
         self._scan_complete = True
+        self._scan_complete_event.set()
+        self._log.debug("Scan complete")
 
     def scan_started(self) -> None:
         self._scan_complete = False
+        self._scan_complete_event.clear()
 
     async def handle(self, rawmsg: RawMessage) -> None:
         """
