@@ -149,10 +149,16 @@ class Channel:
         self._on_status_update.append(meth)
 
     def get_counter_state(self):
-        return None
+        raise NotImplementedError
 
     def get_counter_unit(self):
-        return None
+        raise NotImplementedError
+
+    def get_max(self) -> int:
+        raise NotImplementedError
+
+    def get_min(self) -> int:
+        raise NotImplementedError
 
 
 class Blind(Channel):
