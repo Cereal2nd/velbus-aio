@@ -104,7 +104,7 @@ class CoverOffMessage2(Message):
         else:
             tmp = 0x0C
 
-        return bytes([COMMAND_CODE, tmp]) + struct.pack(">L", self.delay_time)[-3:]
+        return bytes([COMMAND_CODE, tmp])
 
 
 register_command(COMMAND_CODE, CoverOffMessage2, "VMB1BL")
