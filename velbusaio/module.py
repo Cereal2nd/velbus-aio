@@ -358,7 +358,7 @@ class Module:
 
         self._cache()
 
-    def get_channels(self) -> list:
+    def get_channels(self) -> dict:
         """
         List all channels for this module
         """
