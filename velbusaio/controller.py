@@ -33,13 +33,11 @@ class Velbus:
 
     def __init__(self, dsn, cache_dir=get_cache_dir()) -> None:
         self._log = logging.getLogger("velbus")
-        self._loop = asyncio.get_event_loop()
 
         self._protocol = VelbusProtocol(
             message_received_callback=self._on_message_received,
             connection_lost_callback=self._on_connection_lost,
             end_of_scan_callback=self._on_end_of_scan,
-            loop=self._loop,
         )
         self._closing = False
         self._auto_reconnect = True
@@ -60,7 +58,7 @@ class Velbus:
         """Respond to Protocol connection lost."""
         if self._auto_reconnect and not self._closing:
             self._log.debug("Reconnecting to transport")
-            asyncio.ensure_future(self.connect(), loop=self._loop)
+            asyncio.ensure_future(self.connect())
 
     def _on_end_of_scan(self):
         self._handler.scan_finished()
@@ -157,7 +155,10 @@ class Velbus:
                 host, port = self._dsn.split(":")
                 ctx = None
             try:
-                _transport, _protocol = await self._loop.create_connection(
+                (
+                    _transport,
+                    _protocol,
+                ) = await asyncio.get_event_loop().create_connection(
                     lambda: self._protocol, host=host, port=port, ssl=ctx
                 )
 
@@ -167,7 +168,7 @@ class Velbus:
             # serial port
             try:
                 _transport, _protocol = await serial_asyncio.create_serial_connection(
-                    self._loop,
+                    asyncio.get_event_loop(),
                     lambda: self._protocol,
                     url=self._dsn,
                     baudrate=38400,
