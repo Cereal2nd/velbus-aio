@@ -27,14 +27,12 @@ class VelbusProtocol(asyncio.BufferedProtocol):
 
     def __init__(
         self,
-        loop,
         message_received_callback: t.Callable[[RawMessage], None],
         connection_lost_callback=None,
         end_of_scan_callback=None,
     ) -> None:
         super().__init__()
         self._log = logging.getLogger("velbus-protocol")
-        self._loop = loop
         self._message_received_callback = message_received_callback
         self._connection_lost_callback = connection_lost_callback
         self._end_of_scan_callback = end_of_scan_callback
@@ -48,8 +46,8 @@ class VelbusProtocol(asyncio.BufferedProtocol):
         self.transport = None
 
         # everything for writing to Velbus
-        self._send_queue = asyncio.Queue(loop=self._loop)
-        self._write_transport_lock = asyncio.Lock(loop=self._loop)
+        self._send_queue = asyncio.Queue()
+        self._write_transport_lock = asyncio.Lock()
         self._writer_task = None
         self._restart_writer = False
         self.restart_writing()
@@ -74,7 +72,7 @@ class VelbusProtocol(asyncio.BufferedProtocol):
         """Resume writing."""
         if self._restart_writer and not self._write_transport_lock.locked():
             self._writer_task = asyncio.ensure_future(
-                self._get_message_from_send_queue(), loop=self._loop
+                self._get_message_from_send_queue()
             )
             self._writer_task.add_done_callback(lambda _future: self.restart_writing())
 
@@ -95,7 +93,7 @@ class VelbusProtocol(asyncio.BufferedProtocol):
             self._log.error(f"Velbus connection lost: {exc!r}")
 
         self.transport = None
-        asyncio.ensure_future(self.pause_writing(), loop=self._loop)
+        asyncio.ensure_future(self.pause_writing())
         if self._connection_lost_callback:
             self._connection_lost_callback(exc)
 
@@ -126,7 +124,7 @@ class VelbusProtocol(asyncio.BufferedProtocol):
             )
 
             if msg is not None:
-                asyncio.ensure_future(self._process_message(msg), loop=self._loop)
+                asyncio.ensure_future(self._process_message(msg))
                 _recheck = True
             else:
                 _recheck = False
@@ -151,7 +149,7 @@ class VelbusProtocol(asyncio.BufferedProtocol):
             msg, remaining_data = create_message_info(self._buffer)
 
             if msg is not None:
-                asyncio.ensure_future(self._process_message(msg), loop=self._loop)
+                asyncio.ensure_future(self._process_message(msg))
 
             self._new_buffer(remaining_data)
 
@@ -194,7 +192,7 @@ class VelbusProtocol(asyncio.BufferedProtocol):
                     queue_sleep_time = SLEEP_TIME
                 if msg_info.rtr and msg_info.address == 0xFF:
                     self._end_of_scan_callback()
-                await asyncio.sleep(queue_sleep_time, loop=self._loop)
+                await asyncio.sleep(queue_sleep_time)
             except (asyncio.CancelledError, GeneratorExit) as exc:
                 if not self._closing:
                     self._log.error(f"Stopping Velbus writer due to {exc!r}")
