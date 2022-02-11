@@ -127,6 +127,13 @@ class Channel:
     def __str__(self):
         return self.__repr__()
 
+    def get_channel_info(self) -> dict[str, Any]:
+        data = {}
+        for key, value in self.__dict__.items():
+            if key not in ["_module", "_writer", "_name_parts", "_on_status_update"]:
+                data[key.replace("_", "", 1)] = value
+        return data
+
     async def update(self, data: dict) -> None:
         """
         Set the attributes of this channel
