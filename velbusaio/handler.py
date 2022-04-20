@@ -76,7 +76,6 @@ class PacketHandler:
                 )
             )
         elif address in self._velbus.get_modules().keys():
-            # self._handle_message(rawmsg)
             module_type = self._velbus.get_module(address).get_type()
             if commandRegistry.has_command(int(command_value), module_type):
                 command = commandRegistry.get_command(command_value, module_type)
@@ -101,59 +100,62 @@ class PacketHandler:
                 )
             )
 
-    def _handle_message(self, rawmsg: RawMessage) -> None:
-        module_type = self._velbus.get_module(rawmsg.address).get_type()
-        this_msg = keys_exists(
-            self.pdata, "ModuleTypes", h2(module_type), "Messages", h2(rawmsg.command)
-        )
-        print(this_msg)
+    # def _handle_message(self, rawMsg: RawMessage) -> None:
+    #    module_type = self._velbus.get_module(rawMsg.address).get_type()
+    #    this_msg = keys_exists(
+    #        self.pdata, "ModuleTypes", h2(module_type), "Messages", h2(rawMsg.command), "Data"
+    #    )
+    #    if this_msg and "PerByte" in this_msg:
+    #        self._per_byte(this_msg["PerByte"], rawMsg)
 
-    def _per_byte(self, cmsg, msg) -> dict:
-        result = {}
-        for num, byte in enumerate(msg.data):
-            num = str(num)
-            # only do something if its defined
-            if num not in cmsg:
-                continue
-            # check if we can do a binary match
-            for mat in cmsg[num]["Match"]:
-                if (
-                    (mat.startswith("%") and re.match(mat[1:], f"{byte:08b}"))
-                    or mat == f"{byte:08b}"
-                    or mat == f"{byte:02x}"
-                ):
-                    result = self._per_byte_handle(
-                        result, cmsg[num]["Match"][mat], byte
-                    )
-        return result
+    # def _per_byte(self, cmsg, rawMsg: RawMessage) -> dict:
+    #    result = {}
+    #    byte_index = 0
+    #    for byte in rawMsg.data:
+    #        num = str(byte_index)
+    #        # only do something if its defined
+    #        if num not in cmsg:
+    #            continue
+    #        # check if we can do a binary match
+    #        for mat in cmsg[num]["Match"]:
+    #            if (
+    #                (mat.startswith("%") and re.match(mat[1:], f"{byte:08b}"))
+    #                or mat == f"{byte:08b}"
+    #                or mat == f"{byte:02x}"
+    #            ):
+    #                result = self._per_byte_handle(
+    #                    result, cmsg[num]["Match"][mat], byte
+    #                )
+    #        byte_index += 1
+    #    return result
 
-    def _per_byte_handle(self, result: dict, todo: dict, byte: int) -> dict:
-        if "Channel" in todo:
-            result["Channel"] = todo["Channel"]
-        if "Value" in todo:
-            result["Value"] = todo["Value"]
-        if "Convert" in todo:
-            result["ValueList"] = []
-            if todo["Convert"] == "Decimal":
-                result["ValueList"].append(int(byte))
-            elif todo["Convert"] == "Counter":
-                result["ValueList"].append(f"{byte:02x}")
-            elif todo["Convert"] == "Temperature":
-                print("CONVERT temperature")
-            elif todo["Convert"] == "Divider":
-                bin_str = f"{byte:08b}"
-                chan = bin_str[6:]
-                val = bin_str[:5]
-                print(f"CONVERT Divider {chan} {val}")
-            elif todo["Convert"] == "Channel":
-                print("CONVERT Channel")
-            elif todo["Convert"] == "ChannelBit":
-                print("CONVERT ChannelBit")
-            elif todo["Convert"].startswith("ChannelBitStatus"):
-                print("CONVERT ChannelBitStatus")
-            else:
-                self._log.error("UNKNOWN convert requested: {}".format(todo["Convert"]))
-        return result
+    # def _per_byte_handle(self, result: dict, todo: dict, byte: int) -> dict:
+    #    if "Channel" in todo:
+    #        result["Channel"] = todo["Channel"]
+    #    if "Value" in todo:
+    #        result["Value"] = todo["Value"]
+    #    if "Convert" in todo:
+    #        result["ValueList"] = []
+    #        if todo["Convert"] == "Decimal":
+    #            result["ValueList"].append(int(byte))
+    #        elif todo["Convert"] == "Counter":
+    #            result["ValueList"].append(f"{byte:02x}")
+    #        elif todo["Convert"] == "Temperature":
+    #            print("CONVERT temperature")
+    #        elif todo["Convert"] == "Divider":
+    #            bin_str = f"{byte:08b}"
+    #            chan = bin_str[6:]
+    #            val = bin_str[:5]
+    #            print(f"CONVERT Divider {chan} {val}")
+    #        elif todo["Convert"] == "Channel":
+    #            print("CONVERT Channel")
+    #        elif todo["Convert"] == "ChannelBit":
+    #            print("CONVERT ChannelBit")
+    #        elif todo["Convert"].startswith("ChannelBitStatus"):
+    #            print("CONVERT ChannelBitStatus")
+    #        else:
+    #            self._log.error("UNKNOWN convert requested: {}".format(todo["Convert"]))
+    #    return result
 
     async def _handle_module_type(self, msg: Message) -> None:
         """
