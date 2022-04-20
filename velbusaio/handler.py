@@ -76,6 +76,7 @@ class PacketHandler:
                 )
             )
         elif address in self._velbus.get_modules().keys():
+            # self._handle_message(rawmsg)
             module_type = self._velbus.get_module(address).get_type()
             if commandRegistry.has_command(int(command_value), module_type):
                 command = commandRegistry.get_command(command_value, module_type)
@@ -99,6 +100,13 @@ class PacketHandler:
                     self._velbus.get_modules().keys(),
                 )
             )
+
+    def _handle_message(self, rawmsg: RawMessage) -> None:
+        module_type = self._velbus.get_module(rawmsg.address).get_type()
+        this_msg = keys_exists(
+            self.pdata, "ModuleTypes", h2(module_type), "Messages", h2(rawmsg.command)
+        )
+        print(this_msg)
 
     def _per_byte(self, cmsg, msg) -> dict:
         result = {}

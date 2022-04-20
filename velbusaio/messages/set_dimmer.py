@@ -58,16 +58,13 @@ class SetDimmerMessage(Message):
         """
         :return: bytes
         """
-        return (
-            bytes(
-                [
-                    COMMAND_CODE,
-                    self.channels_to_byte(self.dimmer_channels),
-                    self.dimmer_state,
-                ]
-            )
-            + self.dimmer_transitiontime.to_bytes(2, byteorder="big", signed=False)
-        )
+        return bytes(
+            [
+                COMMAND_CODE,
+                self.channels_to_byte(self.dimmer_channels),
+                self.dimmer_state,
+            ]
+        ) + self.dimmer_transitiontime.to_bytes(2, byteorder="big", signed=False)
 
 
 register_command(COMMAND_CODE, SetDimmerMessage, "VMBDME")
