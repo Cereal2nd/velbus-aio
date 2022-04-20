@@ -61,4 +61,7 @@ MODULE_DIRECTORY = {
     0x40: "VMBUSBIP",
     0x41: "VMB1RYS",
     0x42: "VMBKP",
+    0x43: "VMBIN",
+    0x44: "VMB4PB",
+    0x45: "VMBDALI",
 }
