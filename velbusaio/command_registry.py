@@ -51,6 +51,7 @@ MODULE_DIRECTORY = {
     0x35: "VMBEL2",
     0x36: "VMBEL4",
     0x37: "VMBELO",
+    0x38: "VMBELPIR",
     0x39: "VMBSIG",
     0x3A: "VMBGP1-2",
     0x3B: "VMBGP2-2",
