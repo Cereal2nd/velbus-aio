@@ -10,7 +10,6 @@ import pickle
 import struct
 import sys
 
-from velbusaio.command_registry import commandRegistry
 from velbusaio.channels import (
     Blind,
     Button,
@@ -25,6 +24,7 @@ from velbusaio.channels import (
     Temperature,
     ThermostatChannel,
 )
+from velbusaio.command_registry import commandRegistry
 from velbusaio.const import CHANNEL_LIGHT_VALUE, CHANNEL_MEMO_TEXT, PRIORITY_LOW
 from velbusaio.helpers import handle_match, keys_exists
 from velbusaio.messages.blind_status import BlindStatusMessage, BlindStatusNgMessage
@@ -45,8 +45,8 @@ from velbusaio.messages.channel_name_part3 import (
 )
 from velbusaio.messages.channel_name_request import (
     COMMAND_CODE as CHANNEL_NAME_REQUEST_COMMAND_CODE,
-    ChannelNameRequestMessage,
 )
+from velbusaio.messages.channel_name_request import ChannelNameRequestMessage
 from velbusaio.messages.clear_led import ClearLedMessage
 from velbusaio.messages.counter_status import CounterStatusMessage
 from velbusaio.messages.counter_status_request import CounterStatusRequestMessage
@@ -507,7 +507,10 @@ class Module:
             msg.channels = 0xFF
             await self._writer(msg)
         else:
-            msg_type = commandRegistry.get_command(CHANNEL_NAME_REQUEST_COMMAND_CODE, self.get_type())
+            msg_type = commandRegistry.get_command(
+                CHANNEL_NAME_REQUEST_COMMAND_CODE,
+                self.get_type()
+            )
             msg = msg_type(self._address)
             msg.priority = PRIORITY_LOW
             msg.channels = list(range(1, (self.number_of_channels() + 1)))
