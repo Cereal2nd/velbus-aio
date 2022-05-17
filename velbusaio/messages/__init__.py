@@ -42,6 +42,7 @@ from velbusaio.messages.fast_blinking_led import FastBlinkingLedMessage
 from velbusaio.messages.forced_off import ForcedOff
 from velbusaio.messages.forced_on import ForcedOn
 from velbusaio.messages.interface_status_request import InterfaceStatusRequestMessage
+from velbusaio.messages.ir_receiver_status import IRReceiverStatusMessage
 from velbusaio.messages.kwh_status import KwhStatusMessage
 from velbusaio.messages.light_value_request import LightValueRequest
 from velbusaio.messages.memo_text import MemoTextMessage
