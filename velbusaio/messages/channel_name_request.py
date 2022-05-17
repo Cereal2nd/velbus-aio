@@ -79,3 +79,4 @@ class ChannelNameRequestMessage2(ChannelNameRequestMessage):
 
 
 register_command(COMMAND_CODE, ChannelNameRequestMessage)
+register_command(COMMAND_CODE, ChannelNameRequestMessage2, "VMB2BL")
