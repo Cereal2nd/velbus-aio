@@ -508,8 +508,7 @@ class Module:
             await self._writer(msg)
         else:
             msg_type = commandRegistry.get_command(
-                CHANNEL_NAME_REQUEST_COMMAND_CODE,
-                self.get_type()
+                CHANNEL_NAME_REQUEST_COMMAND_CODE, self.get_type()
             )
             msg = msg_type(self._address)
             msg.priority = PRIORITY_LOW
