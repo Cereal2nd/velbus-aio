@@ -306,6 +306,14 @@ class Module:
             await self._channels[CHANNEL_LIGHT_VALUE].update(
                 {"cur": message.light_value}
             )
+            await self._channels[1].update({"closed": message.dark})
+            await self._channels[2].update({"closed": message.light})
+            await self._channels[3].update({"closed": message.motion1})
+            await self._channels[4].update({"closed": message.light_motion1})
+            await self._channels[5].update({"closed": message.motion2})
+            await self._channels[6].update({"closed": message.light_motion2})
+            await self._channels[7].update({"closed": message.low_temp_alarm})
+            await self._channels[8].update({"closed": message.high_temp_alarm})
         elif isinstance(message, UpdateLedStatusMessage):
             for channel_id in range(1, 9):
                 channel = self._translate_channel_name(channel_id + _channel_offset)
