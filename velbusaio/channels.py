@@ -167,6 +167,9 @@ class Channel:
     def get_min(self) -> int:
         raise NotImplementedError
 
+    async def press(self) -> None:
+        raise NotImplementedError
+
 
 class Blind(Channel):
     """
@@ -235,7 +238,7 @@ class Button(Channel):
 
     def get_categories(self) -> list:
         if self._enabled:
-            return ["binary_sensor", "led"]
+            return ["binary_sensor", "led", "button"]
         return []
 
     def is_closed(self) -> bool:
@@ -277,6 +280,14 @@ class Button(Channel):
         await self._writer(msg)
         await self.update({"led_state": state})
 
+    async def press(self) -> None:
+        """
+        Press the button
+
+        :return: None
+        """
+        raise NotImplementedError
+
 
 class ButtonCounter(Button):
     """
@@ -292,7 +303,7 @@ class ButtonCounter(Button):
     def get_categories(self) -> list:
         if self._counter:
             return ["sensor"]
-        return ["binary_sensor"]
+        return ["binary_sensor", "button"]
 
     def is_counter_channel(self) -> bool:
         if self._counter:
@@ -339,6 +350,11 @@ class Sensor(Button):
     This is a bit weird, but this happens because of code sharing with openhab
     A sensor in this case is actually a Button
     """
+
+    def get_categories(self) -> list:
+        if self._enabled:
+            return ["binary_sensor", "led"]
+        return []
 
 
 class ThermostatChannel(Button):
