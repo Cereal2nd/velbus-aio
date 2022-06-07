@@ -259,7 +259,12 @@ class Module:
             _update_buttons = False
             for channel_types in self._data["Channels"]:
                 if keys_exists(self._data, "Channels", channel_types, "Type"):
-                    if self._data["Channels"][channel_types]["Type"] == "Button":
+                    if (
+                        self._data["Channels"][channel_types]["Type"] == "Button"
+                        or self._data["Channels"][channel_types]["Type"] == "Sensor"
+                        or self._data["Channels"][channel_types]["Type"]
+                        == "ButtonCounter"
+                    ):
                         _update_buttons = True
                         break
             if _update_buttons:
