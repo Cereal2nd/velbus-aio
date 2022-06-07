@@ -329,19 +329,19 @@ class ButtonCounter(Button):
         return round(val, 2)
 
     def get_unit(self) -> str:
-        if self._Unit == ENERGY_KILO_WATT_HOUR:
-            return "w"
-        if self._Unit == VOLUME_CUBIC_METER_HOUR:
-            return "m3"
-        if self._Unit == VOLUME_LITERS_HOUR:
-            return "l/h"
+        if self._Unit in (
+            VOLUME_LITERS_HOUR,
+            VOLUME_CUBIC_METER_HOUR,
+            ENERGY_KILO_WATT_HOUR,
+        ):
+            return self._Unit
         return None
 
     def get_counter_state(self) -> int:
         return round((self._counter / self._pulses), 2)
 
     def get_counter_unit(self) -> str:
-        return "kWh"
+        return self._Unit
 
 
 class Sensor(Button):
