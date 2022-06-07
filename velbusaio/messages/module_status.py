@@ -103,30 +103,30 @@ class ModuleStatusPirMessage(Message):
     def __init__(self, address=None):
         Message.__init__(self)
         # in data[0]
-        self.dark = False  # bit 1
-        self.light = False  # bit 2
-        self.motion1 = False  # bit 3
-        self.light_motion1 = False  # bit 4
-        self.motion2 = False  # bit 5
-        self.light_motion2 = False  # bit 6
-        self.low_temp_alarm = False  # bit 7
-        self.high_temp_alarm = False  # bit 8
+        self.dark: bool = False  # bit 1
+        self.light: bool = False  # bit 2
+        self.motion1: bool = False  # bit 3
+        self.light_motion1: bool = False  # bit 4
+        self.motion2: bool = False  # bit 5
+        self.light_motion2: bool = False  # bit 6
+        self.low_temp_alarm: bool = False  # bit 7
+        self.high_temp_alarm: bool = False  # bit 8
         # in data[1] and data[2]
-        self.light_value = 0
+        self.light_value: int = 0
 
     def populate(self, priority, address, rtr, data):
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 7)
         self.set_attributes(priority, address, rtr)
-        self.dark = 0x01 & data[0]
-        self.light = 0x02 & data[0]
-        self.motion1 = 0x04 & data[0]
-        self.light_motion1 = 0x08 & data[0]
-        self.motion2 = 0x10 & data[0]
-        self.light_motion2 = 0x20 & data[0]
-        self.low_temp_alarm = 0x40 & data[0]
-        self.high_temp_alarm = 0x80 & data[0]
+        self.dark = bool(data[0] & (1 << 0))
+        self.light = bool(data[0] & (1 << 1))
+        self.motion1 = bool(data[0] & (1 << 2))
+        self.light_motion1 = bool(data[0] & (1 << 3))
+        self.motion2 = bool(data[0] & (1 << 4))
+        self.light_motion2 = bool(data[0] & (1 << 5))
+        self.low_temp_alarm = bool(data[0] & (1 << 6))
+        self.high_temp_alarm = bool(data[0] & (1 << 7))
         self.light_value = (data[1] << 8) + data[2]
 
     def data_to_binary(self):
@@ -134,6 +134,22 @@ class ModuleStatusPirMessage(Message):
         :return: bytes
         """
         raise NotImplementedError
+
+    def to_json(self):
+        """
+        :return: str
+        """
+        json_dict = self.to_json_basic()
+        json_dict["dark"] = self.dark
+        json_dict["light"] = self.light
+        json_dict["motion_1"] = self.motion1
+        json_dict["motion_1_ld"] = self.light_motion1
+        json_dict["motion_2"] = self.motion2
+        json_dict["motion_2_ld"] = self.light_motion2
+        json_dict["low_temp_alarm"] = self.low_temp_alarm
+        json_dict["high_temp_alarm"] = self.high_temp_alarm
+        json_dict["light_value"] = self.light_value
+        return json.dumps(json_dict)
 
 
 register_command(COMMAND_CODE, ModuleStatusMessage)
