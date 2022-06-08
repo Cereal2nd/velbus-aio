@@ -24,11 +24,11 @@ class RawMessage(NamedTuple):
     data: bytes
 
     @property
-    def command(self):
+    def command(self) -> Optional[int]:
         return self.data[0] if len(self.data) > 0 else None
 
     @property
-    def data_only(self):
+    def data_only(self) -> Optional[bytes]:
         return self.data[1:] if len(self.data) > 1 else None
 
     def to_bytes(self) -> bytes:
@@ -125,7 +125,7 @@ def _parse(rawmessage: bytearray) -> Tuple[Optional[RawMessage], bytearray]:
     )
 
 
-def _trim_buffer_garbage(rawmessage):
+def _trim_buffer_garbage(rawmessage: bytearray) -> bytearray:
     """
     Remove leading garbage bytes from a byte stream.
     """
