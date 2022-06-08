@@ -1,9 +1,11 @@
+from typing import Union
+
 from velbusaio.const import MAXIMUM_MESSAGE_SIZE, MINIMUM_MESSAGE_SIZE
 
 
 # Copyright (c) 2017 Thomas Delaet
 # Copied from python-velbus (https://github.com/thomasdelaet/python-velbus)
-def checksum(data) -> int:
+def checksum(data: Union[bytes, bytearray]) -> int:
     """
     :return: int
     """
