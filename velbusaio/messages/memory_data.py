@@ -42,15 +42,5 @@ class MemoryDataMessage(Message):
         """
         return bytes([COMMAND_CODE, self.high_address, self.low_address, self.data])
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["high_add"] = self.high_address
-        json_dict["low_addr"] = self.low_address
-        json_dict["data"] = self.data
-        return json.dumps(json_dict)
-
 
 register_command(COMMAND_CODE, MemoryDataMessage)

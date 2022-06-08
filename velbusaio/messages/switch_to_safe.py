@@ -29,14 +29,6 @@ class SwitchToSafeMessage(Message):
         self.needs_no_rtr(rtr)
         self.set_attributes(priority, address, rtr)
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["sleep_time"] = self.sleep
-        return json.dumps(json_dict)
-
     def data_to_binary(self):
         """
         :return: bytes

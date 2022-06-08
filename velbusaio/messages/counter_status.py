@@ -42,17 +42,6 @@ class CounterStatusMessage(Message):
         self.counter = (data[1] << 24) + (data[2] << 16) + (data[3] << 8) + data[4]
         self.delay = (data[5] << 8) + data[6]
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["pulses"] = self.pulses
-        json_dict["counter"] = self.counter
-        json_dict["delay"] = self.delay
-        json_dict["channel"] = self.channel
-        return json.dumps(json_dict)
-
     def get_channels(self):
         """
         :return: list

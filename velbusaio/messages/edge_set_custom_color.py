@@ -40,20 +40,6 @@ class EdgeSetCustomColor(Message):
         self.green = data[3]
         self.blue = data[4]
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["pallet"] = self.pallet
-        json_dict["rgb"] = self.rgb
-        json_dict["saturation"] = self.saturation
-        json_dict["rgb"] = self.rgb
-        json_dict["red"] = self.red
-        json_dict["green"] = self.green
-        json_dict["blue"] = self.blue
-        return json.dumps(json_dict)
-
     def data_to_binary(self):
         """
         :return: bytes

@@ -42,16 +42,6 @@ class PushButtonStatusMessage(Message):
         self.set_high_priority()
         self.set_no_rtr()
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["closed_channels"] = self.closed
-        json_dict["opened_channels"] = self.opened
-        json_dict["closed_long_channels"] = self.closed_long
-        return json.dumps(json_dict)
-
     def get_channels(self):
         """
         :return: list

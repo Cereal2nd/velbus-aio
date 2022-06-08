@@ -40,14 +40,6 @@ class SetDaylightSaving(Message):
         self.set_attributes(priority, address, rtr)
         self._ds = data[0]
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["ds"] = self._ds
-        return json.dumps(json_dict)
-
     def data_to_binary(self):
         """
         :return: bytes

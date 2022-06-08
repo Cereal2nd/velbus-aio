@@ -56,15 +56,5 @@ class SensorTemperatureMessage(Message):
         else:
             self.max = (((data[4] << 8) | data[5]) / 32) * 0.0625
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["cur"] = self.cur
-        json_dict["min"] = self.min
-        json_dict["max"] = self.max
-        return json.dumps(json_dict)
-
 
 register_command(COMMAND_CODE, SensorTemperatureMessage)

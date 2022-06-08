@@ -51,16 +51,5 @@ class ModuleSubTypeMessage(Message):
         self.sub_address_3 = data[5]
         self.sub_address_4 = data[6]
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["sub_1"] = self.sub_address_1
-        json_dict["sub_2"] = self.sub_address_2
-        json_dict["sub_3"] = self.sub_address_3
-        json_dict["sub_4"] = self.sub_address_4
-        return json.dumps(json_dict)
-
 
 register_command(COMMAND_CODE, ModuleSubTypeMessage)

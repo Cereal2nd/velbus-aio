@@ -87,17 +87,6 @@ class ModuleStatusMessage2(Message):
             ]
         )
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["closed"] = self.closed
-        json_dict["enabled"] = self.enabled
-        json_dict["normal"] = self.normal
-        json_dict["locked"] = self.locked
-        return json.dumps(json_dict)
-
 
 class ModuleStatusPirMessage(Message):
     def __init__(self, address=None):
@@ -134,22 +123,6 @@ class ModuleStatusPirMessage(Message):
         :return: bytes
         """
         raise NotImplementedError
-
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["dark"] = self.dark
-        json_dict["light"] = self.light
-        json_dict["motion_1"] = self.motion1
-        json_dict["motion_1_ld"] = self.light_motion1
-        json_dict["motion_2"] = self.motion2
-        json_dict["motion_2_ld"] = self.light_motion2
-        json_dict["low_temp_alarm"] = self.low_temp_alarm
-        json_dict["high_temp_alarm"] = self.high_temp_alarm
-        json_dict["light_value"] = self.light_value
-        return json.dumps(json_dict)
 
 
 register_command(COMMAND_CODE, ModuleStatusMessage)

@@ -40,14 +40,6 @@ class ChannelNameRequestMessage(Message):
             return bytes([0xEF, self.channels_to_byte(self.channels)])
         return bytes([0xEF, 0xFF])
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["channels"] = self.channels
-        return json.dumps(json_dict)
-
 
 class ChannelNameRequestMessage2(ChannelNameRequestMessage):
     """

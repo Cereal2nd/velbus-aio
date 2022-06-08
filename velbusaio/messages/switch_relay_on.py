@@ -38,14 +38,6 @@ class SwitchRelayOnMessage(Message):
         self.set_attributes(priority, address, rtr)
         self.relay_channels = self.byte_to_channels(data[0])
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["channels"] = self.relay_channels
-        return json.dumps(json_dict)
-
     def data_to_binary(self):
         """
         :return: bytes

@@ -51,18 +51,6 @@ class DimmerChannelStatusMessage(Message):
         self.led_status = data[3]
         (self.delay_time,) = struct.unpack(">L", bytes([0]) + data[4:])
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["channel"] = self.channel
-        json_dict["disable_inhibit_forced"] = self.disable_inhibit_forced
-        json_dict["dimmer_state"] = self.dimmer_state
-        json_dict["led_status"] = self.led_status
-        json_dict["delay_time"] = self.delay_time
-        return json.dumps(json_dict)
-
     def is_normal(self):
         """
         :return: bool

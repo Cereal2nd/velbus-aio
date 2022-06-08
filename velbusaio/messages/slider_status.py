@@ -36,16 +36,6 @@ class SliderStatusMessage(Message):
         self.slider_state = int.from_bytes([data[1]], byteorder="big")
         self.slider_long_pressed = data[2]
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["channel"] = self.channel
-        json_dict["slider_state"] = self.slider_state
-        json_dict["slider_long_pressed"] = self.slider_long_pressed
-        return json.dumps(json_dict)
-
     def cur_slider_state(self):
         """
         :return: int

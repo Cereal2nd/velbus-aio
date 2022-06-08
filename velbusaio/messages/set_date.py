@@ -46,16 +46,6 @@ class SetDate(Message):
         self._mon = data[1]
         self._year = (data[2] << 8) + data[3]
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["day"] = self._day
-        json_dict["mon"] = self._mon
-        json_dict["year"] = self._year
-        return json.dumps(json_dict)
-
     def data_to_binary(self):
         """
         :return: bytes

@@ -44,14 +44,6 @@ class ChannelNamePart3Message(Message):
             self.name, "ascii", "ignore"
         )
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["channel"] = self.channel
-        return json.dumps(json_dict)
-
 
 class ChannelNamePart3Message2(ChannelNamePart3Message):
     """

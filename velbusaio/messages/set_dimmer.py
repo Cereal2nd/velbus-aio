@@ -44,16 +44,6 @@ class SetDimmerMessage(Message):
             data[2:3], byteorder="big", signed=False
         )
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["channels"] = self.dimmer_channels
-        json_dict["state"] = self.dimmer_state
-        json_dict["transitiontime"] = self.dimmer_transitiontime
-        return json.dumps(json_dict)
-
     def data_to_binary(self):
         """
         :return: bytes

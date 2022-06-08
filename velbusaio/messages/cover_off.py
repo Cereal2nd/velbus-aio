@@ -33,14 +33,6 @@ class CoverOffMessage(Message):
         self.set_attributes(priority, address, rtr)
         self.channel = self.byte_to_channel(data[0])
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["channel"] = self.channel
-        return json.dumps(json_dict)
-
     def set_defaults(self, address):
         if address is not None:
             self.set_address(address)
@@ -79,15 +71,6 @@ class CoverOffMessage2(Message):
         # so shift 1 bit to the right + and with 03
         tmp = (data[0] >> 1) & 0x03
         self.channel = self.byte_to_channel(tmp)
-
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["channel"] = self.channel
-        json_dict["delay_time"] = self.delay_time
-        return json.dumps(json_dict)
 
     def set_defaults(self, address):
         if address is not None:

@@ -46,16 +46,6 @@ class SetRealtimeClock(Message):
         self._hour = data[1]
         self._min = data[2]
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["wday"] = self._wday
-        json_dict["hour"] = self._hour
-        json_dict["min"] = self._min
-        return json.dumps(json_dict)
-
     def data_to_binary(self):
         """
         :return: bytes

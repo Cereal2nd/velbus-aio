@@ -70,18 +70,6 @@ class DimmerStatusMessage(Message):
         (self.delay_time,) = struct.unpack(">L", bytes([0]) + data[4:])
         self.dimmer_config = data[6]
 
-    def to_json(self):
-        """
-        :return: str
-        """
-        json_dict = self.to_json_basic()
-        json_dict["channel"] = self.channel
-        json_dict["dimmer_mode"] = self.dimmer_mode
-        json_dict["dimmer_state"] = self.dimmer_state
-        json_dict["led_status"] = self.led_status
-        json_dict["delay_time"] = self.delay_time
-        return json.dumps(json_dict)
-
     def is_start_stop(self):
         """
         :return: bool

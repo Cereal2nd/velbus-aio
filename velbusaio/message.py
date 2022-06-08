@@ -72,12 +72,17 @@ class Message:
 
         :return: dict
         """
-        return {
-            "name": self.__class__.__name__,
-            "priority": self.priority,
-            "address": f"{self.address:x}",
-            "rtr": self.rtr,
-        }
+        me = {}
+        me["name"] = str(self.__class__.__name__)
+        me.update(self.__dict__.copy())
+        for key in me.copy():
+            if key == "name":
+                continue
+            if callable(getattr(self, key)) or key.startswith("__"):
+                del me[key]
+            if isinstance(me[key], (bytes, bytearray)):
+                me[key] = str(me[key], "utf-8")
+        return me
 
     def to_json(self) -> str:
         """
