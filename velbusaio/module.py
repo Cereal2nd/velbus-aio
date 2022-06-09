@@ -9,6 +9,7 @@ import pathlib
 import pickle
 import struct
 import sys
+from typing import Optional
 
 from velbusaio.channels import (
     Blind,
@@ -27,6 +28,7 @@ from velbusaio.channels import (
 from velbusaio.command_registry import commandRegistry
 from velbusaio.const import CHANNEL_LIGHT_VALUE, CHANNEL_MEMO_TEXT, PRIORITY_LOW
 from velbusaio.helpers import handle_match, keys_exists
+from velbusaio.message import Message
 from velbusaio.messages.blind_status import BlindStatusMessage, BlindStatusNgMessage
 from velbusaio.messages.channel_name_part1 import (
     ChannelNamePart1Message,
@@ -85,10 +87,10 @@ class Module:
         module_type: int,
         module_data: dict,
         serial: str = "",
-        memorymap=None,
-        build_year=None,
-        build_week=None,
-        cache_dir=None,
+        memorymap: int | None = None,
+        build_year: int | None = None,
+        build_week: int | None = None,
+        cache_dir: str | None = None,
     ) -> None:
         self._address = module_address
         self._type = module_type
@@ -181,7 +183,7 @@ class Module:
             self.build_week,
         )
 
-    def calc_channel_offset(self, address) -> int:
+    def calc_channel_offset(self, address: int) -> int:
         _channel_offset = 0
         if self._address != address:
             for _sub_addr_key, _sub_addr_val in self._sub_address.items():
@@ -190,7 +192,7 @@ class Module:
                     break
         return _channel_offset
 
-    async def on_message(self, message) -> None:
+    async def on_message(self, message: Message) -> None:
         """
         Process received message
         """
@@ -383,7 +385,7 @@ class Module:
         """
         return self._channels
 
-    async def load(self, from_cache=False) -> None:
+    async def load(self, from_cache: bool = False) -> None:
         """
         Retrieve names of channels
         """
@@ -432,7 +434,7 @@ class Module:
             return
         await self._channels[CHANNEL_MEMO_TEXT].set(txt)
 
-    async def _process_memory_data_message(self, message) -> None:
+    async def _process_memory_data_message(self, message: MemoryDataMessage) -> None:
         addr = "{high:02X}{low:02X}".format(
             high=message.high_address, low=message.low_address
         )
@@ -456,7 +458,7 @@ class Module:
         except KeyError:
             print("KEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEY")
 
-    def _process_channel_name_message(self, part, message) -> None:
+    def _process_channel_name_message(self, part: int, message: Message) -> None:
         channel = self._translate_channel_name(message.channel)
         if channel not in self._channels:
             return
