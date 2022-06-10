@@ -3,6 +3,7 @@ author: Maikel Punie <maikel.punie@gmail.com>
 """
 from __future__ import annotations
 
+import asyncio
 import string
 from typing import Any, Callable
 
@@ -286,7 +287,15 @@ class Button(Channel):
 
         :return: None
         """
-        raise NotImplementedError
+        _mod_add = self.get_module_address("Button")
+        cls = commandRegistry.get_command(0x00, self._module.get_type())
+        msg = cls(_mod_add)
+        msg.closed = [self._num]
+        await self._writer(msg)
+        await asyncio.sleep(1)
+        msg = cls(_mod_add)
+        msg.opened = [self._num]
+        await self._writer(msg)
 
 
 class ButtonCounter(Button):
