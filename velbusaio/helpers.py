@@ -5,11 +5,12 @@ from __future__ import annotations
 
 import os
 import re
+from typing import Any, Dict
 
 from velbusaio.const import CACHEDIR
 
 
-def keys_exists(element, *keys) -> dict:
+def keys_exists(element: dict[str, Any], *keys) -> dict:
     """
     Check if *keys (nested) exists in `element` (dict).
     """
@@ -27,14 +28,14 @@ def keys_exists(element, *keys) -> dict:
     return _element
 
 
-def h2(inp) -> str:
+def h2(inp: int) -> str:
     """
     Format as hex upercase
     """
     return format(inp, "02x").upper()
 
 
-def handle_match(match_dict, data) -> dict:
+def handle_match(match_dict: dict[str, dict[str, dict[str, str]]], data: int) -> dict:
     """
     Handle memory match from the module data
     """
