@@ -27,7 +27,6 @@ class MemoTextMessage(Message):
         """
         self.needs_low_priority(priority)
         self.needs_no_rtr(rtr)
-        self.needs_data(data, 7)
         self.set_attributes(priority, address, rtr)
         self.start = data[1]
         self.name = "".join([chr(x) for x in data[2:]])
