@@ -4,7 +4,7 @@ PACKAGES = find_packages(exclude=["tests", "tests.*"])
 
 setup(
     name="velbus-aio",
-    version="2022.6.2",
+    version="2022.9.1",
     url="https://github.com/Cereal2nd/velbus-aio",
     license="MIT",
     author="Maikel Punie",
