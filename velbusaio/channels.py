@@ -131,7 +131,7 @@ class Channel:
     def get_channel_info(self) -> dict[str, Any]:
         data = {}
         for key, value in self.__dict__.items():
-            data['type'] = self.__class__.__name__
+            data["type"] = self.__class__.__name__
             if key not in ["_module", "_writer", "_name_parts", "_on_status_update"]:
                 data[key.replace("_", "", 1)] = value
         return data
