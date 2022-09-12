@@ -289,13 +289,17 @@ class Button(Channel):
         :return: None
         """
         _mod_add = self.get_module_address("Button")
+        _chn_num = self._num - self._module.calc_channel_offset(_mod_add)
+        # send the just pressed
         cls = commandRegistry.get_command(0x00, self._module.get_type())
         msg = cls(_mod_add)
-        msg.closed = [self._num]
+        msg.closed = [_chn_num]
         await self._writer(msg)
-        await asyncio.sleep(1)
+        # wait
+        await asyncio.sleep(0.3)
+        # send the just released
         msg = cls(_mod_add)
-        msg.opened = [self._num]
+        msg.opened = [_chn_num]
         await self._writer(msg)
 
 
