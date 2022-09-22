@@ -162,7 +162,7 @@ class Velbus:
                     lambda: self._protocol, host=host, port=port, ssl=ctx
                 )
 
-            except ConnectionRefusedError as err:
+            except (ConnectionRefusedError, OSError) as err:
                 raise VelbusConnectionFailed() from err
         else:
             # serial port
@@ -178,7 +178,7 @@ class Velbus:
                     xonxoff=0,
                     rtscts=1,
                 )
-            except FileNotFoundError as err:
+            except (FileNotFoundError, serial.SerialException) as err:
                 raise VelbusConnectionFailed() from err
         if test_connect:
             return
