@@ -438,25 +438,34 @@ class Module:
         addr = "{high:02X}{low:02X}".format(
             high=message.high_address, low=message.low_address
         )
-        try:
-            mdata = self._data["Memory"]["1"]["Address"][addr]
-            if "ModuleName" in mdata and isinstance(self._name, dict):
-                # if self._name is a dict we are still loading
-                # if its a string it was already complete
-                if message.data == 0xFF:
-                    # modulename is complete
-                    self._name = "".join(str(x) for x in self._name.values())
-                else:
-                    char = mdata["ModuleName"].split(":")[0]
-                    self._name[int(char)] = chr(message.data)
-            elif "Match" in mdata:
-                for chan, chan_data in handle_match(
-                    mdata["Match"], message.data
-                ).items():
-                    data = chan_data.copy()
-                    await self._channels[chan].update(data)
-        except KeyError:
-            print("KEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEY")
+        mdata = self._data["Memory"]["1"]["Address"][addr]
+        if "ModuleName" in mdata and isinstance(self._name, dict):
+            # if self._name is a dict we are still loading
+            # if its a string it was already complete
+            if message.data == 0xFF:
+                # modulename is complete
+                self._name = "".join(str(x) for x in self._name.values())
+            else:
+                char = mdata["ModuleName"].split(":")[0]
+                self._name[int(char)] = chr(message.data)
+        elif "Match" in mdata:
+            for chan, chan_data in handle_match(mdata["Match"], message.data).items():
+                data = chan_data.copy()
+                await self._channels[chan].update(data)
+        elif "SensorName" in mdata:
+            # this is part of the channel names
+            # make sure we set the channel to loaded
+            # format of the value (in mdata)
+            #   channel:char:start/save
+            spl = mdata["SensorName"].split(":")
+            if len(spl) == 2:
+                [chan, pos] = spl
+            elif len(spl) == 3:
+                [chan, pos, dummy] = spl
+            chan = self._translate_channel_name(chan)
+            self._channels[chan].set_name_char(pos, message.data)
+        else:
+            print(mdata)
 
     def _process_channel_name_message(self, part: int, message: Message) -> None:
         channel = self._translate_channel_name(message.channel)

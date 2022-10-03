@@ -48,14 +48,14 @@ class Channel:
 
     def get_module_address(self, chan_type="") -> int:
         """Return (sub)module address for channel"""
-        _mod_address = self._address
-        if chan_type == "Button" and self._num > 8:
-            _mod_address = self._module.get_addresses()[1]
-            if self._num > 16:
-                _mod_address = self._module.get_addresses()[2]
-                if self._num > 24:
-                    _mod_address = self._module.get_addresses()[3]
-        return _mod_address
+        if chan_type == "Button" and self._num > 24:
+            return self._module.get_addresses()[3]
+        elif chan_type == "Button" and self._num > 16:
+            return self._module.get_addresses()[2]
+        elif chan_type == "Button" and self._num > 8:
+            return self._module.get_addresses()[1]
+        else:
+            return self._address
 
     def get_module_sw_version(self) -> str:
         return self._module.get_sw_version()
@@ -85,6 +85,15 @@ class Channel:
         :return: the channel name
         """
         return self._name
+
+    def set_name_char(self, pos, char) -> None:
+        self._is_loaded = True
+        self._name_parts = {}
+        # make sure the string is long enough
+        while len(self._name) < int(pos):
+            self._name += " "
+        # store the char on correct pos
+        self._name = self._name[: int(pos)] + str(char) + self._name[int(pos) + 1 :]
 
     def set_name_part(self, part, name) -> None:
         """
