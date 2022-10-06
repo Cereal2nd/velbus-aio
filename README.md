@@ -30,7 +30,5 @@ The latest version of the library is published as a python package on [pypi](htt
    - source venv/bin/activate
 4. install the module
    - python setup.py develop
-5. define the connection parameters
-   - modify examples/load_modules.py
-6. run the example
-   - python examples/load_modules.py
+5. run the example
+   - python examples/load_modules.py --connect 192.168.1.9:1234
