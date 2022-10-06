@@ -188,29 +188,36 @@ class Blind(Channel):
     """
 
     _state = None
-    _position = 0
+    # State reports the direction of *movement*: moving up, moving down or stopped
+    _position = None
+    # Position reporting is not supported by VBMxBL modules (only in BLE/BLS)
 
     def get_categories(self) -> list:
         return ["cover"]
 
-    def get_position(self) -> int:
+    def get_position(self) -> int | None:
         return self._position
 
     def get_state(self) -> str:
         return self._state
 
-    def is_closed(self) -> bool:
-        if self._state == 0x02:
-            return True
-        return False
+    def is_closed(self) -> bool | None:
+        """Report if the blind is fully closed."""
+        if self._position is None:
+            return None
+        # else:
+        return self._position == 100
 
-    def is_open(self) -> bool:
-        if self._state == 0x01:
-            return True
-        return False
+    def is_open(self) -> bool | None:
+        """Report if the blind is fully open."""
+        if self._position is None:
+            return None
+        return self._position == 0
 
     def support_position(self) -> bool:
-        return False
+        # position will be populated after the first BlindStatusNgMessage (during module load)
+        # For VBMxBL modules, position will remain None and not be overwritten
+        return self._position is not None
 
     async def open(self) -> None:
         cls = commandRegistry.get_command(0x05, self._module.get_type())
@@ -231,6 +238,7 @@ class Blind(Channel):
         await self._writer(msg)
 
     async def set_position(self, position: int) -> None:
+        # may not be supported by the module
         cls = commandRegistry.get_command(0x1C, self._module.get_type())
         msg = cls(self._address)
         msg.channel = self._num
