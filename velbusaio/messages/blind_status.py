@@ -107,7 +107,7 @@ class BlindStatusMessage(Message):
         self.channel = self.byte_to_channel(tmp)
         self.timeout = data[1]  # Omzetter seconden ????
         # 2 bits per channel used
-        self.status = data[2] >> ((self.channel - 1) * 2)
+        self.status = (data[2] >> ((self.channel - 1) * 2)) & 0x03
 
     def to_json(self):
         """
