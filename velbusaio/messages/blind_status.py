@@ -49,17 +49,14 @@ class BlindStatusNgMessage(Message):
         json_dict["status"] = DSTATUS[self.status]
         return json.dumps(json_dict)
 
-    def is_up(self):
-        """
-        :return: bool
-        """
+    def is_moving_up(self) -> bool:
         return self.status == 0x01
 
-    def is_down(self):
-        """
-        :return: bool
-        """
+    def is_moving_down(self) -> bool:
         return self.status == 0x02
+
+    def is_stopped(self) -> bool:
+        return self.status == 0x00
 
     def data_to_binary(self):
         """
@@ -119,17 +116,14 @@ class BlindStatusMessage(Message):
         json_dict["status"] = DSTATUS[self.status]
         return json.dumps(json_dict)
 
-    def is_up(self):
-        """
-        :return: bool
-        """
+    def is_moving_up(self) -> bool:
         return self.status == 0x01
 
-    def is_down(self):
-        """
-        :return: bool
-        """
+    def is_moving_down(self) -> bool:
         return self.status == 0x02
+
+    def is_stopped(self) -> bool:
+        return self.status == 0x00
 
 
 register_command(COMMAND_CODE, BlindStatusNgMessage, "VMB1BLE")
