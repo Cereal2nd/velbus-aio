@@ -49,17 +49,14 @@ class BlindStatusNgMessage(Message):
         json_dict["status"] = DSTATUS[self.status]
         return json.dumps(json_dict)
 
-    def is_up(self):
-        """
-        :return: bool
-        """
+    def is_moving_up(self) -> bool:
         return self.status == 0x01
 
-    def is_down(self):
-        """
-        :return: bool
-        """
+    def is_moving_down(self) -> bool:
         return self.status == 0x02
+
+    def is_stopped(self) -> bool:
+        return self.status == 0x00
 
     def data_to_binary(self):
         """
@@ -107,7 +104,7 @@ class BlindStatusMessage(Message):
         self.channel = self.byte_to_channel(tmp)
         self.timeout = data[1]  # Omzetter seconden ????
         # 2 bits per channel used
-        self.status = data[2] >> ((self.channel - 1) * 2)
+        self.status = (data[2] >> ((self.channel - 1) * 2)) & 0x03
 
     def to_json(self):
         """
@@ -119,17 +116,14 @@ class BlindStatusMessage(Message):
         json_dict["status"] = DSTATUS[self.status]
         return json.dumps(json_dict)
 
-    def is_up(self):
-        """
-        :return: bool
-        """
+    def is_moving_up(self) -> bool:
         return self.status == 0x01
 
-    def is_down(self):
-        """
-        :return: bool
-        """
+    def is_moving_down(self) -> bool:
         return self.status == 0x02
+
+    def is_stopped(self) -> bool:
+        return self.status == 0x00
 
 
 register_command(COMMAND_CODE, BlindStatusNgMessage, "VMB1BLE")
