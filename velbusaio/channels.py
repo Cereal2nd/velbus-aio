@@ -201,6 +201,15 @@ class Blind(Channel):
     def get_state(self) -> str:
         return self._state
 
+    def is_opening(self) -> bool:
+        return self._state == 0x01
+
+    def is_closing(self) -> bool:
+        return self._state == 0x02
+
+    def is_stopped(self) -> bool:
+        return self._state == 0x00
+
     def is_closed(self) -> bool | None:
         """Report if the blind is fully closed."""
         if self._position is None:
