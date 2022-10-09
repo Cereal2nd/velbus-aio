@@ -36,6 +36,7 @@ from velbusaio.messages.cover_down import CoverDownMessage, CoverDownMessage2
 from velbusaio.messages.cover_off import CoverOffMessage, CoverOffMessage2
 from velbusaio.messages.cover_position import CoverPosMessage
 from velbusaio.messages.cover_up import CoverUpMessage, CoverUpMessage2
+from velbusaio.messages.dali_device_settings import DaliDeviceSettings
 from velbusaio.messages.dimmer_channel_status import DimmerChannelStatusMessage
 from velbusaio.messages.dimmer_status import DimmerStatusMessage
 from velbusaio.messages.fast_blinking_led import FastBlinkingLedMessage
