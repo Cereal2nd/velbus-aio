@@ -81,6 +81,29 @@ class Module:
     Abstract class for Velbus hardware modules.
     """
 
+    @classmethod
+    def factory(
+        cls,
+        module_address: int,
+        module_type: int,
+        module_data: dict,
+        serial: str = "",
+        memorymap: int | None = None,
+        build_year: int | None = None,
+        build_week: int | None = None,
+        cache_dir: str | None = None,
+    ) -> Module:
+        return Module(
+            module_address,
+            module_type,
+            module_data,
+            serial,
+            memorymap,
+            build_year,
+            build_week,
+            cache_dir,
+        )
+
     def __init__(
         self,
         module_address: int,

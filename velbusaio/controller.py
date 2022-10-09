@@ -84,7 +84,7 @@ class Velbus:
             await self._modules[addr].load(True)
         else:
             self._log.info(f"Load NEW module: {typ} @ {addr}")
-            self._modules[addr] = Module(
+            self._modules[addr] = Module.factory(
                 addr,
                 typ,
                 data,
