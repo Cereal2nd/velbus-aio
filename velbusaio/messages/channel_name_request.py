@@ -70,5 +70,29 @@ class ChannelNameRequestMessage2(ChannelNameRequestMessage):
         return bytes([COMMAND_CODE, tmp])
 
 
+class ChannelNameRequestMessage3(ChannelNameRequestMessage):
+    """
+    send by:
+    received by: VMBDALI
+    """
+
+    def populate(self, priority, address, rtr, data):
+        """
+        :return: None
+        """
+        self.needs_low_priority(priority)
+        self.needs_no_rtr(rtr)
+        self.needs_data(data, 1)
+        self.set_attributes(priority, address, rtr)
+        self.channels = data[0]
+
+    def data_to_binary(self):
+        """
+        :return: bytes
+        """
+        return bytes([COMMAND_CODE, self.channels])
+
+
 register_command(COMMAND_CODE, ChannelNameRequestMessage)
 register_command(COMMAND_CODE, ChannelNameRequestMessage2, "VMB2BL")
+register_command(COMMAND_CODE, ChannelNameRequestMessage3, "VMBDALI")
