@@ -465,7 +465,7 @@ class Module:
             chan = self._translate_channel_name(chan)
             self._channels[chan].set_name_char(pos, message.data)
         else:
-            print(mdata)
+            self._log.debug(mdata)
 
     def _process_channel_name_message(self, part: int, message: Message) -> None:
         channel = self._translate_channel_name(message.channel)
