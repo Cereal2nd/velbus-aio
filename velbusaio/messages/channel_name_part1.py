@@ -47,7 +47,7 @@ class ChannelNamePart1Message(Message):
 
 class ChannelNamePart1Message2(ChannelNamePart1Message):
     """
-    send by: VMBGP*
+    send by: VMBGP*, VMBDALI
     received by:
     """
 
@@ -104,3 +104,4 @@ register_command(COMMAND_CODE, ChannelNamePart1Message2, "VMBKP")
 register_command(COMMAND_CODE, ChannelNamePart1Message2, "VMBELPIR")
 register_command(COMMAND_CODE, ChannelNamePart1Message3, "VMB1BL")
 register_command(COMMAND_CODE, ChannelNamePart1Message3, "VMB2BL")
+register_command(COMMAND_CODE, ChannelNamePart1Message2, "VMBDALI")
