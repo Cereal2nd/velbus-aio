@@ -3,8 +3,6 @@
 """
 from __future__ import annotations
 
-import json
-
 from velbusaio.command_registry import register_command
 from velbusaio.message import Message
 
@@ -57,9 +55,23 @@ class SetDimmerMessage(Message):
         ) + self.dimmer_transitiontime.to_bytes(2, byteorder="big", signed=False)
 
 
+class SetDimmerMessage2(SetDimmerMessage):
+    """
+    send by:
+    received by: VMBDALI
+    """
+
+    def byte_to_channels(self, byte: int) -> list[int]:
+        return [byte]
+
+    def channels_to_byte(self, channels) -> int:
+        assert len(channels) == 1
+        return channels[0]
+
+
 register_command(COMMAND_CODE, SetDimmerMessage, "VMBDME")
 register_command(COMMAND_CODE, SetDimmerMessage, "VMB4DC")
 register_command(COMMAND_CODE, SetDimmerMessage, "VMBDMI")
 register_command(COMMAND_CODE, SetDimmerMessage, "VMBDMI-R")
 register_command(COMMAND_CODE, SetDimmerMessage, "VMB1LED")
-register_command(COMMAND_CODE, SetDimmerMessage, "VMBDALI")
+register_command(COMMAND_CODE, SetDimmerMessage2, "VMBDALI")
