@@ -36,8 +36,8 @@ class DaliDeviceSettingMsg(Message):
             decode_class = DaliDeviceSetting(message_subtype).decode_class
             if decode_class is not None:
                 self.data = decode_class.from_data(self.data)
-        except KeyError:
-            # Unknown subtype
+        except Exception:
+            # Unknown subtype or error while decoding; leave as bytes
             pass
 
     def to_json_basic(self):
@@ -59,6 +59,9 @@ class DaliDeviceSettingSubMessage:
 
     @classmethod
     def from_data(cls, data: bytes) -> DaliDeviceSettingSubMessage:
+        raise NotImplementedError()
+
+    def to_data(self) -> bytes:
         raise NotImplementedError()
 
     def to_json_basic(self):
@@ -86,6 +89,8 @@ class DeviceTypeMsg(DaliDeviceSettingSubMessage):
 
     @classmethod
     def from_data(cls, data: bytes) -> DeviceTypeMsg:
+        if len(data) != 1:
+            raise ValueError("Expected 1 byte of data")
         return DeviceTypeMsg(device_type=DeviceType(data[0]))
 
     def to_data(self) -> bytes:
@@ -96,6 +101,41 @@ class DeviceTypeMsg(DaliDeviceSettingSubMessage):
             "submsg_type": self.__class__.__name__,
             "device_type": self.device_type.name,
         }
+
+
+@dataclasses.dataclass
+class MemberOfGroupMsg(DaliDeviceSettingSubMessage):
+    member_of_group: list[bool]
+
+    @classmethod
+    def from_data(cls, data: bytes) -> DaliDeviceSettingSubMessage:
+        if len(data) != 2:
+            raise ValueError("Expected 2 bytes")
+        i = int.from_bytes(data, "little")
+        member_of_groups = []
+        for group_num in range(0, 16):
+            member_of_groups.append(bool(i & (1 << group_num)))
+        return MemberOfGroupMsg(member_of_groups)
+
+    def to_data(self) -> bytes:
+        i = 0
+        for group_num, member in enumerate(self.member_of_group):
+            if member:
+                i += 1 << group_num
+        return i.to_bytes(2, "little")
+
+    def to_json_basic(self):
+        return {
+            "member_of_groups": self.member_of_groups,
+        }
+
+    @property
+    def member_of_groups(self) -> list[int]:
+        groups = []
+        for num, member in enumerate(self.member_of_group):
+            if member:
+                groups.append(num)
+        return groups
 
 
 class DaliDeviceSetting(enum.Enum):
@@ -128,9 +168,9 @@ class DaliDeviceSetting(enum.Enum):
     MinimumLevel = (18, None)
     MaximumLevel = (19, None)
     FadeTimeAndRate = (20, None)
-    GroupMembers = (21, None)
-    # currently undefined 22
-    # currently undefined 23
+    MemberOfGroup = (21, MemberOfGroupMsg)
+    GroupMembers0 = (22, None)
+    GroupMembers32 = (22, None)
     # currently undefined 24
     DeviceType = (25, DeviceTypeMsg)
     ActualLevel = (26, None)
