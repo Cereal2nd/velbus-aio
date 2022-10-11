@@ -697,6 +697,7 @@ class VmbDali(Module):
                             True,
                             self._writer,
                             self._address,
+                            slider_scale=254,
                         )
                         await self._request_single_channel_name(message.channel)
 
