@@ -54,4 +54,14 @@ class RestoreDimmerMessage(Message):
         ) + self.dimmer_transitiontime.to_bytes(2, byteorder="big", signed=False)
 
 
+class RestoreDimmerMessage2(RestoreDimmerMessage):
+    def byte_to_channels(self, byte: int) -> list[int]:
+        return [byte]
+
+    def channels_to_byte(self, channels: list[int]) -> int:
+        assert len(channels) == 1
+        return channels[0]
+
+
 register_command(COMMAND_CODE, RestoreDimmerMessage)
+register_command(COMMAND_CODE, RestoreDimmerMessage2, "VMBDALI")
