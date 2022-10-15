@@ -10,6 +10,8 @@ from velbusaio.command_registry import register_command
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xB0
+COMMAND_CODE_2 = 0xA7
+COMMAND_CODE_3 = 0xA6
 
 
 class ModuleSubTypeMessage(Message):
@@ -20,7 +22,7 @@ class ModuleSubTypeMessage(Message):
 
     # pylint: disable-msg=R0902
 
-    def __init__(self, address=None):
+    def __init__(self, address=None, sub_address_offset: int = 0):
         Message.__init__(self)
         self.module_type = 0x00
         self.sub_address_1 = 0xFF
@@ -29,6 +31,7 @@ class ModuleSubTypeMessage(Message):
         self.sub_address_4 = 0xFF
         self.set_defaults(address)
         self.serial = 0
+        self.sub_address_offset = sub_address_offset
 
     def module_name(self):
         """
@@ -53,3 +56,5 @@ class ModuleSubTypeMessage(Message):
 
 
 register_command(COMMAND_CODE, ModuleSubTypeMessage)
+register_command(COMMAND_CODE_2, ModuleSubTypeMessage)
+register_command(COMMAND_CODE_3, ModuleSubTypeMessage)

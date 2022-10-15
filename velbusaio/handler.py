@@ -64,9 +64,19 @@ class PacketHandler:
             msg.populate(priority, address, rtr, data)
             self._log.debug(f"Received {msg}")
             await self._handle_module_type(msg)
-        elif command_value == 0xB0 and not self._scan_complete:
+        elif command_value in (0xB0, 0xA7, 0xA6) and not self._scan_complete:
             msg = ModuleSubTypeMessage()
             msg.populate(priority, address, rtr, data)
+
+            if command_value == 0xB0:
+                msg.sub_address_offset = 0
+            elif command_value == 0xA7:
+                msg.sub_address_offset = 4
+            elif command_value == 0xA6:
+                msg.sub_address_offset = 8
+            else:
+                raise RuntimeError("Unreachable code reached => bug here")
+
             self._log.debug(f"Received {msg}")
             await self._handle_module_subtype(msg)
         elif command_value in self.pdata["MessagesBroadCast"]:
@@ -180,10 +190,10 @@ class PacketHandler:
         if msg.address not in self._velbus.get_modules():
             return
         addrList = {
-            1: msg.sub_address_1,
-            2: msg.sub_address_2,
-            3: msg.sub_address_3,
-            4: msg.sub_address_4,
+            (msg.sub_address_offset + 1): msg.sub_address_1,
+            (msg.sub_address_offset + 2): msg.sub_address_2,
+            (msg.sub_address_offset + 3): msg.sub_address_3,
+            (msg.sub_address_offset + 4): msg.sub_address_4,
         }
         await self._velbus.add_submodules(msg.address, addrList)
 
