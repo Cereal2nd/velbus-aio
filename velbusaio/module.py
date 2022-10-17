@@ -9,12 +9,12 @@ import pathlib
 import pickle
 import struct
 import sys
-from typing import Optional
 
 from velbusaio.channels import (
     Blind,
     Button,
     ButtonCounter,
+    Channel,
     Dimmer,
     EdgeLit,
     LightSensor,
@@ -29,6 +29,7 @@ from velbusaio.command_registry import commandRegistry
 from velbusaio.const import CHANNEL_LIGHT_VALUE, CHANNEL_MEMO_TEXT, PRIORITY_LOW
 from velbusaio.helpers import handle_match, keys_exists
 from velbusaio.message import Message
+from velbusaio.messages import DaliDeviceSettingMsg
 from velbusaio.messages.blind_status import BlindStatusMessage, BlindStatusNgMessage
 from velbusaio.messages.channel_name_part1 import (
     ChannelNamePart1Message,
@@ -52,6 +53,14 @@ from velbusaio.messages.channel_name_request import ChannelNameRequestMessage
 from velbusaio.messages.clear_led import ClearLedMessage
 from velbusaio.messages.counter_status import CounterStatusMessage
 from velbusaio.messages.counter_status_request import CounterStatusRequestMessage
+from velbusaio.messages.dali_device_settings import DeviceType as DaliDeviceType
+from velbusaio.messages.dali_device_settings import DeviceTypeMsg as DaliDeviceTypeMsg
+from velbusaio.messages.dali_device_settings import MemberOfGroupMsg
+from velbusaio.messages.dali_device_settings_request import (
+    COMMAND_CODE as DALI_DEVICE_SETTINGS_REQUEST_COMMAND_CODE,
+)
+from velbusaio.messages.dali_device_settings_request import DaliDeviceSettingsRequest
+from velbusaio.messages.dali_dim_value_status import DimValueStatus
 from velbusaio.messages.dimmer_channel_status import DimmerChannelStatusMessage
 from velbusaio.messages.dimmer_status import DimmerStatusMessage
 from velbusaio.messages.fast_blinking_led import FastBlinkingLedMessage
@@ -80,6 +89,41 @@ class Module:
     """
     Abstract class for Velbus hardware modules.
     """
+
+    @classmethod
+    def factory(
+        cls,
+        module_address: int,
+        module_type: int,
+        module_data: dict,
+        serial: str = "",
+        memorymap: int | None = None,
+        build_year: int | None = None,
+        build_week: int | None = None,
+        cache_dir: str | None = None,
+    ) -> Module:
+        if module_type == 0x45:
+            return VmbDali(
+                module_address,
+                module_type,
+                module_data,
+                serial,
+                memorymap,
+                build_year,
+                build_week,
+                cache_dir,
+            )
+
+        return Module(
+            module_address,
+            module_type,
+            module_data,
+            serial,
+            memorymap,
+            build_year,
+            build_week,
+            cache_dir,
+        )
 
     def __init__(
         self,
@@ -582,3 +626,136 @@ class Module:
                     "ThermostatAddr" in self._data and self._data["ThermostatAddr"] != 0
                 ):
                     await self._channels[int(chan)].update({"thermostat": True})
+
+
+class VmbDali(Module):
+    """
+    DALI has a variable number of channels: the number of channels
+    depends on the number of DALI devices on the DALI bus
+    """
+
+    def __init__(
+        self,
+        module_address: int,
+        module_type: int,
+        module_data: dict,
+        serial: str = "",
+        memorymap: int | None = None,
+        build_year: int | None = None,
+        build_week: int | None = None,
+        cache_dir: str | None = None,
+    ) -> None:
+        super().__init__(
+            module_address,
+            module_type,
+            module_data,
+            serial,
+            memorymap,
+            build_year,
+            build_week,
+            cache_dir,
+        )
+        self.group_members: dict[int, set[int]] = {}
+
+    async def load(self, from_cache: bool = False) -> None:
+        await super().load(from_cache)
+
+        if not from_cache:
+            for chan in range(1, 64 + 1):
+                self._channels[chan] = Channel(
+                    self, chan, "placeholder", True, self._writer, self._address
+                )
+                # Placeholders will keep this module loading
+                # Until the DaliDeviceSettings messages either delete or replace these placeholder's
+                # with actual channels
+
+            await self._request_dali_channels()
+
+    async def _request_dali_channels(self):
+        msg_type = commandRegistry.get_command(
+            DALI_DEVICE_SETTINGS_REQUEST_COMMAND_CODE, self.get_type()
+        )
+        msg: DaliDeviceSettingsRequest = msg_type(self._address)
+        msg.priority = PRIORITY_LOW
+        msg.channel = 81  # all
+        msg.settings = None  # all
+        await self._writer(msg)
+
+    async def on_message(self, message: Message) -> None:
+        if isinstance(message, DaliDeviceSettingMsg):
+            if isinstance(message.data, DaliDeviceTypeMsg):
+                if message.data.device_type == DaliDeviceType.NoDevicePresent:
+                    if message.channel in self._channels:
+                        del self._channels[message.channel]
+                elif message.data.device_type == DaliDeviceType.LedModule:
+                    if self._channels.get(message.channel).__class__ != Dimmer:
+                        # New or changed type, replace channel:
+                        self._channels[message.channel] = Dimmer(
+                            self,
+                            message.channel,
+                            None,
+                            True,
+                            self._writer,
+                            self._address,
+                            slider_scale=254,
+                        )
+                        await self._request_single_channel_name(message.channel)
+
+            elif isinstance(message.data, MemberOfGroupMsg):
+                for group in range(0, 15 + 1):
+                    this_group_members = self.group_members.setdefault(group, set())
+                    if message.data.member_of_group[group]:
+                        this_group_members.add(message.channel)
+                    elif message.channel in this_group_members:
+                        this_group_members.remove(message.channel)
+
+        elif isinstance(message, PushButtonStatusMessage):
+            _channel_offset = self.calc_channel_offset(message.address)
+            for channel in message.opened:
+                if _channel_offset + channel > 64:  # ignore groups
+                    continue
+                await self._channels[_channel_offset + channel].update({"state": 0})
+            # ignore message.closed: we don't know at what dimlevel they're started
+
+        elif isinstance(message, DimValueStatus):
+            for offset, dim_value in enumerate(message.dim_values):
+                channel = message.channel + offset
+                if channel <= 64:  # channel
+                    await self._channels[channel].update({"state": dim_value})
+                elif channel <= 80:  # group
+                    group_num = channel - 65
+                    for chan in self.group_members.get(group_num, []):
+                        await self._channels[chan].update({"state": dim_value})
+                else:  # broadcast
+                    for chan in self._channels.values():
+                        await chan.update({"state": dim_value})
+
+        elif isinstance(
+            message,
+            (
+                SetLedMessage,
+                ClearLedMessage,
+                FastBlinkingLedMessage,
+                SlowBlinkingLedMessage,
+            ),
+        ):
+            pass
+
+        else:
+            return await super().on_message(message)
+
+        self._cache()
+
+    async def _request_channel_name(self) -> None:
+        # Channel names are requested after channel scan
+        # don't do them here (at initialization time)
+        pass
+
+    async def _request_single_channel_name(self, channel_num: int) -> None:
+        msg_type = commandRegistry.get_command(
+            CHANNEL_NAME_REQUEST_COMMAND_CODE, self.get_type()
+        )
+        msg = msg_type(self._address)
+        msg.priority = PRIORITY_LOW
+        msg.channels = channel_num
+        await self._writer(msg)

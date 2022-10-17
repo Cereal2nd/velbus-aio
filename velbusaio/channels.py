@@ -411,6 +411,15 @@ class Dimmer(Channel):
 
     _state: int = 0
 
+    def __init__(
+        self, module, num, name, nameEditable, writer, address, slider_scale: int = 100
+    ):
+        super().__init__(module, num, name, nameEditable, writer, address)
+
+        self.slider_scale = slider_scale
+        # VMB4DC has dim values 0(off), 1-99(dimmed), 100(full on)
+        # VMBDALI has dim values 0(off), 1-253(dimmed), 254(full on), 255(previous value)
+
     def get_categories(self) -> list:
         return ["light"]
 
@@ -426,7 +435,7 @@ class Dimmer(Channel):
         """
         Return the dimmer state
         """
-        return self._state
+        return int(self._state * 100 / self.slider_scale)
 
     async def set_dimmer_state(self, slider, transitiontime=0) -> None:
         """
@@ -434,7 +443,7 @@ class Dimmer(Channel):
         """
         cls = commandRegistry.get_command(0x07, self._module.get_type())
         msg = cls(self._address)
-        msg.dimmer_state = slider
+        msg.dimmer_state = int(slider * self.slider_scale / 100)
         msg.dimmer_transitiontime = int(transitiontime)
         msg.dimmer_channels = [self._num]
         await self._writer(msg)
