@@ -1,10 +1,22 @@
 #!/usr/bin/env python
 import pytest
 
+import velbusaio.command_registry
 from velbusaio.command_registry import CommandRegistry, register_command
 
 
-def test_defaults():
+@pytest.fixture()
+def own_command_registry():
+    """
+    Ensure a clean, empty commandRegistry; even when modules are loaded as part of other tests
+    """
+    orig_command_registry = velbusaio.command_registry.commandRegistry
+    velbusaio.command_registry.commandRegistry = CommandRegistry({})
+    yield
+    velbusaio.command_registry.commandRegistry = orig_command_registry
+
+
+def test_defaults(own_command_registry):
     # insert some data
     register_command(1, "testclass")
     register_command(2, "testclass2")
