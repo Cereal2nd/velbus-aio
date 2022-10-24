@@ -486,12 +486,13 @@ class Module:
         if "ModuleName" in mdata and isinstance(self._name, dict):
             # if self._name is a dict we are still loading
             # if its a string it was already complete
-            if message.data == 0xFF:
-                # modulename is complete
-                self._name = "".join(str(x) for x in self._name.values())
-            else:
-                char = mdata["ModuleName"].split(":")[0]
-                self._name[int(char)] = chr(message.data)
+            char_and_save = mdata["ModuleName"].split(":")
+            char = char_and_save[0]
+            self._name[int(char)] = chr(message.data)
+            if len(char_and_save) > 1 and char_and_save[1] == "Save":
+                self._name = "".join(
+                    str(x) for x in self._name.values() if x != chr(0xFF)
+                )
         elif "Match" in mdata:
             for chan, chan_data in handle_match(mdata["Match"], message.data).items():
                 data = chan_data.copy()
