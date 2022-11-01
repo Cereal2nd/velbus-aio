@@ -8,6 +8,7 @@ import logging
 import pathlib
 import pickle
 import ssl
+from urllib.parse import urlparse
 
 import serial
 import serial_asyncio
@@ -145,21 +146,26 @@ class Velbus:
         """
         Connect to the bus and load all the data
         """
+        auth = None
         # connect to the bus
         if ":" in self._dsn:
             # tcp/ip combination
-            if self._dsn.startswith("tls://"):
-                host, port = self._dsn.replace("tls://", "").split(":")
+            parts = urlparse(self._dsn)
+            if parts.scheme == "tls":
                 ctx = ssl._create_unverified_context()
             else:
-                host, port = self._dsn.split(":")
                 ctx = None
+            if parts.username:
+                auth = parts.username
             try:
                 (
                     _transport,
                     _protocol,
                 ) = await asyncio.get_event_loop().create_connection(
-                    lambda: self._protocol, host=host, port=port, ssl=ctx
+                    lambda: self._protocol,
+                    host=parts.hostname,
+                    port=parts.port,
+                    ssl=ctx,
                 )
 
             except (ConnectionRefusedError, OSError) as err:
@@ -182,6 +188,10 @@ class Velbus:
                 raise VelbusConnectionFailed() from err
         if test_connect:
             return
+
+        # if auth is required send the auth key
+        if auth:
+            print("YES")
 
         # scan the bus
         await self.scan()
