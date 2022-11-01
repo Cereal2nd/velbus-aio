@@ -191,7 +191,7 @@ class Velbus:
 
         # if auth is required send the auth key
         if auth:
-            print("YES")
+            await self._protocol.write_auth_key(auth)
 
         # scan the bus
         await self.scan()
