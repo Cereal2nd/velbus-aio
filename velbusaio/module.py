@@ -282,9 +282,11 @@ class Module:
             )
         elif isinstance(message, SensorTemperatureMessage):
             chan = self._translate_channel_name(self._data["TemperatureChannel"])
+            await self._channels[chan].maybe_update_temperature(
+                message.getCurTemp(), 1 / 64
+            )
             await self._channels[chan].update(
                 {
-                    "cur": message.getCurTemp(),
                     "min": message.getMinTemp(),
                     "max": message.getMaxTemp(),
                 }
@@ -295,11 +297,13 @@ class Module:
             if chan in self._channels:
                 await self._channels[chan].update(
                     {
-                        "cur": message.current_temp,
                         "target": message.target_temp,
                         "cmode": message.mode_str,
                         "cstatus": message.status_str,
                     }
+                )
+                await self._channels[chan].maybe_update_temperature(
+                    message.current_temp, 1 / 2
                 )
         elif isinstance(message, PushButtonStatusMessage):
             _update_buttons = False

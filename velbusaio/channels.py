@@ -4,6 +4,7 @@ author: Maikel Punie <maikel.punie@gmail.com>
 from __future__ import annotations
 
 import asyncio
+import math
 import string
 from typing import Any, Callable
 
@@ -465,6 +466,7 @@ class Temperature(Channel):
     """
 
     _cur = 0
+    _cur_precision = None
     _max = None
     _min = None
     _target = 0
@@ -535,6 +537,40 @@ class Temperature(Channel):
         cls = commandRegistry.get_command(code, self._module.get_type())
         msg = cls(self._address)
         await self._writer(msg)
+
+    async def maybe_update_temperature(self, new_temp: float, precision: float):
+        # Based on experiments, Velbus modules seem to truncate (i.e. round down)
+        current_temp_rounded_to_precision = (
+            math.floor(self._cur / precision) * precision
+        )
+
+        if current_temp_rounded_to_precision == new_temp:
+            # The newly received temperature is still in line with our current value,
+            # but with reduced precision.
+            # Don't update (would lose high precision)
+            return
+
+        elif (
+            current_temp_rounded_to_precision - precision
+            <= new_temp
+            < current_temp_rounded_to_precision
+            and self._cur_precision < precision
+        ):
+            # The newly received temperature is 1 LSb below the current value
+            # and the current value was set by a better precision message
+            # Modify the received temperature by "adding precision", while still keeping the same low precision value
+            # e.g. (decimal digits represent precision)
+            # | Actual  | Msg     | Stored  |
+            # | 21.0000 | 21.0000 | 21.0000 |
+            # | 20.9375 | 20.5    | 20.9375 |
+            new_temp = current_temp_rounded_to_precision - self._cur_precision
+
+        await self.update(
+            {
+                "cur": new_temp,
+                "cur_precision": precision,
+            }
+        )
 
 
 class SensorNumber(Channel):
