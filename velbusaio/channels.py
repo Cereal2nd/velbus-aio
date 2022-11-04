@@ -191,7 +191,7 @@ class Blind(Channel):
     _state = None
     # State reports the direction of *movement*: moving up, moving down or stopped
     _position = None
-    # Position reporting is not supported by VBMxBL modules (only in BLE/BLS)
+    # Position reporting is not supported by VMBxBL modules (only in BLE/BLS)
 
     def get_categories(self) -> list:
         return ["cover"]
@@ -226,7 +226,7 @@ class Blind(Channel):
 
     def support_position(self) -> bool:
         # position will be populated after the first BlindStatusNgMessage (during module load)
-        # For VBMxBL modules, position will remain None and not be overwritten
+        # For VMBxBL modules, position will remain None and not be overwritten
         return self._position is not None
 
     async def open(self) -> None:
