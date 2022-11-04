@@ -8,6 +8,7 @@ import asyncio
 import json
 import logging
 import re
+from typing import Awaitable, Callable
 
 import pkg_resources
 
@@ -24,7 +25,11 @@ class PacketHandler:
     The packetHandler class
     """
 
-    def __init__(self, writer, velbus) -> None:
+    def __init__(
+        self,
+        writer: Callable[[Message], Awaitable[None]],
+        velbus,  # t_ype Velubs circular dependency TODO
+    ) -> None:
         self._log = logging.getLogger("velbus-packet")
         self._writer = writer
         self._velbus = velbus

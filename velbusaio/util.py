@@ -6,9 +6,6 @@ from velbusaio.const import MAXIMUM_MESSAGE_SIZE, MINIMUM_MESSAGE_SIZE
 # Copyright (c) 2017 Thomas Delaet
 # Copied from python-velbus (https://github.com/thomasdelaet/python-velbus)
 def checksum(data: Union[bytes, bytearray]) -> int:
-    """
-    :return: int
-    """
     assert len(data) >= MINIMUM_MESSAGE_SIZE - 2
     assert len(data) <= MAXIMUM_MESSAGE_SIZE - 2
     __checksum = 0
@@ -25,7 +22,7 @@ class VelbusException(Exception):
         Exception.__init__(self)
         self.value = value
 
-    def __str__(self):
+    def __str__(self) -> str:
         return repr(self.value)
 
 
@@ -34,18 +31,18 @@ class MessageParseException(Exception):
 
 
 class BitSet:
-    def __init__(self, value):
+    def __init__(self, value: int):
         self._value = value
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int) -> bool:
         assert 0 <= idx < 8
         return bool((1 << idx) & self._value)
 
-    def __setitem__(self, idx, value):
+    def __setitem__(self, idx: int, value: bool) -> None:
         assert 0 <= idx < 8
         assert isinstance(value, bool)
         mask = (0xFF ^ (1 << idx)) & self._value
         self._value = mask & (value << idx)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return 8  # a bitset represents one byte

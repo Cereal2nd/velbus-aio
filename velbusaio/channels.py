@@ -6,7 +6,9 @@ from __future__ import annotations
 import asyncio
 import math
 import string
-from typing import Any, Callable
+from typing import Any, Awaitable, Callable
+
+from message import Message
 
 from velbusaio.command_registry import commandRegistry
 from velbusaio.const import (
@@ -25,7 +27,15 @@ class Channel:
     This is the basic abstract class of a velbus channel
     """
 
-    def __init__(self, module, num, name, nameEditable, writer, address):
+    def __init__(
+        self,
+        module,  # t_ype Module circular import dependency, TODO
+        num: int,
+        name: str,
+        nameEditable: bool,
+        writer: Callable[[Message], Awaitable[None]],
+        address: int,
+    ):
         self._num = num
         self._module = module
         self._name = name
@@ -38,7 +48,7 @@ class Channel:
         self._on_status_update = []
         self._name_parts = {}
 
-    def get_module_type(self) -> str:
+    def get_module_type(self) -> int:
         return self._module.get_type()
 
     def get_module_type_name(self) -> str:
@@ -47,7 +57,7 @@ class Channel:
     def get_module_serial(self) -> str:
         return self._module.get_serial()
 
-    def get_module_address(self, chan_type="") -> int:
+    def get_module_address(self, chan_type: str = "") -> int:
         """Return (sub)module address for channel"""
         if chan_type == "Button" and self._num > 24:
             return self._module.get_addresses()[3]
@@ -70,8 +80,6 @@ class Channel:
     def is_loaded(self) -> bool:
         """
         Is this channel loaded
-
-        :return: Boolean
         """
         return self._is_loaded
 
@@ -87,7 +95,7 @@ class Channel:
         """
         return self._name
 
-    def set_name_char(self, pos, char) -> None:
+    def set_name_char(self, pos: int, char: int) -> None:
         self._is_loaded = True
         self._name_parts = {}
         # make sure the string is long enough
@@ -95,8 +103,9 @@ class Channel:
             self._name += " "
         # store the char on correct pos
         self._name = self._name[: int(pos)] + str(char) + self._name[int(pos) + 1 :]
+        # TODO: I think the str(char) should be chr(char)
 
-    def set_name_part(self, part, name) -> None:
+    def set_name_part(self, part: int, name: str) -> None:
         """
         Set a part of the channel name
         """
@@ -128,14 +137,14 @@ class Channel:
         self._on_status_update = []
         self._name_parts = {}
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         items = []
         for k, v in self.__dict__.items():
             if k not in ["_module", "_writer", "_name_parts"]:
                 items.append(f"{k} = {v!r}")
         return "{}[{}]".format(type(self), ", ".join(items))
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.__repr__()
 
     def get_channel_info(self) -> dict[str, Any]:
@@ -157,30 +166,30 @@ class Channel:
                 for m in self._on_status_update:
                     await m()
 
-    def get_categories(self) -> list:
+    def get_categories(self) -> list[str]:
         """
         Get the categories (mainly for home-assistant)
         """
         # COMPONENT_TYPES = ["switch", "sensor", "binary_sensor", "cover", "climate", "light"]
         return []
 
-    def on_status_update(self, meth: Callable) -> None:
+    def on_status_update(self, meth: Callable[[], Awaitable[None]]) -> None:
         self._on_status_update.append(meth)
 
-    def get_counter_state(self):
-        raise NotImplementedError
+    def get_counter_state(self) -> int:
+        raise NotImplementedError()
 
-    def get_counter_unit(self):
-        raise NotImplementedError
+    def get_counter_unit(self) -> str:
+        raise NotImplementedError()
 
     def get_max(self) -> int:
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def get_min(self) -> int:
-        raise NotImplementedError
+        raise NotImplementedError()
 
     async def press(self) -> None:
-        raise NotImplementedError
+        raise NotImplementedError()
 
 
 class Blind(Channel):
@@ -193,7 +202,7 @@ class Blind(Channel):
     _position = None
     # Position reporting is not supported by VMBxBL modules (only in BLE/BLS)
 
-    def get_categories(self) -> list:
+    def get_categories(self) -> list[str]:
         return ["cover"]
 
     def get_position(self) -> int | None:
@@ -265,7 +274,7 @@ class Button(Channel):
     _closed = False
     _led_state = None
 
-    def get_categories(self) -> list:
+    def get_categories(self) -> list[str]:
         if self._enabled:
             return ["binary_sensor", "led", "button"]
         return []
@@ -287,8 +296,6 @@ class Button(Channel):
     async def set_led_state(self, state: str) -> None:
         """
         Set led
-
-        :return: None
         """
         if state == "on":
             code = 0xF6
@@ -312,8 +319,6 @@ class Button(Channel):
     async def press(self) -> None:
         """
         Press the button
-
-        :return: None
         """
         _mod_add = self.get_module_address("Button")
         _chn_num = self._num - self._module.calc_channel_offset(_mod_add)
@@ -341,7 +346,7 @@ class ButtonCounter(Button):
     _counter = None
     _delay = None
 
-    def get_categories(self) -> list:
+    def get_categories(self) -> list[str]:
         if self._counter:
             return ["sensor"]
         return ["binary_sensor", "button"]
@@ -369,7 +374,7 @@ class ButtonCounter(Button):
             val = 0
         return round(val, 2)
 
-    def get_unit(self) -> str:
+    def get_unit(self) -> str | None:
         if self._Unit in (
             VOLUME_LITERS_HOUR,
             VOLUME_CUBIC_METER_HOUR,
@@ -392,7 +397,7 @@ class Sensor(Button):
     A sensor in this case is actually a Button
     """
 
-    def get_categories(self) -> list:
+    def get_categories(self) -> list[str]:
         if self._enabled:
             return ["binary_sensor", "led"]
         return []
@@ -413,7 +418,14 @@ class Dimmer(Channel):
     _state: int = 0
 
     def __init__(
-        self, module, num, name, nameEditable, writer, address, slider_scale: int = 100
+        self,
+        module,  # t_ype Module circular import dependency, TODO
+        num: int,
+        name: str,
+        nameEditable: bool,
+        writer: Callable[[Message], Awaitable[None]],
+        address: int,
+        slider_scale: int = 100,
     ):
         super().__init__(module, num, name, nameEditable, writer, address)
 
@@ -421,7 +433,7 @@ class Dimmer(Channel):
         # VMB4DC has dim values 0(off), 1-99(dimmed), 100(full on)
         # VMBDALI has dim values 0(off), 1-253(dimmed), 254(full on), 255(previous value)
 
-    def get_categories(self) -> list:
+    def get_categories(self) -> list[str]:
         return ["light"]
 
     def is_on(self) -> bool:
@@ -438,7 +450,7 @@ class Dimmer(Channel):
         """
         return int(self._state * 100 / self.slider_scale)
 
-    async def set_dimmer_state(self, slider, transitiontime=0) -> None:
+    async def set_dimmer_state(self, slider: int, transitiontime: int = 0) -> None:
         """
         Set dimmer to slider
         """
@@ -449,7 +461,7 @@ class Dimmer(Channel):
         msg.dimmer_channels = [self._num]
         await self._writer(msg)
 
-    async def restore_dimmer_state(self, transitiontime=0) -> None:
+    async def restore_dimmer_state(self, transitiontime: int = 0) -> None:
         """
         restore dimmer to last known state
         """
@@ -474,7 +486,7 @@ class Temperature(Channel):
     _cstatus = None
     _thermostat = False
 
-    def get_categories(self) -> list:
+    def get_categories(self) -> list[str]:
         if self._thermostat:
             return ["sensor", "climate"]
         return ["sensor"]
@@ -491,12 +503,12 @@ class Temperature(Channel):
     def is_temperature(self) -> bool:
         return True
 
-    def get_max(self) -> int:
+    def get_max(self) -> int | None:
         if self._max is None:
             return None
         return round(self._max, 2)
 
-    def get_min(self) -> int:
+    def get_min(self) -> int | None:
         if self._min is None:
             return None
         return round(self._min, 2)
@@ -510,13 +522,13 @@ class Temperature(Channel):
     def get_climate_mode(self) -> str:
         return self._cstatus
 
-    async def set_temp(self, temp) -> None:
+    async def set_temp(self, temp: float) -> None:
         cls = commandRegistry.get_command(0xE4, self._module.get_type())
         msg = cls(self._address)
-        msg.temp = temp * 2
+        msg.temp = temp * 2  # TODO: int()
         await self._writer(msg)
 
-    async def set_preset(self, mode) -> None:
+    async def set_preset(self, mode: str) -> None:
         if mode == "safe":
             code = 0xDE
         elif mode == "comfort":
@@ -525,20 +537,22 @@ class Temperature(Channel):
             code = 0xDC
         elif mode == "night":
             code = 0xDD
+        # TODO: else-case
         cls = commandRegistry.get_command(code, self._module.get_type())
         msg = cls(self._address)
         await self._writer(msg)
 
-    async def set_mode(self, mode) -> None:
+    async def set_mode(self, mode: str) -> None:
         if mode == "heat":
             code = 0xE0
         elif mode == "cool":
             code = 0xDF
+        # TODO: else case
         cls = commandRegistry.get_command(code, self._module.get_type())
         msg = cls(self._address)
         await self._writer(msg)
 
-    async def maybe_update_temperature(self, new_temp: float, precision: float):
+    async def maybe_update_temperature(self, new_temp: float, precision: float) -> None:
         # Based on experiments, Velbus modules seem to truncate (i.e. round down)
         current_temp_rounded_to_precision = (
             math.floor(self._cur / precision) * precision
@@ -580,16 +594,16 @@ class SensorNumber(Channel):
 
     _cur = 0
 
-    def get_categories(self):
+    def get_categories(self) -> list[str]:
         return ["sensor"]
 
-    def get_class(self):
+    def get_class(self) -> None:
         return None
 
-    def get_unit(self):
+    def get_unit(self) -> None:
         return None
 
-    def get_state(self):
+    def get_state(self) -> float:
         return round(self._cur, 2)
 
 
@@ -600,16 +614,16 @@ class LightSensor(Channel):
 
     _cur = 0
 
-    def get_categories(self):
+    def get_categories(self) -> list[str]:
         return ["sensor"]
 
-    def get_class(self):
+    def get_class(self) -> str:
         return DEVICE_CLASS_ILLUMINANCE
 
-    def get_unit(self):
+    def get_unit(self) -> None:
         return None
 
-    def get_state(self):
+    def get_state(self) -> float:
         return round(self._cur, 2)
 
 
@@ -624,7 +638,7 @@ class Relay(Channel):
     _forced_on = False
     _disabled = False
 
-    def get_categories(self) -> list:
+    def get_categories(self) -> list[str]:
         if self._enabled:
             return ["switch"]
         return []
