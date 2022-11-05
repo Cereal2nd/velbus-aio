@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 
 import serial
 import serial_asyncio
+from channels import Channel
 
 from velbusaio.const import LOAD_TIMEOUT
 from velbusaio.exceptions import VelbusConnectionFailed
@@ -32,7 +33,11 @@ class Velbus:
     A velbus controller
     """
 
-    def __init__(self, dsn, cache_dir=get_cache_dir()) -> None:
+    def __init__(
+        self,
+        dsn: str,
+        cache_dir: str = get_cache_dir(),
+    ) -> None:
         self._log = logging.getLogger("velbus")
 
         self._protocol = VelbusProtocol(
@@ -45,34 +50,34 @@ class Velbus:
 
         self._dsn = dsn
         self._handler = PacketHandler(self.send, self)
-        self._modules = {}
-        self._submodules = []
+        self._modules: dict[int, Module] = {}
+        self._submodules: list[int] = []
         self._send_queue = asyncio.Queue()
         self._cache_dir = cache_dir
         # make sure the cachedir exists
         pathlib.Path(self._cache_dir).mkdir(parents=True, exist_ok=True)
 
-    async def _on_message_received(self, msg: RawMessage):
+    async def _on_message_received(self, msg: RawMessage) -> None:
         await self._handler.handle(msg)
 
-    def _on_connection_lost(self, exc: Exception):
+    def _on_connection_lost(self, exc: Exception) -> None:
         """Respond to Protocol connection lost."""
         if self._auto_reconnect and not self._closing:
             self._log.debug("Reconnecting to transport")
             asyncio.ensure_future(self.connect())
 
-    def _on_end_of_scan(self):
+    def _on_end_of_scan(self) -> None:
         self._handler.scan_finished()
 
     async def add_module(
         self,
-        addr: str,
-        typ: str,
+        addr: int,
+        typ: int,
         data: dict,
-        serial=None,
-        memorymap=None,
-        build_year=None,
-        build_week=None,
+        serial: int | None = None,
+        memorymap: int | None = None,
+        build_year: int | None = None,
+        build_week: int | None = None,
     ) -> None:
         """
         Add a found module to the module cache
@@ -98,7 +103,7 @@ class Velbus:
             self._modules[addr].initialize(self.send)
             await self._modules[addr].load()
 
-    async def add_submodules(self, addr, subList) -> None:
+    async def add_submodules(self, addr: int, subList: dict[int, int]) -> None:
         for sub_num, sub_addr in subList.items():
             if sub_addr == 0xFF:
                 continue
@@ -107,13 +112,16 @@ class Velbus:
             self._modules[sub_addr] = self._modules[addr]
         self._modules[addr].cleanupSubChannels()
 
-    def _load_module_from_cache(self, cache_dir, address) -> None | str:
+    def _load_module_from_cache(self, cache_dir: str, address: int) -> None | Module:
         try:
             cfile = pathlib.Path(f"{cache_dir}/{address}.p")
             with cfile.open("rb") as fl:
-                return pickle.load(fl)
+                o = pickle.load(fl)
+                if isinstance(o, Module):
+                    return o
         except OSError:
             pass
+        return None
 
     def get_modules(self) -> dict:
         """
@@ -247,7 +255,7 @@ class Velbus:
             )
         )
 
-    def get_all(self, class_name: str) -> list:
+    def get_all(self, class_name: str) -> list[Channel]:
         lst = []
         for addr, mod in (self.get_modules()).items():
             if addr in self._submodules:
