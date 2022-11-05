@@ -6,9 +6,7 @@ from __future__ import annotations
 import asyncio
 import math
 import string
-from typing import Any, Awaitable, Callable
-
-from message import Message
+from typing import TYPE_CHECKING, Any, Awaitable, Callable
 
 from velbusaio.command_registry import commandRegistry
 from velbusaio.const import (
@@ -19,6 +17,10 @@ from velbusaio.const import (
     VOLUME_CUBIC_METER_HOUR,
     VOLUME_LITERS_HOUR,
 )
+from velbusaio.message import Message
+
+if TYPE_CHECKING:
+    from velbusaio.module import Module
 
 
 class Channel:
@@ -29,7 +31,7 @@ class Channel:
 
     def __init__(
         self,
-        module,  # t_ype Module circular import dependency, TODO
+        module: Module,
         num: int,
         name: str,
         nameEditable: bool,
@@ -419,7 +421,7 @@ class Dimmer(Channel):
 
     def __init__(
         self,
-        module,  # t_ype Module circular import dependency, TODO
+        module: Module,
         num: int,
         name: str,
         nameEditable: bool,

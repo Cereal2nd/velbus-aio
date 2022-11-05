@@ -8,7 +8,7 @@ import asyncio
 import json
 import logging
 import re
-from typing import Awaitable, Callable
+from typing import TYPE_CHECKING, Awaitable, Callable
 
 import pkg_resources
 
@@ -19,6 +19,9 @@ from velbusaio.messages.module_subtype import ModuleSubTypeMessage
 from velbusaio.messages.module_type import ModuleTypeMessage
 from velbusaio.raw_message import RawMessage
 
+if TYPE_CHECKING:
+    from velbusaio.controller import Velbus
+
 
 class PacketHandler:
     """
@@ -28,7 +31,7 @@ class PacketHandler:
     def __init__(
         self,
         writer: Callable[[Message], Awaitable[None]],
-        velbus,  # t_ype Velubs circular dependency TODO
+        velbus: Velbus,
     ) -> None:
         self._log = logging.getLogger("velbus-packet")
         self._writer = writer
