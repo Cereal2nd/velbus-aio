@@ -5,7 +5,9 @@ This document should get you up and running with your development environment.
 
 ## Development environment
 
-1. (optional) To keep dependencies from different projects from conflicting,
+1. Clone the repo with its submodules: `git clone --recurse-submodules https://github.com/Cereal2nd/velbus-aio`
+   
+2. (optional) To keep dependencies from different projects from conflicting,
    it's usually better to install every project in its own Virtual Environment.
    Start by creating a new virtualenv: `python3 -m venv venv`
    This will create a new directory called `venv` (the second `venv` in the command).
@@ -13,10 +15,10 @@ This document should get you up and running with your development environment.
    `source venv/bin/activate`.
    Your prompt will be prefixed with `(venv)` to indicate the virtual environment is active.
 
-2. Install the development dependencies: `pip install -r requirements-dev.txt`
+3. Install the development dependencies: `pip install -r requirements-dev.txt`
 
-3. Prepare your changes
+4. Prepare your changes
 
-4. Run the tests to check if everything still works as expected: `pytest`
+5. Run the tests to check if everything still works as expected: `pytest`
 
-5. Run `pre-commit run --all-files` to check and correct formatting
+6. Run `pre-commit run --all-files` to check and correct formatting
