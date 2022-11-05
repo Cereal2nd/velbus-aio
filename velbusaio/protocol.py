@@ -170,6 +170,11 @@ class VelbusProtocol(asyncio.BufferedProtocol):
 
     # Everything write-related
 
+    async def write_auth_key(self, authkey):
+        self._log.debug("TX: authentication key")
+        if not self.transport.is_closing():
+            self.transport.write(authkey.encode("utf-8"))
+
     async def send_message(self, msg: RawMessage):
         self._send_queue.put_nowait(msg)
 
