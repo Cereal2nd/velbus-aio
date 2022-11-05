@@ -13,22 +13,13 @@ The latest version of the library is published as a python package on [pypi](htt
 
 # Supported connections:
 
-| Type          | Example                 | Description                                                                              |
-| ------------- | ----------------------- | ---------------------------------------------------------------------------------------- |
-| serial        | /dev/ttyACME0           | a serial device                                                                          |
-| ip:port       | 192.168.1.9:1234        | An ip address + tcp port combination, used in combination with any velbus => tcp gateway |
-| tls://ip:port | tls://192.168.1.9:12345 | A connection to [Signum](https://www.velbus.eu/products/view/?id=458140)                 |
+| Type               | Example                          | Description                                                                                     |
+| ------------------ | -------------------------------- | ----------------------------------------------------------------------------------------------- |
+| serial             | /dev/ttyACME0                    | a serial device                                                                                 |
+| ip:port            | 192.168.1.9:1234                 | An ip address + tcp port combination, used in combination with any velbus => tcp gateway        |
+| tls://ip:port      | tls://192.168.1.9:12345          | A connection to [Signum](https://www.velbus.eu/products/view/?id=458140)                        |
+| tls://auth@ip:port | tls://iauthKey@192.168.1.9:12345 | A connection to [Signum](https://www.velbus.eu/products/view/?id=458140) with uthentication     |
 
-# Develop Installation
+# Development
 
-1. Clone the repo
-   - git clone --recurse-submodules https://github.com/Cereal2nd/velbus-aio
-2. cd into the cloned repo
-   - cd velbus-aio
-3. create and activate a virtual environment
-   - python3 -m venv venv
-   - source venv/bin/activate
-4. install the module
-   - python setup.py develop
-5. run the example
-   - python examples/load_modules.py --connect 192.168.1.9:1234
+See the [contributing](https://github.com/Cereal2nd/velbus-aio/blob/master/CONTRIBUTING.md) guidelines.
