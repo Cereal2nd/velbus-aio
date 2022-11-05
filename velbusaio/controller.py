@@ -50,8 +50,8 @@ class Velbus:
 
         self._dsn = dsn
         self._handler = PacketHandler(self.send, self)
-        self._modules = {}
-        self._submodules = []
+        self._modules: dict[int, Module] = {}
+        self._submodules: list[int] = []
         self._send_queue = asyncio.Queue()
         self._cache_dir = cache_dir
         # make sure the cachedir exists
@@ -112,13 +112,16 @@ class Velbus:
             self._modules[sub_addr] = self._modules[addr]
         self._modules[addr].cleanupSubChannels()
 
-    def _load_module_from_cache(self, cache_dir: str, address: int) -> None | str:
+    def _load_module_from_cache(self, cache_dir: str, address: int) -> None | Module:
         try:
             cfile = pathlib.Path(f"{cache_dir}/{address}.p")
             with cfile.open("rb") as fl:
-                return pickle.load(fl)
+                o = pickle.load(fl)
+                if isinstance(o, Module):
+                    return o
         except OSError:
             pass
+        return None
 
     def get_modules(self) -> dict:
         """
