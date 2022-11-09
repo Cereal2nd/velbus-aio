@@ -33,7 +33,7 @@ class SwitchToSafeMessage(Message):
         """
         :return: bytes
         """
-        return bytes([COMMAND_CODE, self.sleep >> 8, self.sleep & 0xff])
+        return bytes([COMMAND_CODE, self.sleep >> 8, self.sleep & 0xFF])
 
 
 register_command(COMMAND_CODE, SwitchToSafeMessage)

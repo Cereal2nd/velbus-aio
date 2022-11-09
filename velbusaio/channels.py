@@ -544,7 +544,7 @@ class Temperature(Channel):
         if self._cstatus == "run":
             sleep = 0x0
         elif self._cstatus == "manual":
-            sleep = 0xffff
+            sleep = 0xFFFF
         elif self._cstatus == "sleep":
             sleep = self._sleep_timer
         else:
