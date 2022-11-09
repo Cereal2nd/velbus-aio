@@ -12,7 +12,7 @@ class VelbusDiscoveryProtocol(asyncio.DatagramProtocol):
     def __init__(self, target: Address):
         self.target = target
 
-    def connection_made(self, transport: asyncio.transports.DatagramTransport):
+    def connection_made(self, transport: asyncio.transports.DatagramTransport) -> None:
         self.transport = transport
         sock = transport.get_extra_info("socket")
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -20,7 +20,7 @@ class VelbusDiscoveryProtocol(asyncio.DatagramProtocol):
         string = "Velbus Navigation Request"
         self.transport.sendto(string.encode(), self.target)
 
-    def datagram_received(self, data: bytes | str, addr: Address):
+    def datagram_received(self, data: bytes | str, addr: Address) -> None:
         # data received: b'{"message": "Velbus Navigation Guidance", "hostname": "Velbus", "model": "signum18", "id": "7b95834e", "velbus_port": 27015, "velbus_auth": false}' ('192.168.1.9', 32767)
         try:
             json_data = json.loads(data)

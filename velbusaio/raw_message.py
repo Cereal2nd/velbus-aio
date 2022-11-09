@@ -32,10 +32,6 @@ class RawMessage(NamedTuple):
         return self.data[1:] if len(self.data) > 1 else None
 
     def to_bytes(self) -> bytes:
-        """
-        :return: bytes
-        """
-
         # create header:
         header_bytes = bytes(
             [

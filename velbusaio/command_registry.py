@@ -132,7 +132,4 @@ commandRegistry = CommandRegistry(MODULE_DIRECTORY)
 def register_command(
     command_value: int, command_class: type, module_type: str = 0
 ) -> None:
-    """
-    :return: None
-    """
     commandRegistry.register_command(command_value, command_class, module_type)

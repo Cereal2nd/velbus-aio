@@ -29,7 +29,7 @@ class VelbusProtocol(asyncio.BufferedProtocol):
 
     def __init__(
         self,
-        message_received_callback: t.Callable[[RawMessage], None],
+        message_received_callback: t.Callable[[RawMessage], t.Awaitable[None]],
         connection_lost_callback=None,
         end_of_scan_callback=None,
     ) -> None:
@@ -101,10 +101,10 @@ class VelbusProtocol(asyncio.BufferedProtocol):
 
     # Everything read-related
 
-    def get_buffer(self, sizehint):
+    def get_buffer(self, sizehint: int) -> memoryview:
         return self._buffer_view[self._buffer_pos :]
 
-    def data_received(self, data: bytes):
+    def data_received(self, data: bytes) -> None:
         """Receive data from the Streaming protocol.
         Called when asyncio.Protocol detects received data from serial port.
         """
@@ -155,7 +155,7 @@ class VelbusProtocol(asyncio.BufferedProtocol):
 
             self._new_buffer(remaining_data)
 
-    def _new_buffer(self, remaining_data=None):
+    def _new_buffer(self, remaining_data=None) -> None:
         new_buffer = bytearray(MAXIMUM_MESSAGE_SIZE)
         if remaining_data:
             new_buffer[: len(remaining_data)] = remaining_data
@@ -164,16 +164,21 @@ class VelbusProtocol(asyncio.BufferedProtocol):
         self._buffer_pos = len(remaining_data) if remaining_data else 0
         self._buffer_view = memoryview(self._buffer)
 
-    async def _process_message(self, msg: RawMessage):
+    async def _process_message(self, msg: RawMessage) -> None:
         self._log.debug(f"RX: {msg}")
         await self._message_received_callback(msg)
 
     # Everything write-related
 
-    async def send_message(self, msg: RawMessage):
+    async def write_auth_key(self, authkey: str) -> None:
+        self._log.debug("TX: authentication key")
+        if not self.transport.is_closing():
+            self.transport.write(authkey.encode("utf-8"))
+
+    async def send_message(self, msg: RawMessage) -> None:
         self._send_queue.put_nowait(msg)
 
-    async def _get_message_from_send_queue(self):
+    async def _get_message_from_send_queue(self) -> None:
         self._log.debug("Starting Velbus write message from send queue")
         self._log.debug("Acquiring write lock")
         await self._write_transport_lock.acquire()
@@ -212,7 +217,7 @@ class VelbusProtocol(asyncio.BufferedProtocol):
         max_tries=10,
         on_backoff=_on_write_backoff,
     )
-    async def _write_message(self, msg: RawMessage):
+    async def _write_message(self, msg: RawMessage) -> bool:
         self._log.debug(f"TX: {msg}")
         if not self.transport.is_closing():
             self.transport.write(msg.to_bytes())
