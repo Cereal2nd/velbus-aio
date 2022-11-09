@@ -10,6 +10,8 @@ from velbusaio.message import Message
 
 COMMAND_CODE = 0xED
 
+PROGRAM_SELECTION = {0: "none", 1: "summer", 2: "winter", 3: "holiday"}
+
 
 class ModuleStatusMessage(Message):
     """
@@ -61,6 +63,8 @@ class ModuleStatusMessage2(Message):
         self.normal = []
         self.locked = []
         self.programenabled = []
+        self.selected_program = 0
+        self.selected_program_str = PROGRAM_SELECTION[self.selected_program]
 
     def populate(self, priority, address, rtr, data):
         self.needs_low_priority(priority)
@@ -72,6 +76,8 @@ class ModuleStatusMessage2(Message):
         self.normal = self.byte_to_channels(data[2])
         self.locked = self.byte_to_channels(data[3])
         self.programenabled = self.byte_to_channels(data[4])
+        self.selected_program = data[5] & 0x03
+        self.selected_program_str = PROGRAM_SELECTION[self.selected_program]
 
     def data_to_binary(self):
         """
