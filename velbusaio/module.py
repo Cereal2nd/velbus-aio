@@ -9,6 +9,7 @@ import pathlib
 import pickle
 import struct
 import sys
+from typing import Awaitable, Callable
 
 from velbusaio.channels import (
     Blind,
@@ -96,7 +97,7 @@ class Module:
         module_address: int,
         module_type: int,
         module_data: dict,
-        serial: str = "",
+        serial: int | None = None,
         memorymap: int | None = None,
         build_year: int | None = None,
         build_week: int | None = None,
@@ -130,7 +131,7 @@ class Module:
         module_address: int,
         module_type: int,
         module_data: dict,
-        serial: str = "",
+        serial: int | None = None,
         memorymap: int | None = None,
         build_year: int | None = None,
         build_week: int | None = None,
@@ -142,7 +143,7 @@ class Module:
 
         self._name = {}
         self._sub_address = {}
-        self.serial: str = serial
+        self.serial = serial
         self.memory_map_version = memorymap
         self.build_year = build_year
         self.build_week = build_week
@@ -151,7 +152,7 @@ class Module:
         self._channels = {}
         self.loaded = False
 
-    def initialize(self, writer: type) -> None:
+    def initialize(self, writer: Callable[[Message], Awaitable[None]]) -> None:
         self._log = logging.getLogger("velbus-module")
         self._writer = writer
         for chan in self._channels.values():
@@ -645,7 +646,7 @@ class VmbDali(Module):
         module_address: int,
         module_type: int,
         module_data: dict,
-        serial: str = "",
+        serial: int | None = None,
         memorymap: int | None = None,
         build_year: int | None = None,
         build_week: int | None = None,
