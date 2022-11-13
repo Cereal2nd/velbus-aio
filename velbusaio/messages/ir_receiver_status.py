@@ -3,17 +3,15 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.messages.module_status import ModuleStatusMessage
 
 COMMAND_CODE = 0xEB
 
 
+@register(COMMAND_CODE, "VMB8IR")
 class IRReceiverStatusMessage(ModuleStatusMessage):
     """
     send by: VMB8IR
     received by:
     """
-
-
-register_command(COMMAND_CODE, IRReceiverStatusMessage, "VMB8IR")

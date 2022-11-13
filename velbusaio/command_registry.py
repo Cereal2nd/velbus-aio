@@ -129,6 +129,14 @@ class CommandRegistry:
 commandRegistry = CommandRegistry(MODULE_DIRECTORY)
 
 
+def register(command_value: int, module_type: str = 0):
+    def inner_register(command_class):
+        commandRegistry.register_command(command_value, command_class, module_type)
+        return command_class
+
+    return inner_register
+
+
 def register_command(
     command_value: int, command_class: type, module_type: str = 0
 ) -> None:
