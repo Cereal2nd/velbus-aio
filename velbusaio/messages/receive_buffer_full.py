@@ -3,7 +3,7 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0x0B
@@ -37,4 +37,4 @@ class ReceiveBufferFullMessage(Message):
         return bytes([COMMAND_CODE])
 
 
-register_command(COMMAND_CODE, ReceiveBufferFullMessage)
+register(COMMAND_CODE, ReceiveBufferFullMessage)

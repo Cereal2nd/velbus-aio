@@ -3,7 +3,7 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xAA
@@ -25,4 +25,4 @@ class LightValueRequest(Message):
         return bytes([COMMAND_CODE])
 
 
-register_command(COMMAND_CODE, LightValueRequest)
+register(COMMAND_CODE, LightValueRequest)

@@ -3,18 +3,14 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0x0A
 
 
+@register(COMMAND_CODE)
 class BusActiveMessage(Message):
-    """
-    send by:
-    received by: VMB1USB
-    """
-
     def set_defaults(self, address):
         if address is not None:
             self.set_address(address)
@@ -32,6 +28,3 @@ class BusActiveMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE])
-
-
-register_command(COMMAND_CODE, BusActiveMessage)

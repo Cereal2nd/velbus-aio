@@ -3,12 +3,17 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0x07
 
 
+@register(COMMAND_CODE, "VMBDME")
+@register(COMMAND_CODE, "VMB4DC")
+@register(COMMAND_CODE, "VMBDMI")
+@register(COMMAND_CODE, "VMBDMI-R")
+@register(COMMAND_CODE, "VMB1LED")
 class SetDimmerMessage(Message):
     """
     send by:
@@ -55,6 +60,7 @@ class SetDimmerMessage(Message):
         ) + self.dimmer_transitiontime.to_bytes(2, byteorder="big", signed=False)
 
 
+@register(COMMAND_CODE, "VMBDALI")
 class SetDimmerMessage2(SetDimmerMessage):
     """
     send by:
@@ -67,11 +73,3 @@ class SetDimmerMessage2(SetDimmerMessage):
     def channels_to_byte(self, channels) -> int:
         assert len(channels) == 1
         return channels[0]
-
-
-register_command(COMMAND_CODE, SetDimmerMessage, "VMBDME")
-register_command(COMMAND_CODE, SetDimmerMessage, "VMB4DC")
-register_command(COMMAND_CODE, SetDimmerMessage, "VMBDMI")
-register_command(COMMAND_CODE, SetDimmerMessage, "VMBDMI-R")
-register_command(COMMAND_CODE, SetDimmerMessage, "VMB1LED")
-register_command(COMMAND_CODE, SetDimmerMessage2, "VMBDALI")

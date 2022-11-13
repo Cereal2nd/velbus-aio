@@ -3,10 +3,9 @@
 """
 from __future__ import annotations
 
-import json
 import time
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xD8
@@ -53,4 +52,4 @@ class SetRealtimeClock(Message):
         return bytes([COMMAND_CODE, self._wday, self._hour, self._min])
 
 
-register_command(COMMAND_CODE, SetRealtimeClock)
+register(COMMAND_CODE, SetRealtimeClock)

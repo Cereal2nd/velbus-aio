@@ -3,9 +3,7 @@
 """
 from __future__ import annotations
 
-import json
-
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0x00
@@ -62,4 +60,4 @@ class PushButtonStatusMessage(Message):
         )
 
 
-register_command(COMMAND_CODE, PushButtonStatusMessage)
+register(COMMAND_CODE, PushButtonStatusMessage)

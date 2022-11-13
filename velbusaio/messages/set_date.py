@@ -3,10 +3,9 @@
 """
 from __future__ import annotations
 
-import json
 import time
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xB7
@@ -61,4 +60,4 @@ class SetDate(Message):
         )
 
 
-register_command(COMMAND_CODE, SetDate)
+register(COMMAND_CODE, SetDate)

@@ -3,7 +3,7 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xAC
@@ -40,4 +40,4 @@ class MemoTextMessage(Message):
         return bytes([COMMAND_CODE, 0x00, self.start]) + bytes(self.memo_text, "utf-8")
 
 
-register_command(COMMAND_CODE, MemoTextMessage)
+register(COMMAND_CODE, MemoTextMessage)

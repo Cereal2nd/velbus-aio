@@ -3,9 +3,7 @@
 """
 from __future__ import annotations
 
-import json
-
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0x01
@@ -45,4 +43,4 @@ class SwitchRelayOffMessage(Message):
         return bytes([COMMAND_CODE, self.channels_to_byte(self.relay_channels)])
 
 
-register_command(COMMAND_CODE, SwitchRelayOffMessage)
+register(COMMAND_CODE, SwitchRelayOffMessage)

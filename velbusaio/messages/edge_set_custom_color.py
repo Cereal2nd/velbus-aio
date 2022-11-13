@@ -3,9 +3,7 @@
 """
 from __future__ import annotations
 
-import json
-
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xD4
@@ -56,4 +54,4 @@ class EdgeSetCustomColor(Message):
         )
 
 
-register_command(COMMAND_CODE, EdgeSetCustomColor)
+register(COMMAND_CODE, EdgeSetCustomColor)

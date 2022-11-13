@@ -3,10 +3,9 @@
 """
 from __future__ import annotations
 
-import json
 import time
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xAF
@@ -47,4 +46,4 @@ class SetDaylightSaving(Message):
         return bytes([COMMAND_CODE, self._ds])
 
 
-register_command(COMMAND_CODE, SetDaylightSaving)
+register(COMMAND_CODE, SetDaylightSaving)

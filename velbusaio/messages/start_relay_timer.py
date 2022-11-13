@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import struct
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0x03
@@ -50,4 +50,4 @@ class StartRelayTimerMessage(Message):
         )
 
 
-register_command(COMMAND_CODE, StartRelayTimerMessage)
+register(COMMAND_CODE, StartRelayTimerMessage)

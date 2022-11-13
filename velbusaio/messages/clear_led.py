@@ -3,9 +3,7 @@
 """
 from __future__ import annotations
 
-import json
-
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xF5
@@ -39,4 +37,4 @@ class ClearLedMessage(Message):
         return bytes([COMMAND_CODE, self.channels_to_byte(self.leds)])
 
 
-register_command(COMMAND_CODE, ClearLedMessage)
+register(COMMAND_CODE, ClearLedMessage)

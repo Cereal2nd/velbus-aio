@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import struct
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0x0D
@@ -50,4 +50,4 @@ class StartRelayBlinkingTimerMessage(Message):
         )
 
 
-register_command(COMMAND_CODE, StartRelayBlinkingTimerMessage)
+register(COMMAND_CODE, StartRelayBlinkingTimerMessage)

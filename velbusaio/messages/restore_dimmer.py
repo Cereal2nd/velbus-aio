@@ -3,14 +3,13 @@
 """
 from __future__ import annotations
 
-import json
-
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0x11
 
 
+@register(COMMAND_CODE)
 class RestoreDimmerMessage(Message):
     """
     send by:
@@ -54,6 +53,7 @@ class RestoreDimmerMessage(Message):
         ) + self.dimmer_transitiontime.to_bytes(2, byteorder="big", signed=False)
 
 
+@register(COMMAND_CODE, "VMBDALI")
 class RestoreDimmerMessage2(RestoreDimmerMessage):
     def byte_to_channels(self, byte: int) -> list[int]:
         return [byte]
@@ -61,7 +61,3 @@ class RestoreDimmerMessage2(RestoreDimmerMessage):
     def channels_to_byte(self, channels: list[int]) -> int:
         assert len(channels) == 1
         return channels[0]
-
-
-register_command(COMMAND_CODE, RestoreDimmerMessage)
-register_command(COMMAND_CODE, RestoreDimmerMessage2, "VMBDALI")

@@ -3,12 +3,13 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xBD
 
 
+@register(COMMAND_CODE, "VMB7IN")
 class CounterStatusRequestMessage(Message):
     """
     send by:
@@ -35,6 +36,3 @@ class CounterStatusRequestMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self.channels_to_byte(self.channels), 0x00])
-
-
-register_command(COMMAND_CODE, CounterStatusRequestMessage, "VMB7IN")

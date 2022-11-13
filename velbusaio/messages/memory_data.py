@@ -3,9 +3,7 @@
 """
 from __future__ import annotations
 
-import json
-
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xFE
@@ -43,4 +41,4 @@ class MemoryDataMessage(Message):
         return bytes([COMMAND_CODE, self.high_address, self.low_address, self.data])
 
 
-register_command(COMMAND_CODE, MemoryDataMessage)
+register(COMMAND_CODE, MemoryDataMessage)

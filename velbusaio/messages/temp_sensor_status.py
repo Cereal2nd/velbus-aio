@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import json
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xEA
@@ -13,6 +13,7 @@ DSTATUS = {0: "run", 2: "manual", 4: "sleep", 6: "disable"}
 DMODE = {0: "safe", 16: "night", 32: "day", 64: "comfort"}
 
 
+@register(COMMAND_CODE)
 class TempSensorStatusMessage(Message):
     """
     send by: VMBGPOD
@@ -112,6 +113,3 @@ class TempSensorStatusMessage(Message):
         json_dict["target_temp"] = self.target_temp
         json_dict["sleep_timer"] = self.sleep_timer
         return json.dumps(json_dict)
-
-
-register_command(COMMAND_CODE, TempSensorStatusMessage)

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import struct
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xFF
@@ -82,4 +82,4 @@ class ModuleTypeMessage(Message):
         )
 
 
-register_command(COMMAND_CODE, ModuleTypeMessage)
+register(COMMAND_CODE, ModuleTypeMessage)

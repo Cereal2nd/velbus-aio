@@ -3,7 +3,7 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xF8
@@ -37,4 +37,4 @@ class FastBlinkingLedMessage(Message):
         return bytes([COMMAND_CODE, self.channels_to_byte(self.leds)])
 
 
-register_command(COMMAND_CODE, FastBlinkingLedMessage)
+register(COMMAND_CODE, FastBlinkingLedMessage)

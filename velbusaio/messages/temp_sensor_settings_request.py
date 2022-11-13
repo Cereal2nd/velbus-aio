@@ -3,7 +3,7 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xE7
@@ -25,4 +25,4 @@ class TempSensorSettingsRequest(Message):
         return bytes([COMMAND_CODE])
 
 
-register_command(COMMAND_CODE, TempSensorSettingsRequest)
+register(COMMAND_CODE, TempSensorSettingsRequest)

@@ -3,9 +3,7 @@
 """
 from __future__ import annotations
 
-import json
-
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xE6
@@ -57,4 +55,4 @@ class SensorTemperatureMessage(Message):
             self.max = (((data[4] << 8) | data[5]) / 32) * 0.0625
 
 
-register_command(COMMAND_CODE, SensorTemperatureMessage)
+register(COMMAND_CODE, SensorTemperatureMessage)

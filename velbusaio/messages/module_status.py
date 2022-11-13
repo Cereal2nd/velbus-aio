@@ -3,8 +3,6 @@
 """
 from __future__ import annotations
 
-import json
-
 from velbusaio.command_registry import register
 from velbusaio.message import Message
 

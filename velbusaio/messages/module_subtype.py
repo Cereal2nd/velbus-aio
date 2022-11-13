@@ -3,10 +3,9 @@
 """
 from __future__ import annotations
 
-import json
 import struct
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xB0
@@ -55,6 +54,6 @@ class ModuleSubTypeMessage(Message):
         self.sub_address_4 = data[6]
 
 
-register_command(COMMAND_CODE, ModuleSubTypeMessage)
-register_command(COMMAND_CODE_2, ModuleSubTypeMessage)
-register_command(COMMAND_CODE_3, ModuleSubTypeMessage)
+register(COMMAND_CODE, ModuleSubTypeMessage)
+register(COMMAND_CODE_2, ModuleSubTypeMessage)
+register(COMMAND_CODE_3, ModuleSubTypeMessage)

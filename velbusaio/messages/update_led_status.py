@@ -3,10 +3,13 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xF4
+
+
+register(COMMAND_CODE)
 
 
 class UpdateLedStatusMessage(Message):
@@ -46,6 +49,3 @@ class UpdateLedStatusMessage(Message):
                 self.channels_to_byte(self.led_fast_blinking),
             ]
         )
-
-
-register_command(COMMAND_CODE, UpdateLedStatusMessage)

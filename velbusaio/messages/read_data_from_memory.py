@@ -3,7 +3,7 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xFD
@@ -39,4 +39,4 @@ class ReadDataFromMemoryMessage(Message):
         return bytes([COMMAND_CODE, self.high_address, self.low_address])
 
 
-register_command(COMMAND_CODE, ReadDataFromMemoryMessage)
+register(COMMAND_CODE, ReadDataFromMemoryMessage)
