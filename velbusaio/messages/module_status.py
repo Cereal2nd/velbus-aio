@@ -10,6 +10,8 @@ from velbusaio.message import Message
 
 COMMAND_CODE = 0xED
 
+PROGRAM_SELECTION = {0: "none", 1: "summer", 2: "winter", 3: "holiday"}
+
 
 class ModuleStatusMessage(Message):
     """
@@ -61,6 +63,8 @@ class ModuleStatusMessage2(Message):
         self.normal = []
         self.locked = []
         self.programenabled = []
+        self.selected_program = 0
+        self.selected_program_str = PROGRAM_SELECTION[self.selected_program]
 
     def populate(self, priority, address, rtr, data):
         self.needs_low_priority(priority)
@@ -72,6 +76,8 @@ class ModuleStatusMessage2(Message):
         self.normal = self.byte_to_channels(data[2])
         self.locked = self.byte_to_channels(data[3])
         self.programenabled = self.byte_to_channels(data[4])
+        self.selected_program = data[5] & 0x03
+        self.selected_program_str = PROGRAM_SELECTION[self.selected_program]
 
     def data_to_binary(self):
         """
@@ -102,6 +108,8 @@ class ModuleStatusPirMessage(Message):
         self.high_temp_alarm: bool = False  # bit 8
         # in data[1] and data[2]
         self.light_value: int = 0
+        self.selected_program = 0
+        self.selected_program_str = PROGRAM_SELECTION[self.selected_program]
 
     def populate(self, priority, address, rtr, data):
         self.needs_low_priority(priority)
@@ -117,6 +125,8 @@ class ModuleStatusPirMessage(Message):
         self.low_temp_alarm = bool(data[0] & (1 << 6))
         self.high_temp_alarm = bool(data[0] & (1 << 7))
         self.light_value = (data[1] << 8) + data[2]
+        self.selected_program = data[5] & 0x03
+        self.selected_program_str = PROGRAM_SELECTION[self.selected_program]
 
     def data_to_binary(self):
         """
@@ -126,6 +136,7 @@ class ModuleStatusPirMessage(Message):
 
 
 register_command(COMMAND_CODE, ModuleStatusMessage)
+
 register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB8PBU")
 register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB6PBN")
 register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB2PBN")
@@ -141,14 +152,11 @@ register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBEL4")
 register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGP4-2")
 register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGPO")
 register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGPOD")
+register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGPOD-2")
 register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBELO")
 register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB7IN")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB4DC")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBDMI")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBDMI-R")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBDME")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB1RYS")
-register_command(COMMAND_CODE, ModuleStatusPirMessage, "VMBIRO")
+
+register_command(COMMAND_CODE, ModuleStatusPirMessage, "VMBPIRO")
 register_command(COMMAND_CODE, ModuleStatusPirMessage, "VMBPIRM")
-register_command(COMMAND_CODE, ModuleStatusPirMessage, "VMBIRC")
+register_command(COMMAND_CODE, ModuleStatusPirMessage, "VMBPIRC")
 register_command(COMMAND_CODE, ModuleStatusPirMessage, "VMBELPIR")

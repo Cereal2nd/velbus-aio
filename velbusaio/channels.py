@@ -486,6 +486,7 @@ class Temperature(Channel):
     _cmode = None
     _cstatus = None
     _thermostat = False
+    _sleep_timer = 0
 
     def get_categories(self) -> list[str]:
         if self._thermostat:
@@ -539,8 +540,16 @@ class Temperature(Channel):
         elif mode == "night":
             code = 0xDD
         # TODO: else-case
+        if self._cstatus == "run":
+            sleep = 0x0
+        elif self._cstatus == "manual":
+            sleep = 0xFFFF
+        elif self._cstatus == "sleep":
+            sleep = self._sleep_timer
+        else:
+            sleep = 0x0
         cls = commandRegistry.get_command(code, self._module.get_type())
-        msg = cls(self._address)
+        msg = cls(self._address, sleep)
         await self._writer(msg)
 
     async def set_mode(self, mode: str) -> None:

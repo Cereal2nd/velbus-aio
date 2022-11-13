@@ -33,7 +33,7 @@ class SwitchToComfortMessage(Message):
         """
         :return: bytes
         """
-        return bytes([COMMAND_CODE, 0x00, 0x00])
+        return bytes([COMMAND_CODE, self.sleep >> 8, self.sleep & 0xFF])
 
 
 register_command(COMMAND_CODE, SwitchToComfortMessage)

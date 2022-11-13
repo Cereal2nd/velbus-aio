@@ -9,7 +9,7 @@ from velbusaio.command_registry import register_command
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xEA
-DSTATUS = {0: "run", 1: "manual", 2: "sleep", 4: "disable"}
+DSTATUS = {0: "run", 2: "manual", 4: "sleep", 6: "disable"}
 DMODE = {0: "safe", 16: "night", 32: "day", 64: "comfort"}
 
 
@@ -69,8 +69,8 @@ class TempSensorStatusMessage(Message):
         self.set_attributes(priority, address, rtr)
 
         self.local_control = data[0] & 0x01
-        self.status_mode = data[0] & 0x206
-        self._status_str = DSTATUS[self.status_mode]
+        self.status_mode = data[0] & 0x06
+        self.status_str = DSTATUS[self.status_mode]
         self.auto_send = data[0] & 0x08
         self.mode = data[0] & 0x70
         self.mode_str = DMODE[self.mode]
