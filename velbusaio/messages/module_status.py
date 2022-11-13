@@ -73,11 +73,6 @@ class ModuleStatusMessage(Message):
 @register(COMMAND_CODE, "VMBGPOD")
 @register(COMMAND_CODE, "VMBELO")
 @register(COMMAND_CODE, "VMB7IN")
-@register(COMMAND_CODE, "VMB4DC")
-@register(COMMAND_CODE, "VMBDMI")
-@register(COMMAND_CODE, "VMBDMI-R")
-@register(COMMAND_CODE, "VMBDME")
-@register(COMMAND_CODE, "VMB1RYS")
 class ModuleStatusMessage2(Message):
     def __init__(self, address=None):
         Message.__init__(self)
