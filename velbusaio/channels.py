@@ -104,8 +104,7 @@ class Channel:
         while len(self._name) < int(pos):
             self._name += " "
         # store the char on correct pos
-        self._name = self._name[: int(pos)] + str(char) + self._name[int(pos) + 1 :]
-        # TODO: I think the str(char) should be chr(char)
+        self._name = self._name[: int(pos)] + chr(char) + self._name[int(pos) + 1 :]
 
     def set_name_part(self, part: int, name: str) -> None:
         """
