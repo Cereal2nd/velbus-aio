@@ -112,9 +112,9 @@ class ModuleStatusMessage2(Message):
         )
 
 
-@register(COMMAND_CODE, "VMBIRO")
+@register(COMMAND_CODE, "VMBPIRO")
 @register(COMMAND_CODE, "VMBPIRM")
-@register(COMMAND_CODE, "VMBIRC")
+@register(COMMAND_CODE, "VMBPIRC")
 @register(COMMAND_CODE, "VMBELPIR")
 class ModuleStatusPirMessage(Message):
     def __init__(self, address=None):
