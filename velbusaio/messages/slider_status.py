@@ -9,6 +9,11 @@ from velbusaio.message import Message
 COMMAND_CODE = 0x0F
 
 
+@register(COMMAND_CODE, "VMBDME")
+@register(COMMAND_CODE, "VMB4DC")
+@register(COMMAND_CODE, "VMBDMI")
+@register(COMMAND_CODE, "VMBDMI-R")
+@register(COMMAND_CODE, "VMB1LED")
 class SliderStatusMessage(Message):
     """
     sent by: VMBDME
@@ -52,10 +57,3 @@ class SliderStatusMessage(Message):
                 self.slider_long_pressed,
             ]
         )
-
-
-register(COMMAND_CODE, SliderStatusMessage, "VMBDME")
-register(COMMAND_CODE, SliderStatusMessage, "VMB4DC")
-register(COMMAND_CODE, SliderStatusMessage, "VMBDMI")
-register(COMMAND_CODE, SliderStatusMessage, "VMBDMI-R")
-register(COMMAND_CODE, SliderStatusMessage, "VMB1LED")

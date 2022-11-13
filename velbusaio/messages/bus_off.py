@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0x09
 
 
+@register(COMMAND_CODE)
 class BusOffMessage(Message):
     """
     send by:
@@ -29,6 +30,3 @@ class BusOffMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE])
-
-
-register(COMMAND_CODE, BusOffMessage)
