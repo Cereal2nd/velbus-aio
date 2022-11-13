@@ -5,6 +5,7 @@ sleep_timer values are correctly stored into the module's temperature channel.
 import logging
 
 import pytest
+import pathlib
 
 from velbusaio.channels import Temperature
 from velbusaio.handler import PacketHandler
@@ -27,6 +28,8 @@ from velbusaio.module import Module
 async def test_thermostat_operating_mode(mode, sleep_timer):
     module_address = 1
     module_type = 0x28  # VMBGPOD
+    cache_dir=get_cache_dir()
+    pathlib.Path(cache_dir).mkdir(parents=True, exist_ok=True)
 
     ph = PacketHandler(None, None)
     m = Module(
