@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0x02
 
 
+@register(COMMAND_CODE)
 class SwitchRelayOnMessage(Message):
     """
     send by:
@@ -41,6 +42,3 @@ class SwitchRelayOnMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self.channels_to_byte(self.relay_channels)])
-
-
-register(COMMAND_CODE, SwitchRelayOnMessage)

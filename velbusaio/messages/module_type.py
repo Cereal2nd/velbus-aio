@@ -25,6 +25,7 @@ MODULES_WITHOUT_SERIAL = {
 }
 
 
+@register(COMMAND_CODE)
 class ModuleTypeMessage(Message):
     """
     send by: VMB6IN, VMB4RYLD
@@ -80,6 +81,3 @@ class ModuleTypeMessage(Message):
                 self.build_week,
             ]
         )
-
-
-register(COMMAND_CODE, ModuleTypeMessage)

@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xDC
 
 
+@register(COMMAND_CODE)
 class SwitchToDayMessage(Message):
     """
     send by:
@@ -32,6 +33,3 @@ class SwitchToDayMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self.sleep >> 8, self.sleep & 0xFF])
-
-
-register(COMMAND_CODE, SwitchToDayMessage)

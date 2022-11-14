@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xE4
 
 
+@register(COMMAND_CODE)
 class SetTemperatureMessage(Message):
     """
     send by: VMB4RYLD
@@ -38,6 +39,3 @@ class SetTemperatureMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, int(self.temp_type), int(self.temp)])
-
-
-register(COMMAND_CODE, SetTemperatureMessage)

@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xE6
 
 
+@register(COMMAND_CODE)
 class SensorTemperatureMessage(Message):
     """
     send by: VMBTS, vmbg*pd, ...
@@ -53,6 +54,3 @@ class SensorTemperatureMessage(Message):
             self.max = -127 + (((data[4] << 8) | data[5]) / 32 * 0.0625)
         else:
             self.max = (((data[4] << 8) | data[5]) / 32) * 0.0625
-
-
-register(COMMAND_CODE, SensorTemperatureMessage)

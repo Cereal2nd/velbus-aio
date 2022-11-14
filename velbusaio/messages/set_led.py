@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xF6
 
 
+@register(COMMAND_CODE)
 class SetLedMessage(Message):
     """
     send by: VMB4RYLD
@@ -35,6 +36,3 @@ class SetLedMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self.channels_to_byte(self.leds)])
-
-
-register(COMMAND_CODE, SetLedMessage)

@@ -11,6 +11,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xAF
 
 
+@register(COMMAND_CODE)
 class SetDaylightSaving(Message):
     """
     received by all modules
@@ -44,6 +45,3 @@ class SetDaylightSaving(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self._ds])
-
-
-register(COMMAND_CODE, SetDaylightSaving)

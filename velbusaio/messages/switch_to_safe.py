@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xDE
 
 
+@register(COMMAND_CODE)
 class SwitchToSafeMessage(Message):
     """
     send by:
@@ -32,6 +33,3 @@ class SwitchToSafeMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self.sleep >> 8, self.sleep & 0xFF])
-
-
-register(COMMAND_CODE, SwitchToSafeMessage)

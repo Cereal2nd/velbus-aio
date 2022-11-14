@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xE7
 
 
+@register(COMMAND_CODE)
 class SensorSettingsRequestMessage(Message):
     """
     send by:
@@ -34,6 +35,3 @@ class SensorSettingsRequestMessage(Message):
         :return: bytes
         """
         return bytes([])
-
-
-register(COMMAND_CODE, SensorSettingsRequestMessage)

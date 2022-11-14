@@ -11,6 +11,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xB7
 
 
+@register(COMMAND_CODE)
 class SetDate(Message):
     """
     received by all modules
@@ -58,6 +59,3 @@ class SetDate(Message):
                 (self._year & 0x00FF),
             ]
         )
-
-
-register(COMMAND_CODE, SetDate)

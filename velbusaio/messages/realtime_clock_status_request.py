@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xD7
 
 
+@register(COMMAND_CODE)
 class RealtimeClockStatusRequest(Message):
     def populate(self, priority, address, rtr, data):
         """
@@ -23,6 +24,3 @@ class RealtimeClockStatusRequest(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE])
-
-
-register(COMMAND_CODE, RealtimeClockStatusRequest)

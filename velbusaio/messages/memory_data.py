@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xFE
 
 
+@register(COMMAND_CODE)
 class MemoryDataMessage(Message):
     """
     send by: VMB6IN, VMB4RYLD
@@ -39,6 +40,3 @@ class MemoryDataMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self.high_address, self.low_address, self.data])
-
-
-register(COMMAND_CODE, MemoryDataMessage)

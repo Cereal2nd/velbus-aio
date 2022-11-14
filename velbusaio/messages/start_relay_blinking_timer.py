@@ -11,6 +11,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0x0D
 
 
+@register(COMMAND_CODE)
 class StartRelayBlinkingTimerMessage(Message):
     """
     send by:
@@ -48,6 +49,3 @@ class StartRelayBlinkingTimerMessage(Message):
             bytes([COMMAND_CODE, self.channels_to_byte(self.relay_channels)])
             + struct.pack(">L", self.delay_time)[-3:]
         )
-
-
-register(COMMAND_CODE, StartRelayBlinkingTimerMessage)

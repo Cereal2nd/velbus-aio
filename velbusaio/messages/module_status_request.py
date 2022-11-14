@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xFA
 
 
+@register(COMMAND_CODE)
 class ModuleStatusRequestMessage(Message):
     """
     send by:
@@ -36,6 +37,3 @@ class ModuleStatusRequestMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self.channels_to_byte(self.channels)])
-
-
-register(COMMAND_CODE, ModuleStatusRequestMessage)

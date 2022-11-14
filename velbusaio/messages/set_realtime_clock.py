@@ -11,6 +11,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xD8
 
 
+@register(COMMAND_CODE)
 class SetRealtimeClock(Message):
     """
     received by all modules
@@ -50,6 +51,3 @@ class SetRealtimeClock(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self._wday, self._hour, self._min])
-
-
-register(COMMAND_CODE, SetRealtimeClock)

@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0x0B
 
 
+@register(COMMAND_CODE)
 class ReceiveBufferFullMessage(Message):
     """
     send by:
@@ -35,6 +36,3 @@ class ReceiveBufferFullMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE])
-
-
-register(COMMAND_CODE, ReceiveBufferFullMessage)

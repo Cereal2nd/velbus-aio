@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xC9
 
 
+@register(COMMAND_CODE)
 class ReadDataBlockFromMemoryMessage(Message):
     """
     send by:
@@ -37,6 +38,3 @@ class ReadDataBlockFromMemoryMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self.high_address, self.low_address])
-
-
-register(COMMAND_CODE, ReadDataBlockFromMemoryMessage)

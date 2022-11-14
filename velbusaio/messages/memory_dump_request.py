@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xCB
 
 
+@register(COMMAND_CODE)
 class MemoryDumpRequestMessage(Message):
     """
     send by:
@@ -29,6 +30,3 @@ class MemoryDumpRequestMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE])
-
-
-register(COMMAND_CODE, MemoryDumpRequestMessage)
