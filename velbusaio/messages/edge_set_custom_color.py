@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xD4
 
 
+@register(COMMAND_CODE)
 class EdgeSetCustomColor(Message):
     """
     send by:
@@ -52,6 +53,3 @@ class EdgeSetCustomColor(Message):
                 self.blue,
             ]
         )
-
-
-register(COMMAND_CODE, EdgeSetCustomColor)

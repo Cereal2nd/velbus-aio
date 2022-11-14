@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xE8
 
 
+@register(COMMAND_CODE)
 class TempSensorSettingsPart1(Message):
     def populate(self, priority, address, rtr, data):
         """
@@ -23,6 +24,3 @@ class TempSensorSettingsPart1(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE])
-
-
-register(COMMAND_CODE, TempSensorSettingsPart1)

@@ -9,9 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xF4
 
 
-register(COMMAND_CODE)
-
-
+@register(COMMAND_CODE)
 class UpdateLedStatusMessage(Message):
     """
     send by:

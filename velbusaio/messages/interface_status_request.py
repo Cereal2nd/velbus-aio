@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0x0E
 
 
+@register(COMMAND_CODE)
 class InterfaceStatusRequestMessage(Message):
     """
     send by: VMB1USB
@@ -29,6 +30,3 @@ class InterfaceStatusRequestMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE])
-
-
-register(COMMAND_CODE, InterfaceStatusRequestMessage)

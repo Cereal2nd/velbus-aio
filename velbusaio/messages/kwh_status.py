@@ -9,6 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xBE
 
 
+@register(COMMAND_CODE)
 class KwhStatusMessage(Message):
     """
     send by: VMB7IN
@@ -49,6 +50,3 @@ class KwhStatusMessage(Message):
         :return: list
         """
         return self.channel
-
-
-register(COMMAND_CODE, KwhStatusMessage)

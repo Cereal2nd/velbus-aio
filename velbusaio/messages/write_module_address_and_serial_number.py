@@ -11,9 +11,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0x6A
 
 
-register(COMMAND_CODE)
-
-
+@register(COMMAND_CODE)
 class WriteModuleAddressAndSerialNumberMessage(Message):
     """
     send by:
