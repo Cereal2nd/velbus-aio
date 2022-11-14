@@ -30,7 +30,7 @@ def keys_exists(element: dict[str, Any], *keys) -> dict:
 
 def h2(inp: int) -> str:
     """
-    Format as hex upercase
+    Format as hex uppercase
     """
     return format(inp, "02x").upper()
 
