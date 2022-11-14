@@ -9,7 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xBE
 
 
-@register(COMMAND_CODE, "VMB7IN")
+@register(COMMAND_CODE, ["VMB7IN"])
 class CounterStatusMessage(Message):
     """
     send by: VMB7IN

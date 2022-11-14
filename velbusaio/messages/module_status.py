@@ -54,23 +54,28 @@ class ModuleStatusMessage(Message):
         )
 
 
-@register(COMMAND_CODE, "VMB8PBU")
-@register(COMMAND_CODE, "VMB6PBN")
-@register(COMMAND_CODE, "VMB2PBN")
-@register(COMMAND_CODE, "VMB6PBB")
-@register(COMMAND_CODE, "VMBGP1")
-@register(COMMAND_CODE, "VMBEL1")
-@register(COMMAND_CODE, "VMBGP1-2")
-@register(COMMAND_CODE, "VMBGP2")
-@register(COMMAND_CODE, "VMBEL2")
-@register(COMMAND_CODE, "VMBGP2-2")
-@register(COMMAND_CODE, "VMBGP4")
-@register(COMMAND_CODE, "VMBEL4")
-@register(COMMAND_CODE, "VMBGP4-2")
-@register(COMMAND_CODE, "VMBGPO")
-@register(COMMAND_CODE, "VMBGPOD")
-@register(COMMAND_CODE, "VMBELO")
-@register(COMMAND_CODE, "VMB7IN")
+@register(
+    COMMAND_CODE,
+    [
+        "VMB8PBU",
+        "VMB6PBN",
+        "VMB2PBN",
+        "VMB6PBB",
+        "VMBGP1",
+        "VMBEL1",
+        "VMBGP1-2",
+        "VMBGP2",
+        "VMBEL2",
+        "VMBGP2-2",
+        "VMBGP4",
+        "VMBEL4",
+        "VMBGP4-2",
+        "VMBGPO",
+        "VMBGPOD",
+        "VMBELO",
+        "VMB7IN",
+    ],
+)
 class ModuleStatusMessage2(Message):
     def __init__(self, address=None):
         Message.__init__(self)
@@ -110,10 +115,7 @@ class ModuleStatusMessage2(Message):
         )
 
 
-@register(COMMAND_CODE, "VMBPIRO")
-@register(COMMAND_CODE, "VMBPIRM")
-@register(COMMAND_CODE, "VMBPIRC")
-@register(COMMAND_CODE, "VMBELPIR")
+@register(COMMAND_CODE, ["VMBPIRO", "VMBPIRM", "VMBPIRC", "VMBELPIR"])
 class ModuleStatusPirMessage(Message):
     def __init__(self, address=None):
         Message.__init__(self)

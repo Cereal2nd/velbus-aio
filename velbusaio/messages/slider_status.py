@@ -9,11 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0x0F
 
 
-@register(COMMAND_CODE, "VMBDME")
-@register(COMMAND_CODE, "VMB4DC")
-@register(COMMAND_CODE, "VMBDMI")
-@register(COMMAND_CODE, "VMBDMI-R")
-@register(COMMAND_CODE, "VMB1LED")
+@register(COMMAND_CODE, ["VMBDME", "VMB4DC", "VMBDMI", "VMBDMI-R", "VMB1LED"])
 class SliderStatusMessage(Message):
     """
     sent by: VMBDME

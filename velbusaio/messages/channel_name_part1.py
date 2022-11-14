@@ -44,27 +44,32 @@ class ChannelNamePart1Message(Message):
         )
 
 
-@register(COMMAND_CODE, "VMBGP1")
-@register(COMMAND_CODE, "VMBEL1")
-@register(COMMAND_CODE, "VMBGP1-2")
-@register(COMMAND_CODE, "VMBGP2")
-@register(COMMAND_CODE, "VMBEL2")
-@register(COMMAND_CODE, "VMBGP2-2")
-@register(COMMAND_CODE, "VMBGP4")
-@register(COMMAND_CODE, "VMBEL4")
-@register(COMMAND_CODE, "VMBGP4-2")
-@register(COMMAND_CODE, "VMBGPO")
-@register(COMMAND_CODE, "VMBGPOD")
-@register(COMMAND_CODE, "VMBGPOD-2")
-@register(COMMAND_CODE, "VMBELO")
-@register(COMMAND_CODE, "VMBGP4PIR")
-@register(COMMAND_CODE, "VMBGP4PIR-2")
-@register(COMMAND_CODE, "VMBDMI")
-@register(COMMAND_CODE, "VMBDMI-R")
-@register(COMMAND_CODE, "VMBIN")
-@register(COMMAND_CODE, "VMBKP")
-@register(COMMAND_CODE, "VMBELPIR")
-@register(COMMAND_CODE, "VMBDALI")
+@register(
+    COMMAND_CODE,
+    [
+        "VMBGP1",
+        "VMBEL1",
+        "VMBGP1-2",
+        "VMBGP2",
+        "VMBEL2",
+        "VMBGP2-2",
+        "VMBGP4",
+        "VMBEL4",
+        "VMBGP4-2",
+        "VMBGPO",
+        "VMBGPOD",
+        "VMBGPOD-2",
+        "VMBELO",
+        "VMBGP4PIR",
+        "VMBGP4PIR-2",
+        "VMBDMI",
+        "VMBDMI-R",
+        "VMBIN",
+        "VMBKP",
+        "VMBELPIR",
+        "VMBDALI",
+    ],
+)
 class ChannelNamePart1Message2(ChannelNamePart1Message):
     """
     send by: VMBGP*, VMBDALI
@@ -83,8 +88,7 @@ class ChannelNamePart1Message2(ChannelNamePart1Message):
         self.name = "".join([chr(x) for x in data[1:]])
 
 
-@register(COMMAND_CODE, "VMB1BL")
-@register(COMMAND_CODE, "VMB2BL")
+@register(COMMAND_CODE, ["VMB1BL", "VMB2BL"])
 class ChannelNamePart1Message3(ChannelNamePart1Message):
     """
     send by: VMBGP*

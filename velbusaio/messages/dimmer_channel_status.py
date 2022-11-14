@@ -21,9 +21,7 @@ LED_FAST_BLINKING = 1 << 5
 LED_VERY_FAST_BLINKING = 1 << 4
 
 
-@register(COMMAND_CODE, "VMB4DC")
-@register(COMMAND_CODE, "VMBDMI")
-@register(COMMAND_CODE, "VMBDMI-R")
+@register(COMMAND_CODE, ["VMB4DC", "VMBDMI", "VMBDMI-R"])
 class DimmerChannelStatusMessage(Message):
     """
     sent by: VMB4DC

@@ -11,9 +11,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0x04
 
 
-@register(COMMAND_CODE, "VMB1BLE")
-@register(COMMAND_CODE, "VMB2BLE")
-@register(COMMAND_CODE, "VMB1BLS")
+@register(COMMAND_CODE, ["VMB1BLE", "VMB2BLE", "VMB1BLS"])
 class CoverOffMessage(Message):
     """
     sent by:
@@ -48,8 +46,7 @@ class CoverOffMessage(Message):
         return bytes([COMMAND_CODE, self.channels_to_byte([self.channel])])
 
 
-@register(COMMAND_CODE, "VMB1BL")
-@register(COMMAND_CODE, "VMB2BL")
+@register(COMMAND_CODE, ["VMB1BL", "VMB2BL"])
 class CoverOffMessage2(Message):
     """
     sent by:

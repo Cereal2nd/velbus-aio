@@ -132,19 +132,15 @@ class CommandRegistry:
 commandRegistry = CommandRegistry(MODULE_DIRECTORY)
 
 
-def register(command_value: int, module_type: list = 0):
+def register(command_value: int, module_types: list = []):
     def inner_register(command_class):
-        if type(module_type) is list:
-            for module in module_type:
-                commandRegistry.register_command(command_value, command_class, module)
+        if len(module_types) > 0:
+            for module_type in module_types:
+                commandRegistry.register_command(
+                    command_value, command_class, module_type
+                )
         else:
-            commandRegistry.register_command(command_value, command_class, module_type)
+            commandRegistry.register_command(command_value, command_class, 0)
         return command_class
 
     return inner_register
-
-
-def register_command(
-    command_value: int, command_class: type, module_type: str = 0
-) -> None:
-    commandRegistry.register_command(command_value, command_class, module_type)

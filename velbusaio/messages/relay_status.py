@@ -107,7 +107,7 @@ class RelayStatusMessage(Message):
         )
 
 
-@register(COMMAND_CODE, "VMB4RY")
+@register(COMMAND_CODE, ["VMB4RY"])
 class RelayStatusMessage2(RelayStatusMessage):
     def is_on(self):
         """

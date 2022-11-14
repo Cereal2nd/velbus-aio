@@ -9,7 +9,7 @@ from velbusaio.messages.module_status import ModuleStatusMessage
 COMMAND_CODE = 0xEB
 
 
-@register(COMMAND_CODE, "VMB8IR")
+@register(COMMAND_CODE, ["VMB8IR"])
 class IRReceiverStatusMessage(ModuleStatusMessage):
     """
     send by: VMB8IR

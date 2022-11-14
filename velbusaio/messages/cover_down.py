@@ -11,9 +11,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0x06
 
 
-@register(COMMAND_CODE, "VMB1BLE")
-@register(COMMAND_CODE, "VMB2BLE")
-@register(COMMAND_CODE, "VMB1BLS")
+@register(COMMAND_CODE, ["VMB1BLE", "VMB2BLE", "VMB1BLS"])
 class CoverDownMessage(Message):
     """
     sent by:
@@ -53,8 +51,7 @@ class CoverDownMessage(Message):
         )
 
 
-@register(COMMAND_CODE, "VMB1BL")
-@register(COMMAND_CODE, "VMB2BL")
+@register(COMMAND_CODE, ["VMB1BL", "VMB2BL"])
 class CoverDownMessage2(Message):
     """
     sent by:

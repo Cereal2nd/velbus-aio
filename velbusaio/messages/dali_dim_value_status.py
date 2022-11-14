@@ -9,7 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xA5
 
 
-@register(COMMAND_CODE, "VMBDALI")
+@register(COMMAND_CODE, ["VMBDALI"])
 class DimValueStatus(Message):
     """
     send by: VMBDALI

@@ -40,7 +40,7 @@ class ChannelNameRequestMessage(Message):
         return bytes([0xEF, 0xFF])
 
 
-@register(COMMAND_CODE, "VMB2BL")
+@register(COMMAND_CODE, ["VMB2BL"])
 class ChannelNameRequestMessage2(ChannelNameRequestMessage):
     """
     send by:
@@ -70,7 +70,7 @@ class ChannelNameRequestMessage2(ChannelNameRequestMessage):
         return bytes([COMMAND_CODE, tmp])
 
 
-@register(COMMAND_CODE, "VMBDALI")
+@register(COMMAND_CODE, ["VMBDALI"])
 class ChannelNameRequestMessage3(ChannelNameRequestMessage):
     """
     send by:
