@@ -12,7 +12,7 @@ COMMAND_CODE = 0xEC
 DSTATUS = {0: "off", 1: "up", 2: "down"}
 
 
-@register(COMMAND_CODE, ["VMB1BL", "VMB2BL"])
+@register(COMMAND_CODE, ["VMB1BLE", "VMB2BLE", "VMB1BLS"])
 class BlindStatusNgMessage(Message):
     """
     sent by: VMB2BLE
@@ -77,7 +77,7 @@ class BlindStatusNgMessage(Message):
         )
 
 
-@register(COMMAND_CODE, ["VMB1BLE", "VMB2BLE", "VMB1BLS"])
+@register(COMMAND_CODE, ["VMB1BL", "VMB2BL"])
 class BlindStatusMessage(Message):
     """
     sent by: VMB2BLE
