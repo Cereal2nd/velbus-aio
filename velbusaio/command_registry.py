@@ -75,11 +75,11 @@ class CommandRegistry:
         self._overrides = {}
 
     def register_command(
-        self, command_value: int, command_class: type, module_name: str = 0
+        self, command_value: int, command_class: type, module_name: str | None = None
     ) -> None:
         if command_value < 0 or command_value > 255:
             raise ValueError("Command_value should be >=0 and <=255")
-        if module_name != 0 and module_name not in self._module_directory.values():
+        if module_name and module_name not in self._module_directory.values():
             raise Exception(f"Module name {module_name} not known")
         if module_name:
             module_type = next(
@@ -132,15 +132,15 @@ class CommandRegistry:
 commandRegistry = CommandRegistry(MODULE_DIRECTORY)
 
 
-def register(command_value: int, module_types: list = []):
+def register(command_value: int, module_types: list[str] | None = None):
     def inner_register(command_class):
-        if len(module_types) > 0:
+        if module_types:
             for module_type in module_types:
                 commandRegistry.register_command(
                     command_value, command_class, module_type
                 )
         else:
-            commandRegistry.register_command(command_value, command_class, 0)
+            commandRegistry.register_command(command_value, command_class)
         return command_class
 
     return inner_register
