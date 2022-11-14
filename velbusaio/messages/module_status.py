@@ -72,6 +72,7 @@ class ModuleStatusMessage(Message):
         "VMBGP4-2",
         "VMBGPO",
         "VMBGPOD",
+        "VMBGPOD-2",
         "VMBELO",
         "VMB7IN",
     ],
