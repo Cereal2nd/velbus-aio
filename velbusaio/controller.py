@@ -12,8 +12,8 @@ from urllib.parse import urlparse
 
 import serial
 import serial_asyncio
-from channels import Channel
 
+from velbusaio.channels import Channel
 from velbusaio.const import LOAD_TIMEOUT
 from velbusaio.exceptions import VelbusConnectionFailed
 from velbusaio.handler import PacketHandler
