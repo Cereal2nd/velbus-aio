@@ -78,10 +78,10 @@ class ParseError(Exception):
 
 
 def _parse(rawmessage: bytearray) -> Tuple[Optional[RawMessage], bytearray]:
-    assert (
-        MINIMUM_MESSAGE_SIZE <= len(rawmessage) <= MAXIMUM_MESSAGE_SIZE
-    ), "Received a raw message with an illegal length"
-    assert rawmessage[0] == START_BYTE
+    if len(rawmessage) < MINIMUM_MESSAGE_SIZE or len(rawmessage) > MAXIMUM_MESSAGE_SIZE:
+        raise ValueError("Received a raw message with an illegal lemgth")
+    if rawmessage[0] != START_BYTE:
+        raise ValueError("Received a raw message with the wrong startbyte")
 
     priority = rawmessage[1]
     if priority not in PRIORITIES:
