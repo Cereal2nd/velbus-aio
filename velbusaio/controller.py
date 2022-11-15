@@ -7,6 +7,7 @@ import asyncio
 import logging
 import pathlib
 import pickle
+import re
 import ssl
 from urllib.parse import urlparse
 
@@ -158,6 +159,9 @@ class Velbus:
         # connect to the bus
         if ":" in self._dsn:
             # tcp/ip combination
+            if not re.search(r"^[A-Za-z0-9+.\-]+://", self._dsn):
+                # if no scheme, then add the tcp://
+                self._dsn = f"tcp://{self._dsn}"
             parts = urlparse(self._dsn)
             if parts.scheme == "tls":
                 ctx = ssl._create_unverified_context()
