@@ -160,7 +160,7 @@ class Module:
 
     def cleanupSubChannels(self) -> None:
         if self._sub_address == {}:
-            assert "No subaddresses defined"
+            raise Exception("No subaddresses defined")
         for sub in range(1, 4):
             if sub not in self._sub_address:
                 for i in range(((sub * 8) + 1), (((sub + 1) * 8) + 1)):
