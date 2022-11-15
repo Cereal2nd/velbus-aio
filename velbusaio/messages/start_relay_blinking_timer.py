@@ -5,12 +5,13 @@ from __future__ import annotations
 
 import struct
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0x0D
 
 
+@register(COMMAND_CODE)
 class StartRelayBlinkingTimerMessage(Message):
     """
     send by:
@@ -48,6 +49,3 @@ class StartRelayBlinkingTimerMessage(Message):
             bytes([COMMAND_CODE, self.channels_to_byte(self.relay_channels)])
             + struct.pack(">L", self.delay_time)[-3:]
         )
-
-
-register_command(COMMAND_CODE, StartRelayBlinkingTimerMessage)

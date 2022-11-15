@@ -3,15 +3,15 @@
 """
 from __future__ import annotations
 
-import json
 import struct
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0x05
 
 
+@register(COMMAND_CODE, ["VMB1BLE", "VMB2BLE", "VMB1BLS"])
 class CoverUpMessage(Message):
     """
     sent by:
@@ -51,6 +51,7 @@ class CoverUpMessage(Message):
         )
 
 
+@register(COMMAND_CODE, ["VMB1BL", "VMB2BL"])
 class CoverUpMessage2(Message):
     """
     sent by:
@@ -93,10 +94,3 @@ class CoverUpMessage2(Message):
         else:
             tmp = 0x0C
         return bytes([COMMAND_CODE, tmp]) + struct.pack(">L", self.delay_time)[-3:]
-
-
-register_command(COMMAND_CODE, CoverUpMessage2, "VMB1BL")
-register_command(COMMAND_CODE, CoverUpMessage2, "VMB2BL")
-register_command(COMMAND_CODE, CoverUpMessage, "VMB1BLE")
-register_command(COMMAND_CODE, CoverUpMessage, "VMB2BLE")
-register_command(COMMAND_CODE, CoverUpMessage, "VMB1BLS")

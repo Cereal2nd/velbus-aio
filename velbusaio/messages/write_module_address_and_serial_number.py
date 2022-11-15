@@ -5,12 +5,13 @@ from __future__ import annotations
 
 import struct
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0x6A
 
 
+@register(COMMAND_CODE)
 class WriteModuleAddressAndSerialNumberMessage(Message):
     """
     send by:
@@ -56,6 +57,3 @@ class WriteModuleAddressAndSerialNumberMessage(Message):
             + chr(self.module_address)
             + struct.pack(">L", self.new_serial)[2:]
         )
-
-
-register_command(COMMAND_CODE, WriteModuleAddressAndSerialNumberMessage)

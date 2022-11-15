@@ -3,14 +3,13 @@
 """
 from __future__ import annotations
 
-import json
-
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0x00
 
 
+@register(COMMAND_CODE)
 class PushButtonStatusMessage(Message):
     """
     send by: VMB6IN, VMB4RYLD
@@ -60,6 +59,3 @@ class PushButtonStatusMessage(Message):
                 self.channels_to_byte(self.closed_long),
             ]
         )
-
-
-register_command(COMMAND_CODE, PushButtonStatusMessage)

@@ -3,12 +3,13 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xA5
 
 
+@register(COMMAND_CODE, ["VMBDALI"])
 class DimValueStatus(Message):
     """
     send by: VMBDALI
@@ -38,6 +39,3 @@ class DimValueStatus(Message):
                 self.channel,
             ]
         ) + bytes(self.dim_values)
-
-
-register_command(COMMAND_CODE, DimValueStatus, "VMBDALI")

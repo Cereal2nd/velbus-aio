@@ -3,10 +3,9 @@
 """
 from __future__ import annotations
 
-import json
 import struct
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xB0
@@ -14,6 +13,9 @@ COMMAND_CODE_2 = 0xA7
 COMMAND_CODE_3 = 0xA6
 
 
+@register(COMMAND_CODE)
+@register(COMMAND_CODE_2)
+@register(COMMAND_CODE_3)
 class ModuleSubTypeMessage(Message):
     """
     send by: VMB6IN, VMB4RYLD
@@ -53,8 +55,3 @@ class ModuleSubTypeMessage(Message):
         self.sub_address_2 = data[4]
         self.sub_address_3 = data[5]
         self.sub_address_4 = data[6]
-
-
-register_command(COMMAND_CODE, ModuleSubTypeMessage)
-register_command(COMMAND_CODE_2, ModuleSubTypeMessage)
-register_command(COMMAND_CODE_3, ModuleSubTypeMessage)

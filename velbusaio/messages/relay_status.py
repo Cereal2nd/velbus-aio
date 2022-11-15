@@ -3,39 +3,27 @@
 """
 from __future__ import annotations
 
-import json
 import struct
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xFB
-
 CHANNEL_NORMAL = 0x00
-
 CHANNEL_INHIBITED = 0x01
-
 CHANNEL_FORCED_ON = 0x02
-
 CHANNEL_DISABLED = 0x03
-
 RELAY_ON = 0x01
-
 RELAY_OFF = 0x00
-
 INTERVAL_TIMER_ON = 0x03
-
 LED_OFF = 0
-
 LED_ON = 1 << 7
-
 LED_SLOW_BLINKING = 1 << 6
-
 LED_FAST_BLINKING = 1 << 5
-
 LED_VERY_FAST_BLINKING = 1 << 4
 
 
+@register(COMMAND_CODE)
 class RelayStatusMessage(Message):
     """
     send by: VMB4RYLD
@@ -119,6 +107,7 @@ class RelayStatusMessage(Message):
         )
 
 
+@register(COMMAND_CODE, ["VMB4RY"])
 class RelayStatusMessage2(RelayStatusMessage):
     def is_on(self):
         """
@@ -128,7 +117,3 @@ class RelayStatusMessage2(RelayStatusMessage):
             return True
         else:
             return False
-
-
-register_command(COMMAND_CODE, RelayStatusMessage)
-register_command(COMMAND_CODE, RelayStatusMessage2, "VMB4RY")

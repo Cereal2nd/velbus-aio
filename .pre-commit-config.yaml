@@ -1,4 +1,16 @@
 repos:
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        stages: [manual]
+        args: [
+            "-rn", # Only display messages
+            "-sn", # Don't display the score
+          ]
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.2.2
     hooks:

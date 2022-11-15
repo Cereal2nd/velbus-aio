@@ -6,12 +6,13 @@ from __future__ import annotations
 import dataclasses
 import enum
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xE8
 
 
+@register(COMMAND_CODE, ["VMBDALI"])
 class DaliDeviceSettingMsg(Message):
     """
     send by: VMBDALI
@@ -174,6 +175,3 @@ class DaliDeviceSetting(enum.Enum):
     # currently undefined 24
     DeviceType = (25, DeviceTypeMsg)
     ActualLevel = (26, None)
-
-
-register_command(COMMAND_CODE, DaliDeviceSettingMsg, "VMBDALI")
