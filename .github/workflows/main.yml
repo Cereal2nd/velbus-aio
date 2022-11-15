@@ -66,4 +66,4 @@ jobs:
       - name: PyCharm Python Security Scanner
         uses: tonybaloney/pycharm-security@1.22.2
         with:
-          fail_on_warnings: no
+          fail_on_warnings: yes
