@@ -59,5 +59,6 @@ class RestoreDimmerMessage2(RestoreDimmerMessage):
         return [byte]
 
     def channels_to_byte(self, channels: list[int]) -> int:
-        assert len(channels) == 1
+        if len(channels) != 1:
+            raise ValueError("We should have exact one channel")
         return channels[0]
