@@ -3,14 +3,13 @@
 """
 from __future__ import annotations
 
-import json
-
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xEF
 
 
+@register(COMMAND_CODE)
 class ChannelNameRequestMessage(Message):
     """
     send by:
@@ -41,6 +40,7 @@ class ChannelNameRequestMessage(Message):
         return bytes([0xEF, 0xFF])
 
 
+@register(COMMAND_CODE, ["VMB2BL"])
 class ChannelNameRequestMessage2(ChannelNameRequestMessage):
     """
     send by:
@@ -70,6 +70,7 @@ class ChannelNameRequestMessage2(ChannelNameRequestMessage):
         return bytes([COMMAND_CODE, tmp])
 
 
+@register(COMMAND_CODE, ["VMBDALI"])
 class ChannelNameRequestMessage3(ChannelNameRequestMessage):
     """
     send by:
@@ -91,8 +92,3 @@ class ChannelNameRequestMessage3(ChannelNameRequestMessage):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self.channels])
-
-
-register_command(COMMAND_CODE, ChannelNameRequestMessage)
-register_command(COMMAND_CODE, ChannelNameRequestMessage2, "VMB2BL")
-register_command(COMMAND_CODE, ChannelNameRequestMessage3, "VMBDALI")

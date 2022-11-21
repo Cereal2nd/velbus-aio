@@ -3,12 +3,13 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xCC
 
 
+@register(COMMAND_CODE)
 class MemoryDataBlockMessage(Message):
     """
     send by: VMB6IN, VMB4RYLD
@@ -39,6 +40,3 @@ class MemoryDataBlockMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self.high_address, self.low_address]) + self.data
-
-
-register_command(COMMAND_CODE, MemoryDataBlockMessage)

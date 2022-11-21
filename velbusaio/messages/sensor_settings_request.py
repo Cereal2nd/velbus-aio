@@ -3,12 +3,13 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xE7
 
 
+@register(COMMAND_CODE)
 class SensorSettingsRequestMessage(Message):
     """
     send by:
@@ -34,6 +35,3 @@ class SensorSettingsRequestMessage(Message):
         :return: bytes
         """
         return bytes([])
-
-
-register_command(COMMAND_CODE, SensorSettingsRequestMessage)

@@ -15,7 +15,7 @@ jobs:
         with:
           submodules: recursive
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
       - uses: pre-commit/action@v3.0.0
@@ -45,3 +45,25 @@ jobs:
           --wheel
           --outdir dist/
           .
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["python"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+      - name: PyCharm Python Security Scanner
+        uses: tonybaloney/pycharm-security@1.22.2
+        with:
+          fail_on_warnings: no

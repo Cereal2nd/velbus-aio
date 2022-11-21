@@ -5,13 +5,14 @@ from __future__ import annotations
 
 import json
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xEC
 DSTATUS = {0: "off", 1: "up", 2: "down"}
 
 
+@register(COMMAND_CODE, ["VMB1BLE", "VMB2BLE", "VMB1BLS"])
 class BlindStatusNgMessage(Message):
     """
     sent by: VMB2BLE
@@ -76,6 +77,7 @@ class BlindStatusNgMessage(Message):
         )
 
 
+@register(COMMAND_CODE, ["VMB1BL", "VMB2BL"])
 class BlindStatusMessage(Message):
     """
     sent by: VMB2BLE
@@ -124,10 +126,3 @@ class BlindStatusMessage(Message):
 
     def is_stopped(self) -> bool:
         return self.status == 0x00
-
-
-register_command(COMMAND_CODE, BlindStatusNgMessage, "VMB1BLE")
-register_command(COMMAND_CODE, BlindStatusNgMessage, "VMB2BLE")
-register_command(COMMAND_CODE, BlindStatusNgMessage, "VMB1BLS")
-register_command(COMMAND_CODE, BlindStatusMessage, "VMB1BL")
-register_command(COMMAND_CODE, BlindStatusMessage, "VMB2BL")

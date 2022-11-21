@@ -3,12 +3,13 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xDA
 
 
+@register(COMMAND_CODE)
 class BusErrorCounterStatusMessage(Message):
     """
     send by: VMB6IN, VMB4RYLD
@@ -45,6 +46,3 @@ class BusErrorCounterStatusMessage(Message):
                 self.bus_off_counter,
             ]
         )
-
-
-register_command(COMMAND_CODE, BusErrorCounterStatusMessage)

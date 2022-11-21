@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import enum
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 from velbusaio.messages.dali_device_settings import DaliDeviceSetting
 
@@ -17,6 +17,7 @@ class DataSource(enum.Enum):
     FromDaliDevice = 1
 
 
+@register(COMMAND_CODE, ["VMBDALI"])
 class DaliDeviceSettingsRequest(Message):
     """
     send by:
@@ -49,6 +50,3 @@ class DaliDeviceSettingsRequest(Message):
         if self.settings is not None:
             data.append(self.settings.value)
         return bytes(data)
-
-
-register_command(COMMAND_CODE, DaliDeviceSettingsRequest, "VMBDALI")

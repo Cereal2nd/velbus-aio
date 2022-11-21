@@ -3,15 +3,15 @@
 """
 from __future__ import annotations
 
-import json
 import struct
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0x1C
 
 
+@register(COMMAND_CODE, ["VMB1BLE", "VMB2BLE", "VMB1BLS"])
 class CoverPosMessage(Message):
     """
     sent by:
@@ -52,8 +52,3 @@ class CoverPosMessage(Message):
                 self.position,
             ]
         )
-
-
-register_command(COMMAND_CODE, CoverPosMessage, "VMB1BLE")
-register_command(COMMAND_CODE, CoverPosMessage, "VMB2BLE")
-register_command(COMMAND_CODE, CoverPosMessage, "VMB1BLS")

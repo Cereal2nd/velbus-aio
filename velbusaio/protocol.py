@@ -44,7 +44,7 @@ class VelbusProtocol(asyncio.BufferedProtocol):
         self._buffer_view = memoryview(self._buffer)
         self._buffer_pos = 0
 
-        self._serial_buf = bytes()
+        self._serial_buf = b""
         self.transport = None
 
         # everything for writing to Velbus

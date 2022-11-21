@@ -3,14 +3,13 @@
 """
 from __future__ import annotations
 
-import json
-
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xDC
 
 
+@register(COMMAND_CODE)
 class SwitchToDayMessage(Message):
     """
     send by:
@@ -34,6 +33,3 @@ class SwitchToDayMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE, self.sleep >> 8, self.sleep & 0xFF])
-
-
-register_command(COMMAND_CODE, SwitchToDayMessage)

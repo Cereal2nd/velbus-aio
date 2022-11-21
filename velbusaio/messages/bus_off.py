@@ -3,12 +3,13 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0x09
 
 
+@register(COMMAND_CODE)
 class BusOffMessage(Message):
     """
     send by:
@@ -29,6 +30,3 @@ class BusOffMessage(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE])
-
-
-register_command(COMMAND_CODE, BusOffMessage)

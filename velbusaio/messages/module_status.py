@@ -3,9 +3,7 @@
 """
 from __future__ import annotations
 
-import json
-
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xED
@@ -13,6 +11,7 @@ COMMAND_CODE = 0xED
 PROGRAM_SELECTION = {0: "none", 1: "summer", 2: "winter", 3: "holiday"}
 
 
+@register(COMMAND_CODE)
 class ModuleStatusMessage(Message):
     """
     send by: VMB6IN
@@ -55,6 +54,29 @@ class ModuleStatusMessage(Message):
         )
 
 
+@register(
+    COMMAND_CODE,
+    [
+        "VMB8PBU",
+        "VMB6PBN",
+        "VMB2PBN",
+        "VMB6PBB",
+        "VMBGP1",
+        "VMBEL1",
+        "VMBGP1-2",
+        "VMBGP2",
+        "VMBEL2",
+        "VMBGP2-2",
+        "VMBGP4",
+        "VMBEL4",
+        "VMBGP4-2",
+        "VMBGPO",
+        "VMBGPOD",
+        "VMBGPOD-2",
+        "VMBELO",
+        "VMB7IN",
+    ],
+)
 class ModuleStatusMessage2(Message):
     def __init__(self, address=None):
         Message.__init__(self)
@@ -94,6 +116,7 @@ class ModuleStatusMessage2(Message):
         )
 
 
+@register(COMMAND_CODE, ["VMBPIRO", "VMBPIRM", "VMBPIRC", "VMBELPIR"])
 class ModuleStatusPirMessage(Message):
     def __init__(self, address=None):
         Message.__init__(self)
@@ -133,30 +156,3 @@ class ModuleStatusPirMessage(Message):
         :return: bytes
         """
         raise NotImplementedError
-
-
-register_command(COMMAND_CODE, ModuleStatusMessage)
-
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB8PBU")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB6PBN")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB2PBN")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB6PBB")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGP1")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBEL1")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGP1-2")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGP2")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBEL2")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGP2-2")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGP4")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBEL4")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGP4-2")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGPO")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGPOD")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBGPOD-2")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMBELO")
-register_command(COMMAND_CODE, ModuleStatusMessage2, "VMB7IN")
-
-register_command(COMMAND_CODE, ModuleStatusPirMessage, "VMBPIRO")
-register_command(COMMAND_CODE, ModuleStatusPirMessage, "VMBPIRM")
-register_command(COMMAND_CODE, ModuleStatusPirMessage, "VMBPIRC")
-register_command(COMMAND_CODE, ModuleStatusPirMessage, "VMBELPIR")

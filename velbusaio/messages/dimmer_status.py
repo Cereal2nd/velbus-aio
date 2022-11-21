@@ -3,41 +3,28 @@
 """
 from __future__ import annotations
 
-import json
 import struct
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xEE
-
 MODE_START_STOP = 0x00
-
 MODE_STAIRCASE = 0x01
-
 MODE_DIMMER = 0x02
-
 MODE_MEMORY = 0x03
-
 MODE_MULTI = 0x04
-
 MODE_SLOW_ON = 0x05
-
 MODE_SLOW_OFF = 0x06
-
 MODE_SLOW = 0x06
-
 LED_OFF = 0
-
 LED_ON = 1 << 7
-
 LED_SLOW_BLINKING = 1 << 6
-
 LED_FAST_BLINKING = 1 << 5
-
 LED_VERY_FAST_BLINKING = 1 << 4
 
 
+@register(COMMAND_CODE, ["VMBDME", "VMB1LED"])
 class DimmerStatusMessage(Message):
     """
     sent by: VMBDME
@@ -139,7 +126,3 @@ class DimmerStatusMessage(Message):
             )
             + struct.pack(">L", self.delay_time)[-3:]
         )
-
-
-register_command(COMMAND_CODE, DimmerStatusMessage, "VMBDME")
-register_command(COMMAND_CODE, DimmerStatusMessage, "VMB1LED")

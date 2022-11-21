@@ -3,14 +3,13 @@
 """
 from __future__ import annotations
 
-import json
-
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0x0F
 
 
+@register(COMMAND_CODE, ["VMBDME", "VMB4DC", "VMBDMI", "VMBDMI-R", "VMB1LED"])
 class SliderStatusMessage(Message):
     """
     sent by: VMBDME
@@ -54,10 +53,3 @@ class SliderStatusMessage(Message):
                 self.slider_long_pressed,
             ]
         )
-
-
-register_command(COMMAND_CODE, SliderStatusMessage, "VMBDME")
-register_command(COMMAND_CODE, SliderStatusMessage, "VMB4DC")
-register_command(COMMAND_CODE, SliderStatusMessage, "VMBDMI")
-register_command(COMMAND_CODE, SliderStatusMessage, "VMBDMI-R")
-register_command(COMMAND_CODE, SliderStatusMessage, "VMB1LED")

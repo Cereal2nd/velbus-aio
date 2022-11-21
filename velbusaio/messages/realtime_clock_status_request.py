@@ -3,12 +3,13 @@
 """
 from __future__ import annotations
 
-from velbusaio.command_registry import register_command
+from velbusaio.command_registry import register
 from velbusaio.message import Message
 
 COMMAND_CODE = 0xD7
 
 
+@register(COMMAND_CODE)
 class RealtimeClockStatusRequest(Message):
     def populate(self, priority, address, rtr, data):
         """
@@ -23,6 +24,3 @@ class RealtimeClockStatusRequest(Message):
         :return: bytes
         """
         return bytes([COMMAND_CODE])
-
-
-register_command(COMMAND_CODE, RealtimeClockStatusRequest)
