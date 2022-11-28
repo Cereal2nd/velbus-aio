@@ -11,7 +11,6 @@ COMMAND_CODE = 0xB3
 
 @register(COMMAND_CODE)
 class SelectProgramMessage(Message):
-
     def __init__(self, address=None, program=0):
         Message.__init__(self)
         self.select_program = program
