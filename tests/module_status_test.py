@@ -7,23 +7,19 @@ import pathlib
 import pytest
 
 from velbusaio.channels import Channel, LightSensor
+from velbusaio.const import CHANNEL_LIGHT_VALUE, NO_RTR, PRIORITY_LOW, RTR
+from velbusaio.controller import Velbus
 from velbusaio.handler import PacketHandler
 from velbusaio.helpers import get_cache_dir
-from velbusaio.module import Module
-from velbusaio.controller import Velbus
-from velbusaio.messages.select_program import SelectProgramMessage
 from velbusaio.messages.module_status import (
     PROGRAM_SELECTION,
     ModuleStatusGP4PirMessage,
     ModuleStatusMessage2,
     ModuleStatusPirMessage,
 )
-from velbusaio.const import (
-    CHANNEL_LIGHT_VALUE,
-    PRIORITY_LOW,
-    RTR,
-    NO_RTR,
-)
+from velbusaio.messages.select_program import SelectProgramMessage
+from velbusaio.module import Module
+
 # some modules to test
 VMBGP4 = 0x20
 VMBGPOD = 0x28
@@ -31,6 +27,7 @@ VMBPIRM = 0x2A
 VMBGP4PIR = 0x2D
 VMBGPOD_2 = 0x3D
 VMBGP4PIR_2 = 0x3E
+
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
@@ -56,7 +53,7 @@ async def test_module_status_selected_program(module_type):
         ph.pdata["ModuleTypes"][f"{module_type:02X}"],
         cache_dir=get_cache_dir(),
     )
-    velbus = Velbus("") # Dummy connection
+    velbus = Velbus("")  # Dummy connection
     m.initialize(velbus.send)
 
     # load the module with dummy channels
@@ -68,7 +65,7 @@ async def test_module_status_selected_program(module_type):
         ModuleStatusMessage2,
         ModuleStatusGP4PirMessage,
         ModuleStatusPirMessage,
-        ]
+    ]
 
     # test all message variants that have the selected_program variable
     for message in messages_to_test:
@@ -91,7 +88,12 @@ async def test_module_status_selected_program(module_type):
     light_values = [0, 100, 1023]
     for light_value in light_values:
         databyte1 = (light_value & 0x300) >> 4
-        databyte2 = (light_value & 0xFF)
-        msg.populate(PRIORITY_LOW, module_address, NO_RTR, [0x00, databyte1, databyte2, 0x00, 0x00, 0x00, 0x00])
+        databyte2 = light_value & 0xFF
+        msg.populate(
+            PRIORITY_LOW,
+            module_address,
+            NO_RTR,
+            [0x00, databyte1, databyte2, 0x00, 0x00, 0x00, 0x00],
+        )
         await m.on_message(msg)
         assert m._channels[CHANNEL_LIGHT_VALUE].get_state() == light_value
