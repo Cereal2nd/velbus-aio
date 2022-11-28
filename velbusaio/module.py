@@ -68,6 +68,8 @@ from velbusaio.messages.fast_blinking_led import FastBlinkingLedMessage
 from velbusaio.messages.memory_data import MemoryDataMessage
 from velbusaio.messages.meteo_raw import MeteoRawMessage
 from velbusaio.messages.module_status import (
+    PROGRAM_SELECTION,
+    ModuleStatusGP4PirMessage,
     ModuleStatusMessage,
     ModuleStatusMessage2,
     ModuleStatusPirMessage,
@@ -151,6 +153,7 @@ class Module:
         self._is_loading = False
         self._channels = {}
         self.loaded = False
+        self.selected_program_str = None
 
     def initialize(self, writer: Callable[[Message], Awaitable[None]]) -> None:
         self._log = logging.getLogger("velbus-module")
@@ -159,6 +162,15 @@ class Module:
             chan._writer = writer
 
     def cleanupSubChannels(self) -> None:
+        # TODO: 21/11/2022 DannyDeGaspari: Fix needed
+        # Care should be taken for this function, not all subaddresses have their channels on multiples of 8.
+        # The last subaddress contain typically the temperature channels, has more then 8 channels
+        # and doesn't start on a boundary of 8.
+        # E.g. The VMBGP4 has one subaddress, so since the second subaddress is not defined,
+        # this function will delete channels 17-24 while 17 and 18 belong to the temperature channels.
+        #
+        # The solution would be that this functions knows were the temperature channels are located
+        # and/or what the max number of subaddresses are for each module.
         if self._sub_address == {}:
             assert "No subaddresses defined"
         for sub in range(1, 4):
@@ -237,6 +249,18 @@ class Module:
                     break
         return _channel_offset
 
+    def get_selected_program(self) -> str:
+        return self.selected_program_str
+
+    async def set_selected_program(self, program_str: str) -> None:
+        self.selected_program_str = program_str
+        command_code = 0xB3
+        cls = commandRegistry.get_command(command_code, self.get_type())
+        index = list(PROGRAM_SELECTION.values()).index(program_str)
+        program = list(PROGRAM_SELECTION.keys())[index]
+        msg = cls(self._address, program)
+        await self._writer(msg)
+
     async def on_message(self, message: Message) -> None:
         """
         Process received message
@@ -307,6 +331,69 @@ class Module:
                 await self._channels[chan].maybe_update_temperature(
                     message.current_temp, 1 / 2
                 )
+            for channel_types in self._data["Channels"]:
+                if keys_exists(self._data, "Channels", channel_types, "Type"):
+                    if (
+                        self._data["Channels"][channel_types]["Type"]
+                        == "ThermostatChannel"
+                    ):
+                        channel = self._translate_channel_name(channel_types)
+                        if channel in self._channels:
+                            if (
+                                self._data["Channels"][channel_types]["Name"]
+                                == "Heater"
+                            ):
+                                await self._channels[channel].update(
+                                    {"closed": message.heater}
+                                )
+                            elif (
+                                self._data["Channels"][channel_types]["Name"] == "Boost"
+                            ):
+                                await self._channels[channel].update(
+                                    {"closed": message.boost}
+                                )
+                            elif (
+                                self._data["Channels"][channel_types]["Name"] == "Pump"
+                            ):
+                                await self._channels[channel].update(
+                                    {"closed": message.pump}
+                                )
+                            elif (
+                                self._data["Channels"][channel_types]["Name"]
+                                == "Cooler"
+                            ):
+                                await self._channels[channel].update(
+                                    {"closed": message.cooler}
+                                )
+                            elif (
+                                self._data["Channels"][channel_types]["Name"]
+                                == "Alarm 1"
+                            ):
+                                await self._channels[channel].update(
+                                    {"closed": message.alarm1}
+                                )
+                            elif (
+                                self._data["Channels"][channel_types]["Name"]
+                                == "Alarm 2"
+                            ):
+                                await self._channels[channel].update(
+                                    {"closed": message.alarm2}
+                                )
+                            elif (
+                                self._data["Channels"][channel_types]["Name"]
+                                == "Alarm 3"
+                            ):
+                                await self._channels[channel].update(
+                                    {"closed": message.alarm3}
+                                )
+                            elif (
+                                self._data["Channels"][channel_types]["Name"]
+                                == "Alarm 4"
+                            ):
+                                await self._channels[channel].update(
+                                    {"closed": message.alarm4}
+                                )
+
         elif isinstance(message, PushButtonStatusMessage):
             _update_buttons = False
             for channel_types in self._data["Channels"]:
@@ -348,6 +435,7 @@ class Module:
                     self._channels[channel], (Button, ButtonCounter)
                 ):
                     await self._channels[channel].update({"enabled": False})
+            self.selected_program_str = message.selected_program_str
         elif isinstance(message, CounterStatusMessage) and isinstance(
             self._channels[message.channel], ButtonCounter
         ):
@@ -373,6 +461,22 @@ class Module:
                 await self._channels[7].update({"closed": message.low_temp_alarm})
             if 8 in self._channels:
                 await self._channels[8].update({"closed": message.high_temp_alarm})
+            self.selected_program_str = message.selected_program_str
+        elif isinstance(message, ModuleStatusGP4PirMessage):
+            await self._channels[CHANNEL_LIGHT_VALUE].update(
+                {"cur": message.light_value}
+            )
+            for channel_id in range(1, 9):
+                channel = self._translate_channel_name(channel_id + _channel_offset)
+                await self._channels[channel].update(
+                    {"closed": channel_id in message.closed}
+                )
+                if type(self._channels[channel]) == Button:
+                    # only treat 'enabled' if the channel is a Button
+                    await self._channels[channel].update(
+                        {"enabled": channel_id in message.enabled}
+                    )
+            self.selected_program_str = message.selected_program_str
         elif isinstance(message, UpdateLedStatusMessage):
             for channel_id in range(1, 9):
                 channel = self._translate_channel_name(channel_id + _channel_offset)

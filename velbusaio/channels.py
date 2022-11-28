@@ -530,16 +530,16 @@ class Temperature(Channel):
         msg.temp = temp * 2  # TODO: int()
         await self._writer(msg)
 
-    async def set_preset(self, mode: str) -> None:
-        if mode == "safe":
+    async def _switch_mode(self) -> None:
+        if self._cmode == "safe":
             code = 0xDE
-        elif mode == "comfort":
+        elif self._cmode == "comfort":
             code = 0xDB
-        elif mode == "day":
+        elif self._cmode == "day":
             code = 0xDC
-        elif mode == "night":
+        else:  # "night"
             code = 0xDD
-        # TODO: else-case
+
         if self._cstatus == "run":
             sleep = 0x0
         elif self._cstatus == "manual":
@@ -552,7 +552,16 @@ class Temperature(Channel):
         msg = cls(self._address, sleep)
         await self._writer(msg)
 
+    async def set_preset(self, preset: str) -> None:
+        self._cmode = preset
+        await self._switch_mode()
+
+    async def set_climate_mode(self, mode: str) -> None:
+        self._cstatus = mode
+        await self._switch_mode()
+
     async def set_mode(self, mode: str) -> None:
+        # TODO: change function name, proposal = set_heat_cool_mode
         if mode == "heat":
             code = 0xE0
         elif mode == "cool":
