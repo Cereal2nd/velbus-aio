@@ -1,4 +1,4 @@
-ame: Pre-commit auto-update
+name: Pre-commit auto-update
 
 on:
   # every day at midnight
