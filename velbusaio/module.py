@@ -21,13 +21,19 @@ from velbusaio.channels import (
     LightSensor,
     Memo,
     Relay,
+    SelectedProgram,
     Sensor,
     SensorNumber,
     Temperature,
     ThermostatChannel,
 )
 from velbusaio.command_registry import commandRegistry
-from velbusaio.const import CHANNEL_LIGHT_VALUE, CHANNEL_MEMO_TEXT, PRIORITY_LOW
+from velbusaio.const import (
+    CHANNEL_LIGHT_VALUE,
+    CHANNEL_MEMO_TEXT,
+    CHANNEL_SELECTED_PROGRAM,
+    PRIORITY_LOW,
+)
 from velbusaio.helpers import handle_match, keys_exists
 from velbusaio.message import Message
 from velbusaio.messages import DaliDeviceSettingMsg
@@ -68,7 +74,6 @@ from velbusaio.messages.fast_blinking_led import FastBlinkingLedMessage
 from velbusaio.messages.memory_data import MemoryDataMessage
 from velbusaio.messages.meteo_raw import MeteoRawMessage
 from velbusaio.messages.module_status import (
-    PROGRAM_SELECTION,
     ModuleStatusGP4PirMessage,
     ModuleStatusMessage,
     ModuleStatusMessage2,
@@ -153,7 +158,6 @@ class Module:
         self._is_loading = False
         self._channels = {}
         self.loaded = False
-        self.selected_program_str = None
 
     def initialize(self, writer: Callable[[Message], Awaitable[None]]) -> None:
         self._log = logging.getLogger("velbus-module")
@@ -249,18 +253,6 @@ class Module:
                     break
         return _channel_offset
 
-    def get_selected_program(self) -> str:
-        return self.selected_program_str
-
-    async def set_selected_program(self, program_str: str) -> None:
-        self.selected_program_str = program_str
-        command_code = 0xB3
-        cls = commandRegistry.get_command(command_code, self.get_type())
-        index = list(PROGRAM_SELECTION.values()).index(program_str)
-        program = list(PROGRAM_SELECTION.keys())[index]
-        msg = cls(self._address, program)
-        await self._writer(msg)
-
     async def on_message(self, message: Message) -> None:
         """
         Process received message
@@ -331,69 +323,34 @@ class Module:
                 await self._channels[chan].maybe_update_temperature(
                     message.current_temp, 1 / 2
                 )
-            for channel_types in self._data["Channels"]:
-                if keys_exists(self._data, "Channels", channel_types, "Type"):
+            # update the thermostat channels
+            channel_name_to_msg_prop_map = {
+                "Heater": "heater",
+                "Boost": "boost",
+                "Pump": "pump",
+                "Cooler": "cooler",
+                "Alarm 1": "alarm1",
+                "Alarm 2": "alarm2",
+                "Alarm 3": "alarm3",
+                "Alarm 4": "alarm4",
+            }
+            for channel_str in self._data["Channels"]:
+                if keys_exists(self._data, "Channels", channel_str, "Type"):
                     if (
-                        self._data["Channels"][channel_types]["Type"]
+                        self._data["Channels"][channel_str]["Type"]
                         == "ThermostatChannel"
                     ):
-                        channel = self._translate_channel_name(channel_types)
+                        channel = self._translate_channel_name(channel_str)
+                        channel_name = self._data["Channels"][channel_str]["Name"]
                         if channel in self._channels:
-                            if (
-                                self._data["Channels"][channel_types]["Name"]
-                                == "Heater"
-                            ):
-                                await self._channels[channel].update(
-                                    {"closed": message.heater}
-                                )
-                            elif (
-                                self._data["Channels"][channel_types]["Name"] == "Boost"
-                            ):
-                                await self._channels[channel].update(
-                                    {"closed": message.boost}
-                                )
-                            elif (
-                                self._data["Channels"][channel_types]["Name"] == "Pump"
-                            ):
-                                await self._channels[channel].update(
-                                    {"closed": message.pump}
-                                )
-                            elif (
-                                self._data["Channels"][channel_types]["Name"]
-                                == "Cooler"
-                            ):
-                                await self._channels[channel].update(
-                                    {"closed": message.cooler}
-                                )
-                            elif (
-                                self._data["Channels"][channel_types]["Name"]
-                                == "Alarm 1"
-                            ):
-                                await self._channels[channel].update(
-                                    {"closed": message.alarm1}
-                                )
-                            elif (
-                                self._data["Channels"][channel_types]["Name"]
-                                == "Alarm 2"
-                            ):
-                                await self._channels[channel].update(
-                                    {"closed": message.alarm2}
-                                )
-                            elif (
-                                self._data["Channels"][channel_types]["Name"]
-                                == "Alarm 3"
-                            ):
-                                await self._channels[channel].update(
-                                    {"closed": message.alarm3}
-                                )
-                            elif (
-                                self._data["Channels"][channel_types]["Name"]
-                                == "Alarm 4"
-                            ):
-                                await self._channels[channel].update(
-                                    {"closed": message.alarm4}
-                                )
-
+                            await self._channels[channel].update(
+                                {
+                                    "closed": getattr(
+                                        message,
+                                        channel_name_to_msg_prop_map[channel_name],
+                                    )
+                                }
+                            )
         elif isinstance(message, PushButtonStatusMessage):
             _update_buttons = False
             for channel_types in self._data["Channels"]:
@@ -435,7 +392,10 @@ class Module:
                     self._channels[channel], (Button, ButtonCounter)
                 ):
                     await self._channels[channel].update({"enabled": False})
-            self.selected_program_str = message.selected_program_str
+            # self.selected_program_str = message.selected_program_str
+            await self._channels[CHANNEL_SELECTED_PROGRAM].update(
+                {"selected_program_str": message.selected_program_str}
+            )
         elif isinstance(message, CounterStatusMessage) and isinstance(
             self._channels[message.channel], ButtonCounter
         ):
@@ -461,7 +421,10 @@ class Module:
                 await self._channels[7].update({"closed": message.low_temp_alarm})
             if 8 in self._channels:
                 await self._channels[8].update({"closed": message.high_temp_alarm})
-            self.selected_program_str = message.selected_program_str
+            # self.selected_program_str = message.selected_program_str
+            await self._channels[CHANNEL_SELECTED_PROGRAM].update(
+                {"selected_program_str": message.selected_program_str}
+            )
         elif isinstance(message, ModuleStatusGP4PirMessage):
             await self._channels[CHANNEL_LIGHT_VALUE].update(
                 {"cur": message.light_value}
@@ -476,7 +439,10 @@ class Module:
                     await self._channels[channel].update(
                         {"enabled": channel_id in message.enabled}
                     )
-            self.selected_program_str = message.selected_program_str
+            # self.selected_program_str = message.selected_program_str
+            await self._channels[CHANNEL_SELECTED_PROGRAM].update(
+                {"selected_program_str": message.selected_program_str}
+            )
         elif isinstance(message, UpdateLedStatusMessage):
             for channel_id in range(1, 9):
                 channel = self._translate_channel_name(channel_id + _channel_offset)
@@ -737,6 +703,17 @@ class Module:
                     "ThermostatAddr" in self._data and self._data["ThermostatAddr"] != 0
                 ):
                     await self._channels[int(chan)].update({"thermostat": True})
+        # add extra channel for program selection which is not in the channel list of the protocol.json file,
+        # but is available in the messages list of the corresponding module.
+        if keys_exists(self._data, "Messages", "B3"):
+            self._channels[CHANNEL_SELECTED_PROGRAM] = SelectedProgram(
+                self,
+                CHANNEL_SELECTED_PROGRAM,
+                "Selected Program",
+                False,
+                self._writer,
+                self._address,
+            )
 
 
 class VmbDali(Module):

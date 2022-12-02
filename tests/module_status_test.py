@@ -6,8 +6,14 @@ import pathlib
 
 import pytest
 
-from velbusaio.channels import Channel, LightSensor
-from velbusaio.const import CHANNEL_LIGHT_VALUE, NO_RTR, PRIORITY_LOW, RTR
+from velbusaio.channels import Channel, LightSensor, SelectedProgram
+from velbusaio.const import (
+    CHANNEL_LIGHT_VALUE,
+    CHANNEL_SELECTED_PROGRAM,
+    NO_RTR,
+    PRIORITY_LOW,
+    RTR,
+)
 from velbusaio.controller import Velbus
 from velbusaio.handler import PacketHandler
 from velbusaio.helpers import get_cache_dir
@@ -60,6 +66,9 @@ async def test_module_status_selected_program(module_type):
     for chan in range(1, 9):
         m._channels[chan] = Channel(None, None, None, False, None, None)
     m._channels[CHANNEL_LIGHT_VALUE] = LightSensor(None, None, None, False, None, None)
+    m._channels[CHANNEL_SELECTED_PROGRAM] = SelectedProgram(
+        m, None, None, False, velbus.send, None
+    )
 
     messages_to_test = [
         ModuleStatusMessage2,
@@ -76,10 +85,15 @@ async def test_module_status_selected_program(module_type):
             msg.selected_program = program
             msg.selected_program_str = PROGRAM_SELECTION[program]
             await m.on_message(msg)
-            assert m.get_selected_program() == PROGRAM_SELECTION[program]
+            assert (
+                m._channels[CHANNEL_SELECTED_PROGRAM].get_selected_program()
+                == PROGRAM_SELECTION[program]
+            )
 
             # Send the select_program message and check if the binary data is ok
-            await m.set_selected_program(PROGRAM_SELECTION[program])
+            await m._channels[CHANNEL_SELECTED_PROGRAM].set_selected_program(
+                PROGRAM_SELECTION[program]
+            )
             msg_info = await velbus._protocol._send_queue.get()
             assert msg_info.data[1] == program
 

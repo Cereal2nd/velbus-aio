@@ -18,6 +18,7 @@ from velbusaio.const import (
     VOLUME_LITERS_HOUR,
 )
 from velbusaio.message import Message
+from velbusaio.messages.module_status import PROGRAM_SELECTION
 
 if TYPE_CHECKING:
     from velbusaio.module import Module
@@ -721,4 +722,30 @@ class Memo(Channel):
                 await self._writer(msg)
                 msg = cls(self._address)
                 msg.start = msgcntr
+        await self._writer(msg)
+
+
+class SelectedProgram(Channel):
+    """
+    A selected program channel
+    """
+
+    _selected_program_str = None
+
+    def get_categories(self) -> list[str]:
+        return ["select"]
+
+    def get_class(self) -> None:
+        return None
+
+    def get_selected_program(self) -> str:
+        return self._selected_program_str
+
+    async def set_selected_program(self, program_str: str) -> None:
+        self._selected_program_str = program_str
+        command_code = 0xB3
+        cls = commandRegistry.get_command(command_code, self._module.get_type())
+        index = list(PROGRAM_SELECTION.values()).index(program_str)
+        program = list(PROGRAM_SELECTION.keys())[index]
+        msg = cls(self._address, program)
         await self._writer(msg)
