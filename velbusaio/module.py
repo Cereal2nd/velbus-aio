@@ -289,36 +289,39 @@ class Module:
         elif isinstance(message, MemoryDataMessage):
             await self._process_memory_data_message(message)
         elif isinstance(message, (RelayStatusMessage, RelayStatusMessage2)):
-            await self._channels[message.channel].update(
+            await self._update_channel(
+                message.channel,
                 {
                     "on": message.is_on(),
                     "inhibit": message.is_inhibited(),
                     "forced_on": message.is_forced_on(),
                     "disabled": message.is_disabled(),
-                }
+                },
             )
         elif isinstance(message, SensorTemperatureMessage):
             chan = self._translate_channel_name(self._data["TemperatureChannel"])
             await self._channels[chan].maybe_update_temperature(
                 message.getCurTemp(), 1 / 64
             )
-            await self._channels[chan].update(
+            await self._update_channel(
+                chan,
                 {
                     "min": message.getMinTemp(),
                     "max": message.getMaxTemp(),
-                }
+                },
             )
         elif isinstance(message, TempSensorStatusMessage):
             # update the current temp
             chan = self._translate_channel_name(self._data["TemperatureChannel"])
             if chan in self._channels:
-                await self._channels[chan].update(
+                await self._update_channel(
+                    chan,
                     {
                         "target": message.target_temp,
                         "cmode": message.mode_str,
                         "cstatus": message.status_str,
                         "sleep_timer": message.sleep_timer,
-                    }
+                    },
                 )
                 await self._channels[chan].maybe_update_temperature(
                     message.current_temp, 1 / 2
@@ -343,13 +346,14 @@ class Module:
                         channel = self._translate_channel_name(channel_str)
                         channel_name = self._data["Channels"][channel_str]["Name"]
                         if channel in self._channels:
-                            await self._channels[channel].update(
+                            await self._update_channel(
+                                channel,
                                 {
                                     "closed": getattr(
                                         message,
                                         channel_name_to_msg_prop_map[channel_name],
                                     )
-                                }
+                                },
                             )
         elif isinstance(message, PushButtonStatusMessage):
             _update_buttons = False
@@ -367,137 +371,149 @@ class Module:
                 for channel_id in range(1, 9):
                     channel = self._translate_channel_name(channel_id + _channel_offset)
                     if channel_id in message.closed:
-                        await self._channels[channel].update({"closed": True})
+                        await self._update_channel(channel, {"closed": True})
                     if channel_id in message.opened:
-                        await self._channels[channel].update({"closed": False})
+                        await self._update_channel(channel, {"closed": False})
         elif isinstance(message, (ModuleStatusMessage)):
             for channel_id in range(1, 9):
                 channel = self._translate_channel_name(channel_id + _channel_offset)
                 if channel_id in message.closed:
-                    await self._channels[channel].update({"closed": True})
+                    await self._update_channel(channel, {"closed": True})
                 elif channel in self._channels and isinstance(
                     self._channels[channel], (Button, ButtonCounter)
                 ):
-                    await self._channels[channel].update({"closed": False})
+                    await self._update_channel(channel, {"closed": False})
         elif isinstance(message, (ModuleStatusMessage2)):
             for channel_id in range(1, 9):
                 channel = self._translate_channel_name(channel_id + _channel_offset)
                 if channel_id in message.closed:
-                    await self._channels[channel].update({"closed": True})
+                    await self._update_channel(channel, {"closed": True})
                 elif isinstance(self._channels[channel], (Button, ButtonCounter)):
-                    await self._channels[channel].update({"closed": False})
+                    await self._update_channel(channel, {"closed": False})
                 if channel_id in message.enabled:
-                    await self._channels[channel].update({"enabled": True})
+                    await self._update_channel(channel, {"enabled": True})
                 elif channel in self._channels and isinstance(
                     self._channels[channel], (Button, ButtonCounter)
                 ):
-                    await self._channels[channel].update({"enabled": False})
+                    await self._update_channel(channel, {"enabled": False})
             # self.selected_program_str = message.selected_program_str
-            await self._channels[CHANNEL_SELECTED_PROGRAM].update(
-                {"selected_program_str": message.selected_program_str}
+            await self._update_channel(
+                CHANNEL_SELECTED_PROGRAM,
+                {"selected_program_str": message.selected_program_str},
             )
         elif isinstance(message, CounterStatusMessage) and isinstance(
             self._channels[message.channel], ButtonCounter
         ):
             channel = self._translate_channel_name(message.channel)
-            await self._channels[channel].update(
+            await self._update_channel(
+                channel,
                 {
                     "pulses": message.pulses,
                     "counter": message.counter,
                     "delay": message.delay,
-                }
+                },
             )
         elif isinstance(message, ModuleStatusPirMessage):
-            await self._channels[CHANNEL_LIGHT_VALUE].update(
-                {"cur": message.light_value}
+            await self._update_channel(
+                CHANNEL_LIGHT_VALUE, {"cur": message.light_value}
             )
-            await self._channels[1].update({"closed": message.dark})
-            await self._channels[2].update({"closed": message.light})
-            await self._channels[3].update({"closed": message.motion1})
-            await self._channels[4].update({"closed": message.light_motion1})
-            await self._channels[5].update({"closed": message.motion2})
-            await self._channels[6].update({"closed": message.light_motion2})
+            await self._update_channel(1, {"closed": message.dark})
+            await self._update_channel(2, {"closed": message.light})
+            await self._update_channel(3, {"closed": message.motion1})
+            await self._update_channel(4, {"closed": message.light_motion1})
+            await self._update_channel(5, {"closed": message.motion2})
+            await self._update_channel(6, {"closed": message.light_motion2})
             if 7 in self._channels:
-                await self._channels[7].update({"closed": message.low_temp_alarm})
+                await self._update_channel(7, {"closed": message.low_temp_alarm})
             if 8 in self._channels:
-                await self._channels[8].update({"closed": message.high_temp_alarm})
+                await self._update_channel(8, {"closed": message.high_temp_alarm})
             # self.selected_program_str = message.selected_program_str
-            await self._channels[CHANNEL_SELECTED_PROGRAM].update(
-                {"selected_program_str": message.selected_program_str}
+            await self._update_channel(
+                CHANNEL_SELECTED_PROGRAM,
+                {"selected_program_str": message.selected_program_str},
             )
         elif isinstance(message, ModuleStatusGP4PirMessage):
-            await self._channels[CHANNEL_LIGHT_VALUE].update(
-                {"cur": message.light_value}
+            await self._update_channel(
+                CHANNEL_LIGHT_VALUE, {"cur": message.light_value}
             )
             for channel_id in range(1, 9):
                 channel = self._translate_channel_name(channel_id + _channel_offset)
-                await self._channels[channel].update(
-                    {"closed": channel_id in message.closed}
+                await self._update_channel(
+                    channel, {"closed": channel_id in message.closed}
                 )
                 if type(self._channels[channel]) == Button:
                     # only treat 'enabled' if the channel is a Button
-                    await self._channels[channel].update(
-                        {"enabled": channel_id in message.enabled}
+                    await self._update_channel(
+                        channel, {"enabled": channel_id in message.enabled}
                     )
             # self.selected_program_str = message.selected_program_str
-            await self._channels[CHANNEL_SELECTED_PROGRAM].update(
-                {"selected_program_str": message.selected_program_str}
+            await self._update_channel(
+                CHANNEL_SELECTED_PROGRAM,
+                {"selected_program_str": message.selected_program_str},
             )
         elif isinstance(message, UpdateLedStatusMessage):
             for channel_id in range(1, 9):
                 channel = self._translate_channel_name(channel_id + _channel_offset)
                 if channel_id in message.led_slow_blinking:
-                    await self._channels[channel].update({"led_state": "slow"})
+                    await self._update_channel(channel, {"led_state": "slow"})
                 if channel_id in message.led_fast_blinking:
-                    await self._channels[channel].update({"led_state": "fast"})
+                    await self._update_channel(channel, {"led_state": "fast"})
                 if channel_id in message.led_on:
-                    await self._channels[channel].update({"led_state": "on"})
+                    await self._update_channel(channel, {"led_state": "on"})
                 if (
                     channel_id not in message.led_slow_blinking
                     and channel_id not in message.led_fast_blinking
                     and channel_id not in message.led_on
                 ):
-                    await self._channels[channel].update({"led_state": "off"})
+                    await self._update_channel(channel, {"led_state": "off"})
         elif isinstance(message, SetLedMessage):
             for channel_id in range(1, 9):
                 channel = self._translate_channel_name(channel_id + _channel_offset)
                 if channel_id in message.leds:
-                    await self._channels[channel].update({"led_state": "on"})
+                    await self._update_channel(channel, {"led_state": "on"})
         elif isinstance(message, ClearLedMessage):
             for channel_id in range(1, 9):
                 channel = self._translate_channel_name(channel_id + _channel_offset)
                 if channel_id in message.leds:
-                    await self._channels[channel].update({"led_state": "off"})
+                    await self._update_channel(channel, {"led_state": "off"})
         elif isinstance(message, SlowBlinkingLedMessage):
             for channel_id in range(1, 9):
                 channel = self._translate_channel_name(channel_id + _channel_offset)
                 if channel_id in message.leds:
-                    await self._channels[channel].update({"led_state": "slow"})
+                    await self._update_channel(channel, {"led_state": "slow"})
         elif isinstance(message, FastBlinkingLedMessage):
             for channel_id in range(1, 9):
                 channel = self._translate_channel_name(channel_id + _channel_offset)
                 if channel_id in message.leds:
-                    await self._channels[channel].update({"led_state": "fast"})
+                    await self._update_channel(channel, {"led_state": "fast"})
         elif isinstance(message, (DimmerChannelStatusMessage, DimmerStatusMessage)):
             channel = self._translate_channel_name(message.channel)
-            await self._channels[channel].update({"state": message.cur_dimmer_state()})
+            await self._update_channel(channel, {"state": message.cur_dimmer_state()})
         elif isinstance(message, SliderStatusMessage):
             channel = self._translate_channel_name(message.channel)
-            await self._channels[channel].update({"state": message.cur_slider_state()})
+            await self._update_channel(channel, {"state": message.cur_slider_state()})
         elif isinstance(message, BlindStatusNgMessage):
             channel = self._translate_channel_name(message.channel)
-            await self._channels[channel].update(
-                {"state": message.status, "position": message.position}
+            await self._update_channel(
+                channel, {"state": message.status, "position": message.position}
             )
         elif isinstance(message, BlindStatusMessage):
             channel = self._translate_channel_name(message.channel)
-            await self._channels[channel].update({"state": message.status})
+            await self._update_channel(channel, {"state": message.status})
         elif isinstance(message, MeteoRawMessage):
-            await self._channels[11].update({"cur": message.rain})
-            await self._channels[12].update({"cur": message.light})
-            await self._channels[13].update({"cur": message.wind})
+            await self._update_channel(11, {"cur": message.rain})
+            await self._update_channel(12, {"cur": message.light})
+            await self._update_channel(23, {"cur": message.wind})
 
         self._cache()
+
+    async def _update_channel(self, channel: int, updates: dict):
+        try:
+            await self._channels[channel].update(updates)
+        except KeyError:
+            self._log.error(
+                f"channel {channel} does not exist for module @ address {self}"
+            )
 
     def get_channels(self) -> dict:
         """
@@ -572,7 +588,7 @@ class Module:
         elif "Match" in mdata:
             for chan, chan_data in handle_match(mdata["Match"], message.data).items():
                 data = chan_data.copy()
-                await self._channels[chan].update(data)
+                await self._update_channel(chan, data)
         elif "SensorName" in mdata:
             # this is part of the channel names
             # make sure we set the channel to loaded
@@ -702,7 +718,7 @@ class Module:
                 if "Thermostat" in self._data or (
                     "ThermostatAddr" in self._data and self._data["ThermostatAddr"] != 0
                 ):
-                    await self._channels[int(chan)].update({"thermostat": True})
+                    await self._update_channel(int(chan), {"thermostat": True})
         # add extra channel for program selection which is not in the channel list of the protocol.json file,
         # but is available in the messages list of the corresponding module.
         if keys_exists(self._data, "Messages", "B3"):
@@ -802,18 +818,18 @@ class VmbDali(Module):
             for channel in message.opened:
                 if _channel_offset + channel > 64:  # ignore groups
                     continue
-                await self._channels[_channel_offset + channel].update({"state": 0})
+                await self._update_channel((_channel_offset + channel), {"state": 0})
             # ignore message.closed: we don't know at what dimlevel they're started
 
         elif isinstance(message, DimValueStatus):
             for offset, dim_value in enumerate(message.dim_values):
                 channel = message.channel + offset
                 if channel <= 64:  # channel
-                    await self._channels[channel].update({"state": dim_value})
+                    await self._update_channel(channel, {"state": dim_value})
                 elif channel <= 80:  # group
                     group_num = channel - 65
                     for chan in self.group_members.get(group_num, []):
-                        await self._channels[chan].update({"state": dim_value})
+                        await self._update_channel(chan, {"state": dim_value})
                 else:  # broadcast
                     for chan in self._channels.values():
                         await chan.update({"state": dim_value})
