@@ -23,23 +23,23 @@ class TempSensorStatusMessage(Message):
     def __init__(self, address=None):
         Message.__init__(self)
         self.local_control = 0  # 0=unlocked, 1 =locked
-        self.status_mode = 0  # 0=run, 1=manual, 2=sleep timer, 3=disable
+        self.status_mode = 0  # DSTATUS
         self.status_str = "run"
-        self.auto_send = 0  # 0=disabled, 1=enabled
-        self.mode = 0  # 0=safe, 1=night, 2=day, 4=comfort
+        self.auto_send = 0  # 0=disabled
+        self.mode = 0  # DMODE
         self.mode_str = "safe"
-        self.cool = 0  # 0=cool, 1=heat
-        self.heater = 0  # 0=pff, 1=on
-        self.boost = 0  # 0=off, 1 = on
-        self.pump = 0  # 0=on, 1=off
-        self.cool = 0  # 0=off, 1=on
-        self.alarm1 = 0  # 0=off, 1=on
-        self.alarm2 = 0  # 0=off, 1=on
-        self.alarm3 = 0  # 0=off, 1=on
-        self.alarm4 = 0  # 0=off, 1=on
-        self.current_temp = None  # current temp
-        self.target_temp = None  # current temp
-        self.sleep_timer = None  # current sleepTimer
+        self.cool_mode = False
+        self.heater = False
+        self.boost = False
+        self.pump = False
+        self.cooler = False
+        self.alarm1 = False
+        self.alarm2 = False
+        self.alarm3 = False
+        self.alarm4 = False
+        self.current_temp = None
+        self.target_temp = None
+        self.sleep_timer = None
 
     def getCurTemp(self):
         return self.current_temp
@@ -50,12 +50,12 @@ class TempSensorStatusMessage(Message):
         -DB1    bit 2+3         = status_mode
         -DB1    bit 4           = auto send
         -DB1    bit 5+6+7       = mode
-        -DB1    bit 8           = cool
+        -DB1    bit 8           = cool/heat
         -DB2                    = program (not used)
         -DB3    last bit        = heater
         -DB3    bit 2           = boost
         -DB3    bit 3           = pump
-        -DB3    bit 4           = pump
+        -DB3    bit 4           = cooler
         -DB4    bit 5           = alarm 1
         -DB4    bit 6           = alarm 2
         -DB4    bit 7           = alarm 3
@@ -75,16 +75,16 @@ class TempSensorStatusMessage(Message):
         self.auto_send = data[0] & 0x08
         self.mode = data[0] & 0x70
         self.mode_str = DMODE[self.mode]
-        self.cool = data[0] & 0x80
+        self.cool_mode = (data[0] & 0x80) == 0x80
 
-        self.heater = data[2] & 0x01
-        self.boost = data[2] & 0x02
-        self.pump = data[2] & 0x04
-        self.cool = data[2] & 0x08
-        self.alarm1 = data[2] & 0x10
-        self.alarm2 = data[2] & 0x20
-        self.alarm3 = data[2] & 0x40
-        self.alarm4 = data[2] & 0x80
+        self.heater = (data[2] & 0x01) == 0x01
+        self.boost = (data[2] & 0x02) == 0x02
+        self.pump = (data[2] & 0x04) == 0x04
+        self.cooler = (data[2] & 0x08) == 0x08
+        self.alarm1 = (data[2] & 0x10) == 0x10
+        self.alarm2 = (data[2] & 0x20) == 0x20
+        self.alarm3 = (data[2] & 0x40) == 0x40
+        self.alarm4 = (data[2] & 0x80) == 0x80
 
         self.current_temp = data[3] / 2
         self.target_temp = data[4] / 2
@@ -100,11 +100,11 @@ class TempSensorStatusMessage(Message):
         json_dict["status_mode"] = DSTATUS[self.status_mode]
         json_dict["auto_send"] = self.auto_send
         json_dict["mode"] = DMODE[self.mode]
-        json_dict["cool"] = self.cool
+        json_dict["cool_mode"] = self.cool_mode
         json_dict["heater"] = self.heater
         json_dict["boost"] = self.boost
         json_dict["pump"] = self.pump
-        json_dict["cool"] = self.cool
+        json_dict["cooler"] = self.cooler
         json_dict["alarm1"] = self.alarm1
         json_dict["alarm2"] = self.alarm2
         json_dict["alarm3"] = self.alarm3

@@ -21,13 +21,19 @@ from velbusaio.channels import (
     LightSensor,
     Memo,
     Relay,
+    SelectedProgram,
     Sensor,
     SensorNumber,
     Temperature,
     ThermostatChannel,
 )
 from velbusaio.command_registry import commandRegistry
-from velbusaio.const import CHANNEL_LIGHT_VALUE, CHANNEL_MEMO_TEXT, PRIORITY_LOW
+from velbusaio.const import (
+    CHANNEL_LIGHT_VALUE,
+    CHANNEL_MEMO_TEXT,
+    CHANNEL_SELECTED_PROGRAM,
+    PRIORITY_LOW,
+)
 from velbusaio.helpers import handle_match, keys_exists
 from velbusaio.message import Message
 from velbusaio.messages import DaliDeviceSettingMsg
@@ -68,6 +74,7 @@ from velbusaio.messages.fast_blinking_led import FastBlinkingLedMessage
 from velbusaio.messages.memory_data import MemoryDataMessage
 from velbusaio.messages.meteo_raw import MeteoRawMessage
 from velbusaio.messages.module_status import (
+    ModuleStatusGP4PirMessage,
     ModuleStatusMessage,
     ModuleStatusMessage2,
     ModuleStatusPirMessage,
@@ -159,6 +166,15 @@ class Module:
             chan._writer = writer
 
     def cleanupSubChannels(self) -> None:
+        # TODO: 21/11/2022 DannyDeGaspari: Fix needed
+        # Care should be taken for this function, not all subaddresses have their channels on multiples of 8.
+        # The last subaddress contain typically the temperature channels, has more then 8 channels
+        # and doesn't start on a boundary of 8.
+        # E.g. The VMBGP4 has one subaddress, so since the second subaddress is not defined,
+        # this function will delete channels 17-24 while 17 and 18 belong to the temperature channels.
+        #
+        # The solution would be that this functions knows were the temperature channels are located
+        # and/or what the max number of subaddresses are for each module.
         if self._sub_address == {}:
             assert "No subaddresses defined"
         for sub in range(1, 4):
@@ -307,6 +323,34 @@ class Module:
                 await self._channels[chan].maybe_update_temperature(
                     message.current_temp, 1 / 2
                 )
+            # update the thermostat channels
+            channel_name_to_msg_prop_map = {
+                "Heater": "heater",
+                "Boost": "boost",
+                "Pump": "pump",
+                "Cooler": "cooler",
+                "Alarm 1": "alarm1",
+                "Alarm 2": "alarm2",
+                "Alarm 3": "alarm3",
+                "Alarm 4": "alarm4",
+            }
+            for channel_str in self._data["Channels"]:
+                if keys_exists(self._data, "Channels", channel_str, "Type"):
+                    if (
+                        self._data["Channels"][channel_str]["Type"]
+                        == "ThermostatChannel"
+                    ):
+                        channel = self._translate_channel_name(channel_str)
+                        channel_name = self._data["Channels"][channel_str]["Name"]
+                        if channel in self._channels:
+                            await self._channels[channel].update(
+                                {
+                                    "closed": getattr(
+                                        message,
+                                        channel_name_to_msg_prop_map[channel_name],
+                                    )
+                                }
+                            )
         elif isinstance(message, PushButtonStatusMessage):
             _update_buttons = False
             for channel_types in self._data["Channels"]:
@@ -348,6 +392,10 @@ class Module:
                     self._channels[channel], (Button, ButtonCounter)
                 ):
                     await self._channels[channel].update({"enabled": False})
+            # self.selected_program_str = message.selected_program_str
+            await self._channels[CHANNEL_SELECTED_PROGRAM].update(
+                {"selected_program_str": message.selected_program_str}
+            )
         elif isinstance(message, CounterStatusMessage) and isinstance(
             self._channels[message.channel], ButtonCounter
         ):
@@ -373,6 +421,28 @@ class Module:
                 await self._channels[7].update({"closed": message.low_temp_alarm})
             if 8 in self._channels:
                 await self._channels[8].update({"closed": message.high_temp_alarm})
+            # self.selected_program_str = message.selected_program_str
+            await self._channels[CHANNEL_SELECTED_PROGRAM].update(
+                {"selected_program_str": message.selected_program_str}
+            )
+        elif isinstance(message, ModuleStatusGP4PirMessage):
+            await self._channels[CHANNEL_LIGHT_VALUE].update(
+                {"cur": message.light_value}
+            )
+            for channel_id in range(1, 9):
+                channel = self._translate_channel_name(channel_id + _channel_offset)
+                await self._channels[channel].update(
+                    {"closed": channel_id in message.closed}
+                )
+                if type(self._channels[channel]) == Button:
+                    # only treat 'enabled' if the channel is a Button
+                    await self._channels[channel].update(
+                        {"enabled": channel_id in message.enabled}
+                    )
+            # self.selected_program_str = message.selected_program_str
+            await self._channels[CHANNEL_SELECTED_PROGRAM].update(
+                {"selected_program_str": message.selected_program_str}
+            )
         elif isinstance(message, UpdateLedStatusMessage):
             for channel_id in range(1, 9):
                 channel = self._translate_channel_name(channel_id + _channel_offset)
@@ -633,6 +703,17 @@ class Module:
                     "ThermostatAddr" in self._data and self._data["ThermostatAddr"] != 0
                 ):
                     await self._channels[int(chan)].update({"thermostat": True})
+        # add extra channel for program selection which is not in the channel list of the protocol.json file,
+        # but is available in the messages list of the corresponding module.
+        if keys_exists(self._data, "Messages", "B3"):
+            self._channels[CHANNEL_SELECTED_PROGRAM] = SelectedProgram(
+                self,
+                CHANNEL_SELECTED_PROGRAM,
+                "Selected Program",
+                False,
+                self._writer,
+                self._address,
+            )
 
 
 class VmbDali(Module):

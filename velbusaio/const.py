@@ -48,6 +48,7 @@ VOLUME_CUBIC_METER_HOUR: Final = "m3/h"  # Not an official constant at HA yet
 VOLUME_LITERS: Final = "L"
 VOLUME_LITERS_HOUR: Final = "L/h"  # Not an official constant at HA yet
 
+CHANNEL_SELECTED_PROGRAM: Final = 96
 CHANNEL_EDGE_LIT: Final = 97
 CHANNEL_MEMO_TEXT: Final = 98
 CHANNEL_LIGHT_VALUE: Final = 99
