@@ -738,6 +738,9 @@ class SelectedProgram(Channel):
     def get_class(self) -> None:
         return None
 
+    def get_options(self) -> list:
+        return PROGRAM_SELECTION.values()
+
     def get_selected_program(self) -> str:
         return self._selected_program_str
 
