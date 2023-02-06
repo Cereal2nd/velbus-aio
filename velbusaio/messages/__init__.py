@@ -66,6 +66,7 @@ from velbusaio.messages.receive_buffer_full import ReceiveBufferFullMessage
 from velbusaio.messages.receive_ready import ReceiveReadyMessage
 from velbusaio.messages.relay_status import RelayStatusMessage
 from velbusaio.messages.restore_dimmer import RestoreDimmerMessage
+from velbusaio.messages.select_program import SelectProgramMessage
 from velbusaio.messages.sensor_temp_request import SensorTempRequest
 from velbusaio.messages.sensor_temperature import SensorTemperatureMessage
 from velbusaio.messages.set_date import SetDate

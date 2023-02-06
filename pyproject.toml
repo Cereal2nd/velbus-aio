@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+
+[project]
+name        = "velbus-aio"
+version     = "2023.2.0"
+license     = {text = "MIT"}
+description = "Open-source home automation platform running on Python 3."
+readme      = "README.rst"
+authors     = [
+    {name = "Maikel Punie", email = "maikel.punie@gmail.com"}
+]
+keywords    = ["home", "velbus", "automation"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Home Automation",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+requires-python = ">=3.8.0"
+dependencies    = [
+    "pyserial>=3.5.0",
+    "pyserial-asyncio>=0.5",
+    "backoff>=1.10.0",
+]
+
+[project.urls]
+"Source Code" = "https://github.com/Cereal2nd/velbus-aio"
+"Bug Reports" = "https://github.com/Cereal2nd/velbus-aio/issues"
+
+[tool.setuptools]
+platforms = ["any"]
+zip-safe  = false
+include-package-data = true
+
+[tool.setuptools.packages.find]
+exclude = ["tests", "tests.*"]
