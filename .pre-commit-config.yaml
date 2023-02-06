@@ -1,11 +1,11 @@
 repos:
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.2.2
+    rev: v3.3.1
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
   - repo: https://github.com/psf/black
-    rev: 22.10.0
+    rev: 22.12.0
     hooks:
       - id: black
         args:
@@ -46,7 +46,7 @@ repos:
         stages: [manual]
         args: ["--profile", "black"]
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0 # Use the ref you want to point at
+    rev: v4.4.0 # Use the ref you want to point at
     hooks:
       - id: check-ast
       - id: check-json
@@ -55,7 +55,7 @@ repos:
       - id: end-of-file-fixer
       - id: requirements-txt-fixer
   - repo: https://github.com/pre-commit/pygrep-hooks
-    rev: v1.9.0 # Use the ref you want to point at
+    rev: v1.10.0 # Use the ref you want to point at
     hooks:
       - id: python-use-type-annotations
       - id: python-no-eval
@@ -65,7 +65,7 @@ repos:
     hooks:
       - id: prettier
   - repo: https://github.com/cdce8p/python-typing-update
-    rev: v0.5.0
+    rev: v0.5.1
     hooks:
       # Run `python-typing-update` hook manually from time to time
       # to update python typing syntax.
