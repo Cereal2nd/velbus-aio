@@ -18,6 +18,7 @@ from velbusaio.const import (
     VOLUME_LITERS_HOUR,
 )
 from velbusaio.message import Message
+from velbusaio.messages.module_status import PROGRAM_SELECTION
 
 if TYPE_CHECKING:
     from velbusaio.module import Module
@@ -530,16 +531,16 @@ class Temperature(Channel):
         msg.temp = temp * 2  # TODO: int()
         await self._writer(msg)
 
-    async def set_preset(self, mode: str) -> None:
-        if mode == "safe":
+    async def _switch_mode(self) -> None:
+        if self._cmode == "safe":
             code = 0xDE
-        elif mode == "comfort":
+        elif self._cmode == "comfort":
             code = 0xDB
-        elif mode == "day":
+        elif self._cmode == "day":
             code = 0xDC
-        elif mode == "night":
+        else:  # "night"
             code = 0xDD
-        # TODO: else-case
+
         if self._cstatus == "run":
             sleep = 0x0
         elif self._cstatus == "manual":
@@ -552,7 +553,16 @@ class Temperature(Channel):
         msg = cls(self._address, sleep)
         await self._writer(msg)
 
+    async def set_preset(self, preset: str) -> None:
+        self._cmode = preset
+        await self._switch_mode()
+
+    async def set_climate_mode(self, mode: str) -> None:
+        self._cstatus = mode
+        await self._switch_mode()
+
     async def set_mode(self, mode: str) -> None:
+        # TODO: change function name, proposal = set_heat_cool_mode
         if mode == "heat":
             code = 0xE0
         elif mode == "cool":
@@ -712,4 +722,33 @@ class Memo(Channel):
                 await self._writer(msg)
                 msg = cls(self._address)
                 msg.start = msgcntr
+        await self._writer(msg)
+
+
+class SelectedProgram(Channel):
+    """
+    A selected program channel
+    """
+
+    _selected_program_str = None
+
+    def get_categories(self) -> list[str]:
+        return ["select"]
+
+    def get_class(self) -> None:
+        return None
+
+    def get_options(self) -> list:
+        return list(PROGRAM_SELECTION.values())
+
+    def get_selected_program(self) -> str:
+        return self._selected_program_str
+
+    async def set_selected_program(self, program_str: str) -> None:
+        self._selected_program_str = program_str
+        command_code = 0xB3
+        cls = commandRegistry.get_command(command_code, self._module.get_type())
+        index = list(PROGRAM_SELECTION.values()).index(program_str)
+        program = list(PROGRAM_SELECTION.keys())[index]
+        msg = cls(self._address, program)
         await self._writer(msg)

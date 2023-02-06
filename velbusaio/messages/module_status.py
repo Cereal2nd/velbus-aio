@@ -131,6 +131,7 @@ class ModuleStatusPirMessage(Message):
         self.high_temp_alarm: bool = False  # bit 8
         # in data[1] and data[2]
         self.light_value: int = 0
+        # in data[5]
         self.selected_program = 0
         self.selected_program_str = PROGRAM_SELECTION[self.selected_program]
 
@@ -150,6 +151,48 @@ class ModuleStatusPirMessage(Message):
         self.light_value = (data[1] << 8) + data[2]
         self.selected_program = data[5] & 0x03
         self.selected_program_str = PROGRAM_SELECTION[self.selected_program]
+
+    def data_to_binary(self):
+        """
+        :return: bytes
+        """
+        raise NotImplementedError
+
+
+@register(COMMAND_CODE, ["VMBGP4PIR", "VMBGP4PIR-2"])
+class ModuleStatusGP4PirMessage(Message):
+    def __init__(self, address=None):
+        Message.__init__(self)
+        # in data[0]
+        self.closed = []
+        self.enabled = []  # only 4 bits
+        # self.normal = []
+        self.locked = []
+        self.programenabled = []
+        self.selected_program = 0
+        self.selected_program_str = PROGRAM_SELECTION[self.selected_program]
+
+        # in data[1] and data[2]
+        self.light_value: int = 0
+        # in data[5]
+        self.selected_program = 0
+        self.selected_program_str = PROGRAM_SELECTION[self.selected_program]
+        # in data[6]
+        self.light_value_send_interval = 0
+
+    def populate(self, priority, address, rtr, data):
+        self.needs_low_priority(priority)
+        self.needs_no_rtr(rtr)
+        self.needs_data(data, 7)
+        self.set_attributes(priority, address, rtr)
+        self.closed = self.byte_to_channels(data[0])
+        self.enabled = self.byte_to_channels(data[1])
+        self.locked = self.byte_to_channels(data[3])
+        self.light_value = ((data[1] & 0x30) << 4) + data[2]
+        self.programenabled = self.byte_to_channels(data[4])
+        self.selected_program = data[5] & 0x03
+        self.selected_program_str = PROGRAM_SELECTION[self.selected_program]
+        self.light_value_send_interval = data[6]
 
     def data_to_binary(self):
         """
