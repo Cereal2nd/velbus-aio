@@ -275,6 +275,7 @@ class Button(Channel):
     _enabled = True
     _closed = False
     _led_state = None
+    _long = False
 
     def get_categories(self) -> list[str]:
         if self._enabled:
