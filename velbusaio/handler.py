@@ -101,7 +101,7 @@ class PacketHandler:
                 msg.populate(priority, address, rtr, data)
                 self._log.debug(f"Received {msg}")
                 # send the message to the modules
-                await (self._velbus.get_module(msg.address)).on_message(msg)
+                await self._velbus.get_module(msg.address).on_message(msg)
             else:
                 self._log.warning(
                     "NOT FOUND IN command_registry: addr={} cmd={} packet={}".format(
