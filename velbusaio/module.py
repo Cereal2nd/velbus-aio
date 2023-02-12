@@ -176,7 +176,7 @@ class Module:
         # The solution would be that this functions knows were the temperature channels are located
         # and/or what the max number of subaddresses are for each module.
         if self._sub_address == {}:
-            assert "No subaddresses defined"
+            raise Exception("No subaddresses defined")
         for sub in range(1, 4):
             if sub not in self._sub_address:
                 for i in range(((sub * 8) + 1), (((sub + 1) * 8) + 1)):
