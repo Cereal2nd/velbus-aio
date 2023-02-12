@@ -372,8 +372,12 @@ class Module:
                     channel = self._translate_channel_name(channel_id + _channel_offset)
                     if channel_id in message.closed:
                         await self._update_channel(channel, {"closed": True})
+                    if channel_id in message.closed_long:
+                        await self._update_channel(channel, {"long": True})
                     if channel_id in message.opened:
-                        await self._update_channel(channel, {"closed": False})
+                        await self._update_channel(
+                            channel, {"closed": False, "long": False}
+                        )
         elif isinstance(message, (ModuleStatusMessage)):
             for channel_id in range(1, 9):
                 channel = self._translate_channel_name(channel_id + _channel_offset)
