@@ -6,8 +6,10 @@ from velbusaio.const import MAXIMUM_MESSAGE_SIZE, MINIMUM_MESSAGE_SIZE
 # Copyright (c) 2017 Thomas Delaet
 # Copied from python-velbus (https://github.com/thomasdelaet/python-velbus)
 def checksum(data: Union[bytes, bytearray]) -> int:
-    assert len(data) >= MINIMUM_MESSAGE_SIZE - 2
-    assert len(data) <= MAXIMUM_MESSAGE_SIZE - 2
+    if len(data) < MINIMUM_MESSAGE_SIZE - 2:
+        raise ValueError("The message is shorter then expected")
+    if len(data) > MAXIMUM_MESSAGE_SIZE - 2:
+        raise ValueError("The message is longer then expected")
     __checksum = 0
     for data_byte in data:
         __checksum += data_byte
@@ -35,12 +37,13 @@ class BitSet:
         self._value = value
 
     def __getitem__(self, idx: int) -> bool:
-        assert 0 <= idx < 8
+        if idx > 8 or idx <= 0:
+            raise ValueError("The bitSet id is not within expected range 0 < id < 8")
         return bool((1 << idx) & self._value)
 
     def __setitem__(self, idx: int, value: bool) -> None:
-        assert 0 <= idx < 8
-        assert isinstance(value, bool)
+        if idx > 8 or idx <= 0:
+            raise ValueError("The bitSet id is not within expected range 0 < id < 8")
         mask = (0xFF ^ (1 << idx)) & self._value
         self._value = mask & (value << idx)
 
