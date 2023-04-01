@@ -9,11 +9,11 @@ from velbusaio.message import Message
 COMMAND_CODE = 0xD4
 
 
-@register(COMMAND_CODE)
+@register(COMMAND_CODE, ["VMBEL1", "VMBEL2", "VMBEL4", "VMBELO"])
 class EdgeSetCustomColor(Message):
     """
     send by:
-    received by: VMB4RYLD
+    received by: VMBEL1, VMBEL2, VMBEL4, VMBELO
     """
 
     def __init__(self, address=None):

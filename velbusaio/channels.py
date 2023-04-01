@@ -18,6 +18,7 @@ from velbusaio.const import (
     VOLUME_LITERS_HOUR,
 )
 from velbusaio.message import Message
+from velbusaio.messages.edge_set_color import SetEdgeColorMessage, CustomColorPriority
 from velbusaio.messages.module_status import PROGRAM_SELECTION
 
 if TYPE_CHECKING:
@@ -703,8 +704,42 @@ class EdgeLit(Channel):
     An EdgeLit channel
     """
 
-    # def get_categories(self):
-    #    return ["light"]
+    async def reset_color(self, left=True, top=True, right=True, bottom=True):
+        msg = SetEdgeColorMessage(self._address)
+        msg.apply_background_color = True
+        msg.color_idx = 0
+        msg.apply_to_left_edge = left
+        msg.apply_to_top_edge = top
+        msg.apply_to_right_edge = right
+        msg.apply_to_bottom_edge = bottom
+        msg.apply_to_all_pages = True
+        await self._writer(msg)
+
+    async def set_color(
+        self,
+        color_idx: int,
+        left=True,
+        top=True,
+        right=True,
+        bottom=True,
+        blinking=False,
+        priority=CustomColorPriority.LOW_PRIORITY,
+    ) -> None:
+        """
+        Send the turn off message
+        """
+
+        msg = SetEdgeColorMessage(self._address)
+        msg.apply_background_color = True
+        msg.background_blinking = blinking
+        msg.color_idx = color_idx
+        msg.apply_to_left_edge = left
+        msg.apply_to_top_edge = top
+        msg.apply_to_right_edge = right
+        msg.apply_to_bottom_edge = bottom
+        msg.apply_to_all_pages = True
+        msg.custom_color_priority = priority
+        await self._writer(msg)
 
 
 class Memo(Channel):
