@@ -4,6 +4,7 @@ requires = ["setuptools", "wheel"]
 [project]
 name        = "velbus-aio"
 license     = {text = "MIT"}
+version     = "2023.5.0"
 description = "Open-source home automation platform running on Python 3."
 readme      = "README.md"
 authors     = [
@@ -45,7 +46,7 @@ include-package-data = true
 exclude = ["tests", "tests.*", "examples"]
 
 [tool.bumpver]
-current_version = "2023.2.0"
+current_version = "2023.5.0"
 version_pattern = "YYYY.MM.INC0"
 commit_message = "bump version {old_version} -> {new_version}"
 commit = true
@@ -54,6 +55,7 @@ push = true
 
 [tool.bumpver.file_patterns]
 "pyproject.toml" = [
+    'version = "{version}"',
     'current_version = "{version}"',
 ]
 "setup.py" = [
