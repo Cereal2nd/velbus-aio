@@ -16,7 +16,6 @@ repos:
     hooks:
       - id: codespell
         args:
-          - --skip="./.*,*.csv,*.json"
           - --quiet-level=2
   - repo: https://github.com/PyCQA/flake8
     rev: 3.9.2

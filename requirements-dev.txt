@@ -1,4 +1,5 @@
 -e .
+bumpver
 
 pre-commit
 pytest
