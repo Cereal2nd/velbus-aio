@@ -42,7 +42,7 @@ zip-safe  = false
 include-package-data = true
 
 [tool.setuptools.packages.find]
-exclude = ["tests", "tests.*"]
+exclude = ["tests", "tests.*", "examples"]
 
 [tool.bumpver]
 current_version = "2023.2.0"
