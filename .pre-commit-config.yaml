@@ -37,6 +37,7 @@ repos:
           - --quiet
           - --format=custom
           - --configfile=pyproject.toml
+        additional_dependencies: ["bandit[toml]"]
         files: ^.*/.+\.py$
   - repo: https://github.com/PyCQA/isort
     rev: 5.12.0
