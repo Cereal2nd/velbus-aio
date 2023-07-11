@@ -45,6 +45,10 @@ include-package-data = true
 [tool.setuptools.packages.find]
 exclude = ["tests", "tests.*", "examples"]
 
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B301", "B403", "B323", "B104", "B110"]
+
 [tool.bumpver]
 current_version = "2023.5.0"
 version_pattern = "YYYY.MM.INC0"
