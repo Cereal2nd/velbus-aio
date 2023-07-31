@@ -2,15 +2,15 @@
 requires = ["setuptools", "wheel"]
 
 [project]
-name        = "velbus-aio"
-license     = {text = "MIT"}
-version     = "2023.5.0"
+name = "velbus-aio"
+license = {text = "MIT"}
+version = "2023.5.0"
 description = "Open-source home automation platform running on Python 3."
-readme      = "README.md"
-authors     = [
+readme = "README.md"
+authors = [
     {name = "Maikel Punie", email = "maikel.punie@gmail.com"}
 ]
-keywords    = ["home", "velbus", "automation"]
+keywords = ["home", "velbus", "automation"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -27,7 +27,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 requires-python = ">=3.8.0"
-dependencies    = [
+dependencies = [
     "pyserial>=3.5.0",
     "pyserial-asyncio>=0.5",
     "backoff>=1.10.0",
