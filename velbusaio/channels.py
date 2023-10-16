@@ -343,6 +343,8 @@ class ButtonCounter(Button):
     """
     A ButtonCounter channel
     This channel can act as a button and as a counter
+    => standard     this is the calculated value
+    => is_counter   this is the numeric value
     """
 
     _Unit = None
@@ -379,12 +381,12 @@ class ButtonCounter(Button):
         return round(val, 2)
 
     def get_unit(self) -> str | None:
-        if self._Unit in (
-            VOLUME_LITERS_HOUR,
-            VOLUME_CUBIC_METER_HOUR,
-            ENERGY_KILO_WATT_HOUR,
-        ):
-            return self._Unit
+        if self._Unit == VOLUME_LITERS_HOUR:
+            return "L"
+        if self._Unit == VOLUME_CUBIC_METER_HOUR:
+            return "m3"
+        if self._Unit == ENERGY_KILO_WATT_HOUR:
+            return "W"
         return None
 
     def get_counter_state(self) -> int:
