@@ -507,7 +507,7 @@ class Module:
         elif isinstance(message, MeteoRawMessage):
             await self._update_channel(11, {"cur": message.rain})
             await self._update_channel(12, {"cur": message.light})
-            await self._update_channel(23, {"cur": message.wind})
+            await self._update_channel(13, {"cur": message.wind})
 
         self._cache()
 
