@@ -68,6 +68,7 @@ class ChannelNamePart2Message(Message):
         "VMBKP",
         "VMBELPIR",
         "VMBDALI",
+        "VMB4AN",
     ],
 )
 class ChannelNamePart2Message2(ChannelNamePart2Message):

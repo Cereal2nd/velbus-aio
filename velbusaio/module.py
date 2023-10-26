@@ -72,7 +72,7 @@ from velbusaio.messages.dimmer_channel_status import DimmerChannelStatusMessage
 from velbusaio.messages.dimmer_status import DimmerStatusMessage
 from velbusaio.messages.fast_blinking_led import FastBlinkingLedMessage
 from velbusaio.messages.memory_data import MemoryDataMessage
-from velbusaio.messages.meteo_raw import MeteoRawMessage
+from velbusaio.messages.raw import MeteoRawMessage, SensorRawMessage
 from velbusaio.messages.module_status import (
     ModuleStatusGP4PirMessage,
     ModuleStatusMessage,
@@ -175,7 +175,7 @@ class Module:
         #
         # The solution would be that this functions knows were the temperature channels are located
         # and/or what the max number of subaddresses are for each module.
-        if self._sub_address == {}:
+        if self._sub_address == {} and self.loaded:
             raise Exception("No subaddresses defined")
         for sub in range(1, 4):
             if sub not in self._sub_address:

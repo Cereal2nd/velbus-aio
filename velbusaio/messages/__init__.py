@@ -50,7 +50,7 @@ from velbusaio.messages.memo_text import MemoTextMessage
 from velbusaio.messages.memory_data import MemoryDataMessage
 from velbusaio.messages.memory_data_block import MemoryDataBlockMessage
 from velbusaio.messages.memory_dump_request import MemoryDumpRequestMessage
-from velbusaio.messages.meteo_raw import MeteoRawMessage
+from velbusaio.messages.raw import MeteoRawMessage, SensorRawMessage
 from velbusaio.messages.module_status import ModuleStatusMessage, ModuleStatusMessage2
 from velbusaio.messages.module_status_request import ModuleStatusRequestMessage
 from velbusaio.messages.module_subtype import ModuleSubTypeMessage
