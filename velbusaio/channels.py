@@ -617,6 +617,7 @@ class SensorNumber(Channel):
     """
 
     _cur = 0
+    _unit = None
 
     def get_categories(self) -> list[str]:
         return ["sensor"]
@@ -625,7 +626,7 @@ class SensorNumber(Channel):
         return None
 
     def get_unit(self) -> None:
-        return None
+        return self._unit
 
     def get_state(self) -> float:
         return round(self._cur, 2)

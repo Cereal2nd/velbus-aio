@@ -508,6 +508,10 @@ class Module:
             await self._update_channel(11, {"cur": message.rain})
             await self._update_channel(12, {"cur": message.light})
             await self._update_channel(13, {"cur": message.wind})
+        elif isinstance(message, SensorRawMessage):
+            await self._update_channel(
+                message.sensor, {"cur": message.value, "unit": message.unit}
+            )
 
         self._cache()
 
