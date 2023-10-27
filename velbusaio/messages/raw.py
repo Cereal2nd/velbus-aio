@@ -56,7 +56,7 @@ class SensorRawMessage(Message):
         self.needs_no_rtr(rtr)
         self.needs_data(data, 5)
         self.set_attributes(priority, address, rtr)
-        self.sensor = data[0] - 8
+        self.sensor = data[0]
         self.mode = data[1]
         self.value = (data[2] << 16) | (data[3] << 8) | data[4]
         if self.mode == 0:
