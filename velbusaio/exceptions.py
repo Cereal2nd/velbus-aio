@@ -4,7 +4,7 @@
 class VelbusException(Exception):
     """Velbus Exception."""
 
-    def __init__(self, value):
+    def __init__(self, value: str) -> None:
         Exception.__init__(self)
         self.value = value
 
@@ -13,10 +13,10 @@ class VelbusException(Exception):
 
 
 class VelbusConnectionFailed(VelbusException):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__("Connection setup failed")
 
 
 class VelbusConnectionTerminated(VelbusException):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__("Connection terminated")

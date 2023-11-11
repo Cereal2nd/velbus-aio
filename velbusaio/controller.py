@@ -200,7 +200,6 @@ class Velbus:
                 raise VelbusConnectionFailed() from err
         if test_connect:
             return
-
         # if auth is required send the auth key
         if auth:
             await self._protocol.write_auth_key(auth)

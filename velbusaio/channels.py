@@ -191,6 +191,9 @@ class Channel:
     def get_min(self) -> int:
         raise NotImplementedError()
 
+    def is_water(self) -> bool:
+        return False
+
     async def press(self) -> None:
         raise NotImplementedError()
 
@@ -394,6 +397,11 @@ class ButtonCounter(Button):
 
     def get_counter_unit(self) -> str:
         return self._Unit
+
+    def is_water(self) -> bool:
+        if self._counter and self._Unit == VOLUME_LITERS_HOUR:
+            return True
+        return False
 
 
 class Sensor(Button):
