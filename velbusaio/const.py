@@ -43,8 +43,8 @@ DEVICE_CLASS_TEMPERATURE: Final = "temperature"
 TEMP_CELSIUS: Final = "°C"
 ENERGY_KILO_WATT_HOUR: Final = "kWh"
 ENERGY_WATT_HOUR: Final = "Wh"
-VOLUME_CUBIC_METER: Final = "m3"  # Not an official constant at HA yet
-VOLUME_CUBIC_METER_HOUR: Final = "m3/h"  # Not an official constant at HA yet
+VOLUME_CUBIC_METER: Final = "m³"  # Not an official constant at HA yet
+VOLUME_CUBIC_METER_HOUR: Final = "m³/h"  # Not an official constant at HA yet
 VOLUME_LITERS: Final = "L"
 VOLUME_LITERS_HOUR: Final = "L/h"  # Not an official constant at HA yet
 
