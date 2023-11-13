@@ -91,6 +91,7 @@ from velbusaio.messages.slider_status import SliderStatusMessage
 from velbusaio.messages.slow_blinking_led import SlowBlinkingLedMessage
 from velbusaio.messages.temp_sensor_status import TempSensorStatusMessage
 from velbusaio.messages.update_led_status import UpdateLedStatusMessage
+from velbusaio.channels import Temperature as TemperatureChannelType
 
 
 class Module:
@@ -175,12 +176,14 @@ class Module:
         #
         # The solution would be that this functions knows were the temperature channels are located
         # and/or what the max number of subaddresses are for each module.
-        if self._sub_address == {} and self.loaded:
-            raise Exception("No subaddresses defined")
+        # if self._sub_address == {} and self.loaded:
+        #   raise Exception("No subaddresses defined")
         for sub in range(1, 4):
             if sub not in self._sub_address:
                 for i in range(((sub * 8) + 1), (((sub + 1) * 8) + 1)):
-                    if i in self._channels:
+                    if i in self._channels and not isinstance(
+                        self._channels[i], TemperatureChannelType
+                    ):
                         del self._channels[i]
 
     def _cache(self) -> None:
