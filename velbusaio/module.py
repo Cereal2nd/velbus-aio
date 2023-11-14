@@ -448,7 +448,7 @@ class Module:
                 await self._update_channel(
                     channel, {"closed": channel_id in message.closed}
                 )
-                if type(self._channels[channel]) == Button:
+                if type(self._channels[channel]) is Button:
                     # only treat 'enabled' if the channel is a Button
                     await self._update_channel(
                         channel, {"enabled": channel_id in message.enabled}
