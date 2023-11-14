@@ -9,7 +9,7 @@ from velbusaio.message import Message
 COMMAND_CODE = 0x07
 
 
-@register(COMMAND_CODE, ["VMBDME", "VMB4DC", "VMBDMI", "VMBDMI-R", "VMB1LED"])
+@register(COMMAND_CODE, ["VMB1DM", "VMBDME", "VMB4DC", "VMBDMI", "VMBDMI-R", "VMB1LED"])
 class SetDimmerMessage(Message):
     """
     send by:
