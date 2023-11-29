@@ -17,12 +17,12 @@ class SetDaylightSaving(Message):
     received by all modules
     """
 
-    def __init__(self, address=0x00):
+    def __init__(self, address=0x00) -> None:
         Message.__init__(self)
         self._ds = None
         self.set_defaults(address)
 
-    def set_defaults(self, address):
+    def set_defaults(self, address) -> None:
         if address is not None:
             self.set_address(address)
         self.set_low_priority()
@@ -30,7 +30,7 @@ class SetDaylightSaving(Message):
         lclt = time.localtime()
         self._ds = not lclt[8]
 
-    def populate(self, priority, address, rtr, data):
+    def populate(self, priority, address, rtr, data) -> None:
         """
         :return: None
         """
@@ -40,7 +40,7 @@ class SetDaylightSaving(Message):
         self.set_attributes(priority, address, rtr)
         self._ds = data[0]
 
-    def data_to_binary(self):
+    def data_to_binary(self) -> bytes:
         """
         :return: bytes
         """
