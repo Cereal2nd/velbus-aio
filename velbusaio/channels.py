@@ -135,6 +135,18 @@ class Channel:
             if k != "_writer" and k != "_on_status_update" and k != "_name_parts"
         }
 
+    def to_json(self) -> dict:
+        d = self.__dict__
+        return {
+            k: d[k]
+            for k in d
+            if k != "_writer"
+            and k != "_on_status_update"
+            and k != "_name_parts"
+            and k != "_module"
+            and k != "__name__"
+        }
+
     def __setstate__(self, state):
         self.__dict__.update(state)
         self._on_status_update = []
