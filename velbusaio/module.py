@@ -81,7 +81,7 @@ from velbusaio.messages.module_status import (
 )
 from velbusaio.messages.module_status_request import ModuleStatusRequestMessage
 from velbusaio.messages.module_subtype import ModuleSubTypeMessage
-from velbusaio.messages.module_type import ModuleTypeMessage
+from velbusaio.messages.module_type import ModuleTypeMessage, ModuleType2Message
 from velbusaio.messages.push_button_status import PushButtonStatusMessage
 from velbusaio.messages.read_data_from_memory import ReadDataFromMemoryMessage
 from velbusaio.messages.relay_status import RelayStatusMessage, RelayStatusMessage2

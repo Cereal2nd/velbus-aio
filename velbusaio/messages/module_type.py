@@ -66,18 +66,58 @@ class ModuleTypeMessage(Message):
         self.build_year = data[-2]
         self.build_week = data[-1]
 
-    def data_to_binary(self):
+
+@register(
+    COMMAND_CODE,
+    [
+        "VMB4RYLD-10",
+        "VMB4RYNO-10",
+        "VMB2BLE-10",
+        "VMB6PB-20",
+        "VMBEL1-20",
+        "VMBEL2-20",
+        "VMBEL4-20",
+        "VMBELO-20",
+        "VMBGP1-20",
+        "VMBGP2-20",
+        "VMBGP4-20",
+        "VMBGPO-20",
+        "VMBGPO-20",
+        "VMBEL4PIR-20",
+        "VMBGP4PIR-20",
+    ],
+)
+class ModuleType2Message(Message):
+    def __init__(self, address=None):
+        Message.__init__(self)
+        self.module_type = 0x00
+        self.led_on = []
+        self.led_slow_blinking = []
+        self.led_fast_blinking = []
+        self.serial = 0
+        self.memory_map_version = 0
+        self.build_year = 0
+        self.build_week = 0
+        self.term = 0
+        self.set_defaults(address)
+
+    def module_name(self):
         """
-        :return: bytes
+        :return: str
         """
-        return bytes(
-            [
-                COMMAND_CODE,
-                self.module_type,
-                self.channels_to_byte(self.led_on),
-                self.channels_to_byte(self.led_slow_blinking),
-                self.channels_to_byte(self.led_fast_blinking),
-                self.build_year,
-                self.build_week,
-            ]
-        )
+        return "Unknown"
+
+    def populate(self, priority, address, rtr, data):
+        """
+        :return: None
+        """
+        self.needs_low_priority(priority)
+        self.needs_no_rtr(rtr)
+        self.set_attributes(priority, address, rtr)
+        self.module_type = data[0]
+        if data[0] not in MODULES_WITHOUT_SERIAL:
+            (self.serial,) = struct.unpack(">L", bytes([0, 0, data[1], data[2]]))
+            self.memory_map_version = data[3]
+        self.build_year = data[-3]
+        self.build_week = data[-2]
+        self.term = data[-1]
