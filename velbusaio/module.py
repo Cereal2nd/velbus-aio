@@ -324,6 +324,7 @@ class Module:
                         "cmode": message.mode_str,
                         "cstatus": message.status_str,
                         "sleep_timer": message.sleep_timer,
+                        "cool_mode": message.cool_mode,
                     },
                 )
                 await self._channels[chan].maybe_update_temperature(
