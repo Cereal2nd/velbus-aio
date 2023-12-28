@@ -549,6 +549,9 @@ class Temperature(Channel):
     def get_climate_mode(self) -> str:
         return self._cstatus
 
+    def get_cool_mode(self) -> str:
+        return self._cool_mode
+
     async def set_temp(self, temp: float) -> None:
         cls = commandRegistry.get_command(0xE4, self._module.get_type())
         msg = cls(self._address)
