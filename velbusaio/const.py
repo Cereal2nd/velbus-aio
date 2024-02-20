@@ -1,6 +1,7 @@
 """
 Author: Maikel Punie <maikel.punie@gmail.com>
 """
+
 from __future__ import annotations
 
 from typing import Final

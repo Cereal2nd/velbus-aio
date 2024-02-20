@@ -1,6 +1,7 @@
 """
 :author: Maikel Punie <maikel.punie@gmail.com> and Thomas Delaet <thomas@delaet.org>
 """
+
 from __future__ import annotations
 
 MODULE_DIRECTORY = {

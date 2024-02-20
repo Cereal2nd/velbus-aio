@@ -1,6 +1,7 @@
 """
 :author: Frank van Breugel
 """
+
 from __future__ import annotations
 
 import struct
