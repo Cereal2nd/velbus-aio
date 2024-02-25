@@ -276,6 +276,10 @@ class Blind(Channel):
 
     async def set_position(self, position: int) -> None:
         # may not be supported by the module
+        if position == 100:
+            # at least VMB1BLS ignores command 0x1C with position 0x64
+            await self.close()
+            return
         cls = commandRegistry.get_command(0x1C, self._module.get_type())
         msg = cls(self._address)
         msg.channel = self._num
