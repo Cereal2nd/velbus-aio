@@ -1,6 +1,7 @@
 """
 :author: Thomas Delaet <thomas@delaet.org>
 """
+
 from __future__ import annotations
 
 from velbusaio.messages.blind_status import BlindStatusMessage, BlindStatusNgMessage

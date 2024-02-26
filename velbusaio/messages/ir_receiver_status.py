@@ -1,6 +1,7 @@
 """
 :author: David Danssaert <david.danssaert@gmail.com>
 """
+
 from __future__ import annotations
 
 from velbusaio.command_registry import register

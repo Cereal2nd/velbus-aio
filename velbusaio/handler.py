@@ -2,6 +2,7 @@
 Velbus packet handler
 :Author maikel punie <maikel.punie@gmail.com>
 """
+
 from __future__ import annotations
 
 import asyncio

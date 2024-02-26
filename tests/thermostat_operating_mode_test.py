@@ -2,6 +2,7 @@
 This test checks if with an incoming temp_sensor_status message the thermostat operating mode and
 sleep_timer values are correctly stored into the module's temperature channel.
 """
+
 import logging
 import pathlib
 
