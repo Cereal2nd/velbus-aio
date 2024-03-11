@@ -1,6 +1,7 @@
 """
 :author: Danny De Gaspari
 """
+
 from __future__ import annotations
 
 from velbusaio.command_registry import register

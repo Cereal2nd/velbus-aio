@@ -1,6 +1,7 @@
 """
 :author: Thomas Delaet <thomas@delaet.org>
 """
+
 from __future__ import annotations
 
 import struct

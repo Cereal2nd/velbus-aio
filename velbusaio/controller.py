@@ -1,6 +1,7 @@
 """
 Main interface for the velbusaio lib
 """
+
 from __future__ import annotations
 
 import asyncio
