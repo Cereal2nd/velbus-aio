@@ -111,7 +111,7 @@ class Module:
         build_week: int | None = None,
         cache_dir: str | None = None,
     ) -> Module:
-        if module_type == 0x45:
+        if module_type == 0x45 or module_type == 0x5A:
             return VmbDali(
                 module_address,
                 module_type,
