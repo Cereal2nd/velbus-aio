@@ -70,6 +70,7 @@ class ChannelNamePart3Message(Message):
         "VMBELPIR",
         "VMBDALI",
         "VMB4AN",
+        "VMB6PB-20",
     ],
 )
 class ChannelNamePart3Message2(ChannelNamePart3Message):
