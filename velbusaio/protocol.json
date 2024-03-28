@@ -623,198 +623,70 @@
       "Info": "4 channel relay module with normal open contacts",
       "Memory": {
         "Address": {
-          "00E3": {
-            "ModuleName": "0:Start"
-          },
-          "00E4": {
-            "ModuleName": "1"
-          },
-          "00E5": {
-            "ModuleName": "2"
-          },
-          "00E6": {
-            "ModuleName": "3"
-          },
-          "00E7": {
-            "ModuleName": "4"
-          },
-          "00E8": {
-            "ModuleName": "5"
-          },
-          "00E9": {
-            "ModuleName": "6"
-          },
-          "00EA": {
-            "ModuleName": "7"
-          },
-          "00EB": {
-            "ModuleName": "8"
-          },
-          "00EC": {
-            "ModuleName": "9"
-          },
-          "00ED": {
-            "ModuleName": "10"
-          },
-          "00EE": {
-            "ModuleName": "11"
-          },
-          "00EF": {
-            "ModuleName": "12"
-          },
-          "01E3": {
-            "ModuleName": "13"
-          },
-          "01E4": {
-            "ModuleName": "14"
-          },
-          "01E5": {
-            "ModuleName": "15"
-          },
-          "01E6": {
-            "ModuleName": "16"
-          },
-          "01E7": {
-            "ModuleName": "17"
-          },
-          "01E8": {
-            "ModuleName": "18"
-          },
-          "01E9": {
-            "ModuleName": "19"
-          },
-          "01EA": {
-            "ModuleName": "20"
-          },
-          "01EB": {
-            "ModuleName": "21"
-          },
-          "01EC": {
-            "ModuleName": "22"
-          },
-          "01ED": {
-            "ModuleName": "23"
-          },
-          "01EE": {
-            "ModuleName": "24"
-          },
-          "01EF": {
-            "ModuleName": "25"
-          },
-          "02E3": {
-            "ModuleName": "26"
-          },
-          "02E4": {
-            "ModuleName": "27"
-          },
-          "02E5": {
-            "ModuleName": "28"
-          },
-          "02E6": {
-            "ModuleName": "29"
-          },
-          "02E7": {
-            "ModuleName": "30"
-          },
-          "02E8": {
-            "ModuleName": "31"
-          },
-          "02E9": {
-            "ModuleName": "32"
-          },
-          "02EA": {
-            "ModuleName": "33"
-          },
-          "02EB": {
-            "ModuleName": "34"
-          },
-          "02EC": {
-            "ModuleName": "35"
-          },
-          "02ED": {
-            "ModuleName": "36"
-          },
-          "02EE": {
-            "ModuleName": "37"
-          },
-          "02EF": {
-            "ModuleName": "38"
-          },
-          "03E3": {
-            "ModuleName": "39"
-          },
-          "03E4": {
-            "ModuleName": "40"
-          },
-          "03E5": {
-            "ModuleName": "41"
-          },
-          "03E6": {
-            "ModuleName": "42"
-          },
-          "03E7": {
-            "ModuleName": "43"
-          },
-          "03E8": {
-            "ModuleName": "44"
-          },
-          "03E9": {
-            "ModuleName": "45"
-          },
-          "03EA": {
-            "ModuleName": "46"
-          },
-          "03EB": {
-            "ModuleName": "47"
-          },
-          "03EC": {
-            "ModuleName": "48"
-          },
-          "03ED": {
-            "ModuleName": "49"
-          },
-          "03EE": {
-            "ModuleName": "50"
-          },
-          "03EF": {
-            "ModuleName": "51"
-          },
-          "04E3": {
-            "ModuleName": "52"
-          },
-          "04E4": {
-            "ModuleName": "53"
-          },
-          "04E5": {
-            "ModuleName": "54"
-          },
-          "04E6": {
-            "ModuleName": "55"
-          },
-          "04E7": {
-            "ModuleName": "56"
-          },
-          "04E8": {
-            "ModuleName": "57"
-          },
-          "04E9": {
-            "ModuleName": "58"
-          },
-          "04EA": {
-            "ModuleName": "59"
-          },
-          "04EB": {
-            "ModuleName": "60"
-          },
-          "04EC": {
-            "ModuleName": "61"
-          },
-          "04ED": {
-            "ModuleName": "62"
-          },
-          "04EE": {
-            "ModuleName": "64:Save"
-          }
+          "00E3": { "ModuleName": "0:Start" },
+          "00E4": { "ModuleName": "1" },
+          "00E5": { "ModuleName": "2" },
+          "00E6": { "ModuleName": "3" },
+          "00E7": { "ModuleName": "4" },
+          "00E8": { "ModuleName": "5" },
+          "00E9": { "ModuleName": "6" },
+          "00EA": { "ModuleName": "7" },
+          "00EB": { "ModuleName": "8" },
+          "00EC": { "ModuleName": "9" },
+          "00ED": { "ModuleName": "10" },
+          "00EE": { "ModuleName": "11" },
+          "00EF": { "ModuleName": "12" },
+          "01E3": { "ModuleName": "13" },
+          "01E4": { "ModuleName": "14" },
+          "01E5": { "ModuleName": "15" },
+          "01E6": { "ModuleName": "16" },
+          "01E7": { "ModuleName": "17" },
+          "01E8": { "ModuleName": "18" },
+          "01E9": { "ModuleName": "19" },
+          "01EA": { "ModuleName": "20" },
+          "01EB": { "ModuleName": "21" },
+          "01EC": { "ModuleName": "22" },
+          "01ED": { "ModuleName": "23" },
+          "01EE": { "ModuleName": "24" },
+          "01EF": { "ModuleName": "25" },
+          "02E3": { "ModuleName": "26" },
+          "02E4": { "ModuleName": "27" },
+          "02E5": { "ModuleName": "28" },
+          "02E6": { "ModuleName": "29" },
+          "02E7": { "ModuleName": "30" },
+          "02E8": { "ModuleName": "31" },
+          "02E9": { "ModuleName": "32" },
+          "02EA": { "ModuleName": "33" },
+          "02EB": { "ModuleName": "34" },
+          "02EC": { "ModuleName": "35" },
+          "02ED": { "ModuleName": "36" },
+          "02EE": { "ModuleName": "37" },
+          "02EF": { "ModuleName": "38" },
+          "03E3": { "ModuleName": "39" },
+          "03E4": { "ModuleName": "40" },
+          "03E5": { "ModuleName": "41" },
+          "03E6": { "ModuleName": "42" },
+          "03E7": { "ModuleName": "43" },
+          "03E8": { "ModuleName": "44" },
+          "03E9": { "ModuleName": "45" },
+          "03EA": { "ModuleName": "46" },
+          "03EB": { "ModuleName": "47" },
+          "03EC": { "ModuleName": "48" },
+          "03ED": { "ModuleName": "49" },
+          "03EE": { "ModuleName": "50" },
+          "03EF": { "ModuleName": "51" },
+          "04E3": { "ModuleName": "52" },
+          "04E4": { "ModuleName": "53" },
+          "04E5": { "ModuleName": "54" },
+          "04E6": { "ModuleName": "55" },
+          "04E7": { "ModuleName": "56" },
+          "04E8": { "ModuleName": "57" },
+          "04E9": { "ModuleName": "58" },
+          "04EA": { "ModuleName": "59" },
+          "04EB": { "ModuleName": "60" },
+          "04EC": { "ModuleName": "61" },
+          "04ED": { "ModuleName": "62" },
+          "04EE": { "ModuleName": "64:Save" }
         },
         "ModuleName": "00E3-00EF;01E3-01EF;02E3-02EF;03E3-03EF;04E3-04EE",
         "StatusAddress": "00E3;00E4;00E5;00E6;00E7;00E8;00E9;00EA;00EB;00EC;00ED;00EE;00EF;01E3;01E4;01E5;01E6;01E7;01E8;01E9;01EA;01EB;01EC;01ED;01EE;01EF;02E3;02E4;02E5;02E6;02E7;02E8;02E9;02EA;02EB;02EC;02ED;02EE;02EF;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;04E3;04E4;04E5;04E6;04E7;04E8;04E9;04EA;04EB;04EC;04ED;04EE"
@@ -848,102 +720,38 @@
       "Info": "0/1 to 10V dimmer controller module",
       "Memory": {
         "Address": {
-          "00E0": {
-            "ModuleName": "0:Start"
-          },
-          "00E1": {
-            "ModuleName": "1"
-          },
-          "00E2": {
-            "ModuleName": "2"
-          },
-          "00E3": {
-            "ModuleName": "3"
-          },
-          "00E4": {
-            "ModuleName": "4"
-          },
-          "00E5": {
-            "ModuleName": "5"
-          },
-          "00E6": {
-            "ModuleName": "6"
-          },
-          "00E7": {
-            "ModuleName": "7"
-          },
-          "00E8": {
-            "ModuleName": "8"
-          },
-          "00E9": {
-            "ModuleName": "9"
-          },
-          "00EA": {
-            "ModuleName": "10"
-          },
-          "00EB": {
-            "ModuleName": "11"
-          },
-          "00EC": {
-            "ModuleName": "12"
-          },
-          "00ED": {
-            "ModuleName": "13"
-          },
-          "00EE": {
-            "ModuleName": "14"
-          },
-          "00EF": {
-            "ModuleName": "15"
-          },
-          "01E0": {
-            "ModuleName": "16"
-          },
-          "01E1": {
-            "ModuleName": "17"
-          },
-          "01E2": {
-            "ModuleName": "18"
-          },
-          "01E3": {
-            "ModuleName": "19"
-          },
-          "01E4": {
-            "ModuleName": "20"
-          },
-          "01E5": {
-            "ModuleName": "21"
-          },
-          "01E6": {
-            "ModuleName": "22"
-          },
-          "01E7": {
-            "ModuleName": "23"
-          },
-          "01E8": {
-            "ModuleName": "24"
-          },
-          "01E9": {
-            "ModuleName": "25"
-          },
-          "01EA": {
-            "ModuleName": "26"
-          },
-          "01EB": {
-            "ModuleName": "27"
-          },
-          "01EC": {
-            "ModuleName": "28"
-          },
-          "01ED": {
-            "ModuleName": "29"
-          },
-          "01EE": {
-            "ModuleName": "30"
-          },
-          "01EF": {
-            "ModuleName": "32:Save"
-          }
+          "00E0": { "ModuleName": "0:Start" },
+          "00E1": { "ModuleName": "1" },
+          "00E2": { "ModuleName": "2" },
+          "00E3": { "ModuleName": "3" },
+          "00E4": { "ModuleName": "4" },
+          "00E5": { "ModuleName": "5" },
+          "00E6": { "ModuleName": "6" },
+          "00E7": { "ModuleName": "7" },
+          "00E8": { "ModuleName": "8" },
+          "00E9": { "ModuleName": "9" },
+          "00EA": { "ModuleName": "10" },
+          "00EB": { "ModuleName": "11" },
+          "00EC": { "ModuleName": "12" },
+          "00ED": { "ModuleName": "13" },
+          "00EE": { "ModuleName": "14" },
+          "00EF": { "ModuleName": "15" },
+          "01E0": { "ModuleName": "16" },
+          "01E1": { "ModuleName": "17" },
+          "01E2": { "ModuleName": "18" },
+          "01E3": { "ModuleName": "19" },
+          "01E4": { "ModuleName": "20" },
+          "01E5": { "ModuleName": "21" },
+          "01E6": { "ModuleName": "22" },
+          "01E7": { "ModuleName": "23" },
+          "01E8": { "ModuleName": "24" },
+          "01E9": { "ModuleName": "25" },
+          "01EA": { "ModuleName": "26" },
+          "01EB": { "ModuleName": "27" },
+          "01EC": { "ModuleName": "28" },
+          "01ED": { "ModuleName": "29" },
+          "01EE": { "ModuleName": "30" },
+          "01EF": { "ModuleName": "32:Save" }
         },
         "ModuleName": "00E0-00EF;01E0-01EF",
         "StatusAddress": "00E0;00E1;00E2;00E3;00E4;00E5;00E6;00E7;00E8;00E9;00EA;00EB;00EC;00ED;00EE;00EF;01E0;01E1;01E2;01E3;01E4;01E5;01E6;01E7;01E8;01E9;01EA;01EB;01EC;01ED;01EE;01EF"
@@ -979,198 +787,70 @@
       "Info": "Velbus dimmer for resistive or inductive load",
       "Memory": {
         "Address": {
-          "00B0": {
-            "ModuleName": "0:Start"
-          },
-          "00B1": {
-            "ModuleName": "1"
-          },
-          "00B2": {
-            "ModuleName": "2"
-          },
-          "00B3": {
-            "ModuleName": "3"
-          },
-          "00B4": {
-            "ModuleName": "4"
-          },
-          "00B5": {
-            "ModuleName": "5"
-          },
-          "00B6": {
-            "ModuleName": "6"
-          },
-          "00B7": {
-            "ModuleName": "7"
-          },
-          "00B8": {
-            "ModuleName": "8"
-          },
-          "00B9": {
-            "ModuleName": "9"
-          },
-          "00BA": {
-            "ModuleName": "10"
-          },
-          "00BB": {
-            "ModuleName": "11"
-          },
-          "00BC": {
-            "ModuleName": "12"
-          },
-          "00BD": {
-            "ModuleName": "13"
-          },
-          "00BE": {
-            "ModuleName": "14"
-          },
-          "00BF": {
-            "ModuleName": "15"
-          },
-          "00C0": {
-            "ModuleName": "16"
-          },
-          "00C1": {
-            "ModuleName": "17"
-          },
-          "00C2": {
-            "ModuleName": "18"
-          },
-          "00C3": {
-            "ModuleName": "19"
-          },
-          "00C4": {
-            "ModuleName": "20"
-          },
-          "00C5": {
-            "ModuleName": "21"
-          },
-          "00C6": {
-            "ModuleName": "22"
-          },
-          "00C7": {
-            "ModuleName": "23"
-          },
-          "00C8": {
-            "ModuleName": "24"
-          },
-          "00C9": {
-            "ModuleName": "25"
-          },
-          "00CA": {
-            "ModuleName": "26"
-          },
-          "00CB": {
-            "ModuleName": "27"
-          },
-          "00CC": {
-            "ModuleName": "28"
-          },
-          "00CD": {
-            "ModuleName": "29"
-          },
-          "00CE": {
-            "ModuleName": "30"
-          },
-          "00CF": {
-            "ModuleName": "31"
-          },
-          "00D0": {
-            "ModuleName": "32"
-          },
-          "00D1": {
-            "ModuleName": "33"
-          },
-          "00D2": {
-            "ModuleName": "34"
-          },
-          "00D3": {
-            "ModuleName": "35"
-          },
-          "00D4": {
-            "ModuleName": "36"
-          },
-          "00D5": {
-            "ModuleName": "37"
-          },
-          "00D6": {
-            "ModuleName": "38"
-          },
-          "00D7": {
-            "ModuleName": "39"
-          },
-          "00D8": {
-            "ModuleName": "40"
-          },
-          "00D9": {
-            "ModuleName": "41"
-          },
-          "00DA": {
-            "ModuleName": "42"
-          },
-          "00DB": {
-            "ModuleName": "43"
-          },
-          "00DC": {
-            "ModuleName": "44"
-          },
-          "00DD": {
-            "ModuleName": "45"
-          },
-          "00DE": {
-            "ModuleName": "46"
-          },
-          "00DF": {
-            "ModuleName": "47"
-          },
-          "00E0": {
-            "ModuleName": "48"
-          },
-          "00E1": {
-            "ModuleName": "49"
-          },
-          "00E2": {
-            "ModuleName": "50"
-          },
-          "00E3": {
-            "ModuleName": "51"
-          },
-          "00E4": {
-            "ModuleName": "52"
-          },
-          "00E5": {
-            "ModuleName": "53"
-          },
-          "00E6": {
-            "ModuleName": "54"
-          },
-          "00E7": {
-            "ModuleName": "55"
-          },
-          "00E8": {
-            "ModuleName": "56"
-          },
-          "00E9": {
-            "ModuleName": "57"
-          },
-          "00EA": {
-            "ModuleName": "58"
-          },
-          "00EB": {
-            "ModuleName": "59"
-          },
-          "00EC": {
-            "ModuleName": "60"
-          },
-          "00ED": {
-            "ModuleName": "61"
-          },
-          "00EE": {
-            "ModuleName": "62"
-          },
-          "00EF": {
-            "ModuleName": "64:Save"
-          }
+          "00B0": { "ModuleName": "0:Start" },
+          "00B1": { "ModuleName": "1" },
+          "00B2": { "ModuleName": "2" },
+          "00B3": { "ModuleName": "3" },
+          "00B4": { "ModuleName": "4" },
+          "00B5": { "ModuleName": "5" },
+          "00B6": { "ModuleName": "6" },
+          "00B7": { "ModuleName": "7" },
+          "00B8": { "ModuleName": "8" },
+          "00B9": { "ModuleName": "9" },
+          "00BA": { "ModuleName": "10" },
+          "00BB": { "ModuleName": "11" },
+          "00BC": { "ModuleName": "12" },
+          "00BD": { "ModuleName": "13" },
+          "00BE": { "ModuleName": "14" },
+          "00BF": { "ModuleName": "15" },
+          "00C0": { "ModuleName": "16" },
+          "00C1": { "ModuleName": "17" },
+          "00C2": { "ModuleName": "18" },
+          "00C3": { "ModuleName": "19" },
+          "00C4": { "ModuleName": "20" },
+          "00C5": { "ModuleName": "21" },
+          "00C6": { "ModuleName": "22" },
+          "00C7": { "ModuleName": "23" },
+          "00C8": { "ModuleName": "24" },
+          "00C9": { "ModuleName": "25" },
+          "00CA": { "ModuleName": "26" },
+          "00CB": { "ModuleName": "27" },
+          "00CC": { "ModuleName": "28" },
+          "00CD": { "ModuleName": "29" },
+          "00CE": { "ModuleName": "30" },
+          "00CF": { "ModuleName": "31" },
+          "00D0": { "ModuleName": "32" },
+          "00D1": { "ModuleName": "33" },
+          "00D2": { "ModuleName": "34" },
+          "00D3": { "ModuleName": "35" },
+          "00D4": { "ModuleName": "36" },
+          "00D5": { "ModuleName": "37" },
+          "00D6": { "ModuleName": "38" },
+          "00D7": { "ModuleName": "39" },
+          "00D8": { "ModuleName": "40" },
+          "00D9": { "ModuleName": "41" },
+          "00DA": { "ModuleName": "42" },
+          "00DB": { "ModuleName": "43" },
+          "00DC": { "ModuleName": "44" },
+          "00DD": { "ModuleName": "45" },
+          "00DE": { "ModuleName": "46" },
+          "00DF": { "ModuleName": "47" },
+          "00E0": { "ModuleName": "48" },
+          "00E1": { "ModuleName": "49" },
+          "00E2": { "ModuleName": "50" },
+          "00E3": { "ModuleName": "51" },
+          "00E4": { "ModuleName": "52" },
+          "00E5": { "ModuleName": "53" },
+          "00E6": { "ModuleName": "54" },
+          "00E7": { "ModuleName": "55" },
+          "00E8": { "ModuleName": "56" },
+          "00E9": { "ModuleName": "57" },
+          "00EA": { "ModuleName": "58" },
+          "00EB": { "ModuleName": "59" },
+          "00EC": { "ModuleName": "60" },
+          "00ED": { "ModuleName": "61" },
+          "00EE": { "ModuleName": "62" },
+          "00EF": { "ModuleName": "64:Save" }
         },
         "ModuleName": "00B0-00EF",
         "StatusAddress": "00B0;00B1;00B2;00B3;00B4;00B5;00B6;00B7;00B8;00B9;00BA;00BB;00BC;00BD;00BE;00BF;00C0;00C1;00C2;00C3;00C4;00C5;00C6;00C7;00C8;00C9;00CA;00CB;00CC;00CD;00CE;00CF;00D0;00D1;00D2;00D3;00D4;00D5;00D6;00D7;00D8;00D9;00DA;00DB;00DC;00DD;00DE;00DF;00E0;00E1;00E2;00E3;00E4;00E5;00E6;00E7;00E8;00E9;00EA;00EB;00EC;00ED;00EE;00EF"
@@ -1224,198 +904,70 @@
       "Info": "Push button interface module",
       "Memory": {
         "Address": {
-          "03C0": {
-            "ModuleName": "0:Start"
-          },
-          "03C1": {
-            "ModuleName": "1"
-          },
-          "03C2": {
-            "ModuleName": "2"
-          },
-          "03C3": {
-            "ModuleName": "3"
-          },
-          "03C4": {
-            "ModuleName": "4"
-          },
-          "03C5": {
-            "ModuleName": "5"
-          },
-          "03C6": {
-            "ModuleName": "6"
-          },
-          "03C7": {
-            "ModuleName": "7"
-          },
-          "03C8": {
-            "ModuleName": "8"
-          },
-          "03C9": {
-            "ModuleName": "9"
-          },
-          "03CA": {
-            "ModuleName": "10"
-          },
-          "03CB": {
-            "ModuleName": "11"
-          },
-          "03CC": {
-            "ModuleName": "12"
-          },
-          "03CD": {
-            "ModuleName": "13"
-          },
-          "03CE": {
-            "ModuleName": "14"
-          },
-          "03CF": {
-            "ModuleName": "15"
-          },
-          "03D0": {
-            "ModuleName": "16"
-          },
-          "03D1": {
-            "ModuleName": "17"
-          },
-          "03D2": {
-            "ModuleName": "18"
-          },
-          "03D3": {
-            "ModuleName": "19"
-          },
-          "03D4": {
-            "ModuleName": "20"
-          },
-          "03D5": {
-            "ModuleName": "21"
-          },
-          "03D6": {
-            "ModuleName": "22"
-          },
-          "03D7": {
-            "ModuleName": "23"
-          },
-          "03D8": {
-            "ModuleName": "24"
-          },
-          "03D9": {
-            "ModuleName": "25"
-          },
-          "03DA": {
-            "ModuleName": "26"
-          },
-          "03DB": {
-            "ModuleName": "27"
-          },
-          "03DC": {
-            "ModuleName": "28"
-          },
-          "03DD": {
-            "ModuleName": "29"
-          },
-          "03DE": {
-            "ModuleName": "30"
-          },
-          "03DF": {
-            "ModuleName": "31"
-          },
-          "03E0": {
-            "ModuleName": "32"
-          },
-          "03E1": {
-            "ModuleName": "33"
-          },
-          "03E2": {
-            "ModuleName": "34"
-          },
-          "03E3": {
-            "ModuleName": "35"
-          },
-          "03E4": {
-            "ModuleName": "36"
-          },
-          "03E5": {
-            "ModuleName": "37"
-          },
-          "03E6": {
-            "ModuleName": "38"
-          },
-          "03E7": {
-            "ModuleName": "39"
-          },
-          "03E8": {
-            "ModuleName": "40"
-          },
-          "03E9": {
-            "ModuleName": "41"
-          },
-          "03EA": {
-            "ModuleName": "42"
-          },
-          "03EB": {
-            "ModuleName": "43"
-          },
-          "03EC": {
-            "ModuleName": "44"
-          },
-          "03ED": {
-            "ModuleName": "45"
-          },
-          "03EE": {
-            "ModuleName": "46"
-          },
-          "03EF": {
-            "ModuleName": "47"
-          },
-          "03F0": {
-            "ModuleName": "48"
-          },
-          "03F1": {
-            "ModuleName": "49"
-          },
-          "03F2": {
-            "ModuleName": "50"
-          },
-          "03F3": {
-            "ModuleName": "51"
-          },
-          "03F4": {
-            "ModuleName": "52"
-          },
-          "03F5": {
-            "ModuleName": "53"
-          },
-          "03F6": {
-            "ModuleName": "54"
-          },
-          "03F7": {
-            "ModuleName": "55"
-          },
-          "03F8": {
-            "ModuleName": "56"
-          },
-          "03F9": {
-            "ModuleName": "57"
-          },
-          "03FA": {
-            "ModuleName": "58"
-          },
-          "03FB": {
-            "ModuleName": "59"
-          },
-          "03FC": {
-            "ModuleName": "60"
-          },
-          "03FD": {
-            "ModuleName": "61"
-          },
-          "03FE": {
-            "ModuleName": "62"
-          },
-          "03FF": {
-            "ModuleName": "64:Save"
-          }
+          "03C0": { "ModuleName": "0:Start" },
+          "03C1": { "ModuleName": "1" },
+          "03C2": { "ModuleName": "2" },
+          "03C3": { "ModuleName": "3" },
+          "03C4": { "ModuleName": "4" },
+          "03C5": { "ModuleName": "5" },
+          "03C6": { "ModuleName": "6" },
+          "03C7": { "ModuleName": "7" },
+          "03C8": { "ModuleName": "8" },
+          "03C9": { "ModuleName": "9" },
+          "03CA": { "ModuleName": "10" },
+          "03CB": { "ModuleName": "11" },
+          "03CC": { "ModuleName": "12" },
+          "03CD": { "ModuleName": "13" },
+          "03CE": { "ModuleName": "14" },
+          "03CF": { "ModuleName": "15" },
+          "03D0": { "ModuleName": "16" },
+          "03D1": { "ModuleName": "17" },
+          "03D2": { "ModuleName": "18" },
+          "03D3": { "ModuleName": "19" },
+          "03D4": { "ModuleName": "20" },
+          "03D5": { "ModuleName": "21" },
+          "03D6": { "ModuleName": "22" },
+          "03D7": { "ModuleName": "23" },
+          "03D8": { "ModuleName": "24" },
+          "03D9": { "ModuleName": "25" },
+          "03DA": { "ModuleName": "26" },
+          "03DB": { "ModuleName": "27" },
+          "03DC": { "ModuleName": "28" },
+          "03DD": { "ModuleName": "29" },
+          "03DE": { "ModuleName": "30" },
+          "03DF": { "ModuleName": "31" },
+          "03E0": { "ModuleName": "32" },
+          "03E1": { "ModuleName": "33" },
+          "03E2": { "ModuleName": "34" },
+          "03E3": { "ModuleName": "35" },
+          "03E4": { "ModuleName": "36" },
+          "03E5": { "ModuleName": "37" },
+          "03E6": { "ModuleName": "38" },
+          "03E7": { "ModuleName": "39" },
+          "03E8": { "ModuleName": "40" },
+          "03E9": { "ModuleName": "41" },
+          "03EA": { "ModuleName": "42" },
+          "03EB": { "ModuleName": "43" },
+          "03EC": { "ModuleName": "44" },
+          "03ED": { "ModuleName": "45" },
+          "03EE": { "ModuleName": "46" },
+          "03EF": { "ModuleName": "47" },
+          "03F0": { "ModuleName": "48" },
+          "03F1": { "ModuleName": "49" },
+          "03F2": { "ModuleName": "50" },
+          "03F3": { "ModuleName": "51" },
+          "03F4": { "ModuleName": "52" },
+          "03F5": { "ModuleName": "53" },
+          "03F6": { "ModuleName": "54" },
+          "03F7": { "ModuleName": "55" },
+          "03F8": { "ModuleName": "56" },
+          "03F9": { "ModuleName": "57" },
+          "03FA": { "ModuleName": "58" },
+          "03FB": { "ModuleName": "59" },
+          "03FC": { "ModuleName": "60" },
+          "03FD": { "ModuleName": "61" },
+          "03FE": { "ModuleName": "62" },
+          "03FF": { "ModuleName": "64:Save" }
         },
         "ModuleName": "03C0-03FF",
         "StatusAddress": "03C0;03C1;03C2;03C3;03C4;03C5;03C6;03C7;03C8;03C9;03CA;03CB;03CC;03CD;03CE;03CF;03D0;03D1;03D2;03D3;03D4;03D5;03D6;03D7;03D8;03D9;03DA;03DB;03DC;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;03F0;03F1;03F2;03F3;03F4;03F5;03F6;03F7;03F8;03F9;03FA;03FB;03FC;03FD;03FE;03FF"
@@ -10248,6 +9800,48 @@
       "Type": "VMB2BLE-10"
     },
     "4B": {
+      "Channels": {
+        "01": {
+          "Editable": "yes",
+          "Name": "Dimmer 1",
+          "Type": "Dimmer"
+        },
+        "02": {
+          "Editable": "yes",
+          "Name": "Dimmer 2",
+          "Type": "Dimmer"
+        },
+        "03": {
+          "Editable": "yes",
+          "Name": "Dimmer 3",
+          "Type": "Dimmer"
+        },
+        "04": {
+          "Editable": "yes",
+          "Name": "Dimmer 4",
+          "Type": "Dimmer"
+        },
+        "05": {
+          "Editable": "yes",
+          "Name": "Dimmer 4",
+          "Type": "Dimmer"
+        },
+        "06": {
+          "Editable": "yes",
+          "Name": "Dimmer 6",
+          "Type": "Dimmer"
+        },
+        "07": {
+          "Editable": "yes",
+          "Name": "Dimmer 7",
+          "Type": "Dimmer"
+        },
+        "08": {
+          "Editable": "yes",
+          "Name": "Dimmer 8",
+          "Type": "Dimmer"
+        }
+      },
       "File": "protocol_vmb8dc_20.txt",
       "Info": "8 channel 0 to 10 V dimmer control module",
       "Type": "VMB8DC-20"
@@ -10299,198 +9893,70 @@
       "Info": "6 button interface module",
       "Memory": {
         "Address": {
-          "03BC": {
-            "ModuleName": "0:Start"
-          },
-          "03BD": {
-            "ModuleName": "1"
-          },
-          "03BE": {
-            "ModuleName": "2"
-          },
-          "03BF": {
-            "ModuleName": "3"
-          },
-          "03C0": {
-            "ModuleName": "4"
-          },
-          "03C1": {
-            "ModuleName": "5"
-          },
-          "03C2": {
-            "ModuleName": "6"
-          },
-          "03C3": {
-            "ModuleName": "7"
-          },
-          "03C4": {
-            "ModuleName": "8"
-          },
-          "03C5": {
-            "ModuleName": "9"
-          },
-          "03C6": {
-            "ModuleName": "10"
-          },
-          "03C7": {
-            "ModuleName": "11"
-          },
-          "03C8": {
-            "ModuleName": "12"
-          },
-          "03C9": {
-            "ModuleName": "13"
-          },
-          "03CA": {
-            "ModuleName": "14"
-          },
-          "03CB": {
-            "ModuleName": "15"
-          },
-          "03CC": {
-            "ModuleName": "16"
-          },
-          "03CD": {
-            "ModuleName": "17"
-          },
-          "03CE": {
-            "ModuleName": "18"
-          },
-          "03CF": {
-            "ModuleName": "19"
-          },
-          "03D0": {
-            "ModuleName": "20"
-          },
-          "03D1": {
-            "ModuleName": "21"
-          },
-          "03D2": {
-            "ModuleName": "22"
-          },
-          "03D3": {
-            "ModuleName": "23"
-          },
-          "03D4": {
-            "ModuleName": "24"
-          },
-          "03D5": {
-            "ModuleName": "25"
-          },
-          "03D6": {
-            "ModuleName": "26"
-          },
-          "03D7": {
-            "ModuleName": "27"
-          },
-          "03D8": {
-            "ModuleName": "28"
-          },
-          "03D9": {
-            "ModuleName": "29"
-          },
-          "03DA": {
-            "ModuleName": "30"
-          },
-          "03DB": {
-            "ModuleName": "31"
-          },
-          "03DC": {
-            "ModuleName": "32"
-          },
-          "03DD": {
-            "ModuleName": "33"
-          },
-          "03DE": {
-            "ModuleName": "34"
-          },
-          "03DF": {
-            "ModuleName": "35"
-          },
-          "03E0": {
-            "ModuleName": "36"
-          },
-          "03E1": {
-            "ModuleName": "37"
-          },
-          "03E2": {
-            "ModuleName": "38"
-          },
-          "03E3": {
-            "ModuleName": "39"
-          },
-          "03E4": {
-            "ModuleName": "40"
-          },
-          "03E5": {
-            "ModuleName": "41"
-          },
-          "03E6": {
-            "ModuleName": "42"
-          },
-          "03E7": {
-            "ModuleName": "43"
-          },
-          "03E8": {
-            "ModuleName": "44"
-          },
-          "03E9": {
-            "ModuleName": "45"
-          },
-          "03EA": {
-            "ModuleName": "46"
-          },
-          "03EB": {
-            "ModuleName": "47"
-          },
-          "03EC": {
-            "ModuleName": "48"
-          },
-          "03ED": {
-            "ModuleName": "49"
-          },
-          "03EE": {
-            "ModuleName": "50"
-          },
-          "03EF": {
-            "ModuleName": "51"
-          },
-          "03F0": {
-            "ModuleName": "52"
-          },
-          "03F1": {
-            "ModuleName": "53"
-          },
-          "03F2": {
-            "ModuleName": "54"
-          },
-          "03F3": {
-            "ModuleName": "55"
-          },
-          "03F4": {
-            "ModuleName": "56"
-          },
-          "03F5": {
-            "ModuleName": "57"
-          },
-          "03F6": {
-            "ModuleName": "58"
-          },
-          "03F7": {
-            "ModuleName": "59"
-          },
-          "03F8": {
-            "ModuleName": "60"
-          },
-          "03F9": {
-            "ModuleName": "61"
-          },
-          "03FA": {
-            "ModuleName": "62"
-          },
-          "03FB": {
-            "ModuleName": "64:Save"
-          }
+          "03BC": { "ModuleName": "0:Start" },
+          "03BD": { "ModuleName": "1" },
+          "03BE": { "ModuleName": "2" },
+          "03BF": { "ModuleName": "3" },
+          "03C0": { "ModuleName": "4" },
+          "03C1": { "ModuleName": "5" },
+          "03C2": { "ModuleName": "6" },
+          "03C3": { "ModuleName": "7" },
+          "03C4": { "ModuleName": "8" },
+          "03C5": { "ModuleName": "9" },
+          "03C6": { "ModuleName": "10" },
+          "03C7": { "ModuleName": "11" },
+          "03C8": { "ModuleName": "12" },
+          "03C9": { "ModuleName": "13" },
+          "03CA": { "ModuleName": "14" },
+          "03CB": { "ModuleName": "15" },
+          "03CC": { "ModuleName": "16" },
+          "03CD": { "ModuleName": "17" },
+          "03CE": { "ModuleName": "18" },
+          "03CF": { "ModuleName": "19" },
+          "03D0": { "ModuleName": "20" },
+          "03D1": { "ModuleName": "21" },
+          "03D2": { "ModuleName": "22" },
+          "03D3": { "ModuleName": "23" },
+          "03D4": { "ModuleName": "24" },
+          "03D5": { "ModuleName": "25" },
+          "03D6": { "ModuleName": "26" },
+          "03D7": { "ModuleName": "27" },
+          "03D8": { "ModuleName": "28" },
+          "03D9": { "ModuleName": "29" },
+          "03DA": { "ModuleName": "30" },
+          "03DB": { "ModuleName": "31" },
+          "03DC": { "ModuleName": "32" },
+          "03DD": { "ModuleName": "33" },
+          "03DE": { "ModuleName": "34" },
+          "03DF": { "ModuleName": "35" },
+          "03E0": { "ModuleName": "36" },
+          "03E1": { "ModuleName": "37" },
+          "03E2": { "ModuleName": "38" },
+          "03E3": { "ModuleName": "39" },
+          "03E4": { "ModuleName": "40" },
+          "03E5": { "ModuleName": "41" },
+          "03E6": { "ModuleName": "42" },
+          "03E7": { "ModuleName": "43" },
+          "03E8": { "ModuleName": "44" },
+          "03E9": { "ModuleName": "45" },
+          "03EA": { "ModuleName": "46" },
+          "03EB": { "ModuleName": "47" },
+          "03EC": { "ModuleName": "48" },
+          "03ED": { "ModuleName": "49" },
+          "03EE": { "ModuleName": "50" },
+          "03EF": { "ModuleName": "51" },
+          "03F0": { "ModuleName": "52" },
+          "03F1": { "ModuleName": "53" },
+          "03F2": { "ModuleName": "54" },
+          "03F3": { "ModuleName": "55" },
+          "03F4": { "ModuleName": "56" },
+          "03F5": { "ModuleName": "57" },
+          "03F6": { "ModuleName": "58" },
+          "03F7": { "ModuleName": "59" },
+          "03F8": { "ModuleName": "60" },
+          "03F9": { "ModuleName": "61" },
+          "03FA": { "ModuleName": "62" },
+          "03FB": { "ModuleName": "64:Save" }
         },
         "ModuleName": "03BC-03FB",
         "StatusAddress": "03BC;03BD;03BE;03BF;03C0;03C1;03C2;03C3;03C4;03C5;03C6;03C7;03C8;03C9;03CA;03CB;03CC;03CD;03CE;03CF;03D0;03D1;03D2;03D3;03D4;03D5;03D6;03D7;03D8;03D9;03DA;03DB;03DC;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;03F0;03F1;03F2;03F3;03F4;03F5;03F6;03F7;03F8;03F9;03FA;03FB"
@@ -11062,6 +10528,64 @@
       "ThermostatAddr": "0"
     },
     "5F": {
+      "AllChannelStatus": "FF",
+      "ChannelNumbers": {
+        "Name": {
+          "Convert": "hex"
+        }
+      },
+      "Channels": {
+        "01": {
+          "Editable": "yes",
+          "Name": "Push button 1",
+          "Type": "Button"
+        },
+        "02": {
+          "Editable": "yes",
+          "Name": "Push button 2",
+          "Type": "Button"
+        },
+        "03": {
+          "Editable": "yes",
+          "Name": "Push button 3",
+          "Type": "Button"
+        },
+        "04": {
+          "Editable": "yes",
+          "Name": "Push button 4",
+          "Type": "Button"
+        },
+        "05": {
+          "Name": "Dark/Light output",
+          "Type": "Sensor"
+        },
+        "06": {
+          "Name": "Motion output",
+          "Type": "Sensor"
+        },
+        "07": {
+          "Name": "Light Depending motion",
+          "Type": "Sensor"
+        },
+        "08": {
+          "Name": "Absence output",
+          "Type": "Sensor"
+        },
+        "9": {
+          "Editable": "yes",
+          "Name": "Temperature",
+          "Type": "Temperature"
+        },
+        "11": {
+          "Name": "Output",
+          "Type": "Relay"
+        },
+        "99": {
+          "Name": "Light value",
+          "Type": "LightSensor"
+        }
+      },
+      "TemperatureChannel": "9",
       "Info": "Motion detector with four touch buttons module",
       "Type": "VMBGP4PIR-20"
     }
