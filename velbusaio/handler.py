@@ -40,7 +40,7 @@ class PacketHandler:
         self._scan_complete = False
         self._scan_complete_event = asyncio.Event()
         with open(
-            pkg_resources.resource_filename(__name__, "moduleprotocol/protocol.json")
+            pkg_resources.resource_filename(__name__, "protocol.json")
         ) as protocol_file:
             self.pdata = json.load(protocol_file)
 
