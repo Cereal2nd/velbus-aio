@@ -37,21 +37,34 @@ class PacketHandler:
         self._log = logging.getLogger("velbus-packet")
         self._writer = writer
         self._velbus = velbus
-        self._scan_complete = False
-        self._scan_complete_event = asyncio.Event()
+        self._active_modulescan_address = 0     #lgor
+        self._moduletyperesponsemsg = None      #lgor received type response message
+        self.scan_complete = False
+        # lgor self._scan_complete_event = asyncio.Event()
         with open(
             pkg_resources.resource_filename(__name__, "moduleprotocol/protocol.json")
         ) as protocol_file:
             self.pdata = json.load(protocol_file)
 
-    def scan_finished(self) -> None:
-        self._scan_complete = True
-        self._scan_complete_event.set()
-        self._log.debug("Scan complete")
+    #lgor added for initiating single module type scan
+    def set_module_type_request(self, address : byte) -> None:  #lgor
+        _moduletyperesponsemsg = None                           #lgor
+        self._active_modulescan_address = address               #lgor
 
-    def scan_started(self) -> None:
-        self._scan_complete = False
-        self._scan_complete_event.clear()
+    #lgor added for test received module type message 
+    def is_module_typerespons_ok(self) -> bool:                 #lgor
+        return is self._moduletyperesponsemsg not None          #lgor
+
+    #lgor removed: no global scan start / completion required
+    #def scan_finished(self) -> None:
+    #    self._scan_complete = True
+    #    self._scan_complete_event.set()
+    #    self._log.debug("Scan complete")
+
+    #lgor removed: no global scan start / completion required
+    #def scan_started(self) -> None:
+    #    self._scan_complete = False
+    #    self._scan_complete_event.clear()
 
     async def handle(self, rawmsg: RawMessage) -> None:
         """
@@ -68,26 +81,27 @@ class PacketHandler:
         command_value = rawmsg.command
         data = rawmsg.data_only
 
-        if command_value == 0xFF and not self._scan_complete:
-            msg = ModuleTypeMessage()
-            msg.populate(priority, address, rtr, data)
-            self._log.debug(f"Received {msg}")
-            await self._handle_module_type(msg)
-        elif command_value in (0xB0, 0xA7, 0xA6) and not self._scan_complete:
-            msg = ModuleSubTypeMessage()
-            msg.populate(priority, address, rtr, data)
-
-            if command_value == 0xB0:
-                msg.sub_address_offset = 0
-            elif command_value == 0xA7:
-                msg.sub_address_offset = 4
-            elif command_value == 0xA6:
-                msg.sub_address_offset = 8
+        #lgor handle config related messages
+        if command_value in (0xxFF, 0xB0, 0xA7, 0xA6):                                      #lgor
+            if  active_modulescan_address == address:                                       #lgor only respond to requested module (VelbusLink might interfere otherwise)
+                if command_value == 0xFF:                                                   #lgor type response message 
+                    _moduletyperesponsemsg = ModuleTypeMessage()                            #lgor
+                    _moduletyperesponsemsg.populate(priority, address, rtr, data)           #lgor
             else:
-                raise RuntimeError("Unreachable code reached => bug here")
+                msg = ModuleSubTypeMessage()
+                msg.populate(priority, address, rtr, data)
 
-            self._log.debug(f"Received {msg}")
-            await self._handle_module_subtype(msg)
+                if command_value == 0xB0:
+                    msg.sub_address_offset = 0
+                elif command_value == 0xA7:
+                    msg.sub_address_offset = 4
+                elif command_value == 0xA6:
+                    msg.sub_address_offset = 8
+                else:
+                    raise RuntimeError("Unreachable code reached => bug here")
+    
+                self._log.debug(f"Received {msg}")
+                await self._handle_module_subtype(msg)
         elif command_value in self.pdata["MessagesBroadCast"]:
             self._log.debug(
                 "Received broadcast message {} from {}, ignoring".format(
@@ -109,7 +123,7 @@ class PacketHandler:
                         address, command_value, ":".join(format(x, "02x") for x in data)
                     )
                 )
-        elif self._scan_complete:
+        elif self.scan_complete:
             # this should only happen once the scan is complete, of its not complete suspended the error message
             self._log.warning(
                 "UNKNOWN module, you should initialize a full new velbus scan: packet={}, address={}, modules={}".format(
@@ -176,24 +190,27 @@ class PacketHandler:
     #            self._log.error("UNKNOWN convert requested: {}".format(todo["Convert"]))
     #    return result
 
-    async def _handle_module_type(self, msg: Message) -> None:
+    #lgor: _ removed from name (function is not local anymore)
+    async def handle_module_type(self) -> None:         #lgor (signature changed)
         """
         load the module data
         """
-        data = keys_exists(self.pdata, "ModuleTypes", h2(msg.module_type))
-        if not data:
-            self._log.warning(f"Module not recognized: {msg.module_type}")
-            return
-        # create the module
-        await self._velbus.add_module(
-            msg.address,
-            msg.module_type,
-            data,
-            memorymap=msg.memory_map_version,
-            build_year=msg.build_year,
-            build_week=msg.build_week,
-            serial=msg.serial,
-        )
+        msg = _moduletyperesponsemsg                    #lgor
+        if msg is not None :                            #lgor
+            data = keys_exists(self.pdata, "ModuleTypes", h2(msg.module_type))
+            if not data:
+                self._log.warning(f"Module not recognized: {msg.module_type}")
+                return
+            # create the module
+            await self._velbus.add_module(
+                msg.address,
+                msg.module_type,
+                data,
+                memorymap=msg.memory_map_version,
+                build_year=msg.build_year,
+                build_week=msg.build_week,
+                serial=msg.serial,
+            )   
 
     async def _handle_module_subtype(self, msg: Message) -> None:
         if msg.address not in self._velbus.get_modules():
