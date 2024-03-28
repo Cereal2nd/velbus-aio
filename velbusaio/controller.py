@@ -208,27 +208,56 @@ class Velbus:
         # scan the bus
         await self.scan()
 
+    # lgor original scan 
+    #async def scan(self) -> None:
+    #    self._handler.scan_started()
+    #    for addr in range(1, 256):
+    #        msg = ModuleTypeRequestMessage(addr)
+    #        await self.send(msg)
+    #    await self._handler._scan_complete_event.wait()
+    #    # calculate how long to wait
+    #    calc_timeout = len(self._modules) * 30
+    #    if calc_timeout < LOAD_TIMEOUT:
+    #        timeout = calc_timeout
+    #    else:
+    #        timeout = LOAD_TIMEOUT
+    #    # create a task to wait until we have all modules loaded
+    #    tsk = asyncio.Task(self._check_if_modules_are_loaded())
+    #    try:
+    #        await asyncio.wait_for(tsk, timeout=timeout)
+    #    except asyncio.TimeoutError:
+    #        self._log.error(
+    #            f"Not all modules are loaded within a timeout of {LOAD_TIMEOUT} seconds, continuing with the loaded modules"
+    #        )
+
+    #lgor: scan refactered
     async def scan(self) -> None:
-        self._handler.scan_started()
-        for addr in range(1, 256):
+        for addr in range(1, 254):
+            #initiate module type request 
+            self._handler.set_module_type_request(addr)
             msg = ModuleTypeRequestMessage(addr)
             await self.send(msg)
-        await self._handler._scan_complete_event.wait()
-        # calculate how long to wait
-        calc_timeout = len(self._modules) * 30
-        if calc_timeout < LOAD_TIMEOUT:
-            timeout = calc_timeout
-        else:
-            timeout = LOAD_TIMEOUT
-        # create a task to wait until we have all modules loaded
-        tsk = asyncio.Task(self._check_if_modules_are_loaded())
-        try:
-            await asyncio.wait_for(tsk, timeout=timeout)
-        except asyncio.TimeoutError:
-            self._log.error(
-                f"Not all modules are loaded within a timeout of {LOAD_TIMEOUT} seconds, continuing with the loaded modules"
-            )
+           
+            # create a task to wait for the requested module type response message
+            tsk = asyncio.Task(self._handler.is_module_typerespons_ok())
+            
+            # wait for the reception of the type response message
+            try:
+                await asyncio.wait_for(tsk, timeout=200)    #lgor 200mSec should do it (we should not set timeout to small because there might be other traffic on the bus)
+                # module type response message received: we are now sure the module is present
+                # we can now request module and channel info (garded by long timeout which we should never meet)
+                tskInfo = asyncio.Task(self._handler.handle_module_type())
+                try:
+                    await asyncio.wait_for(tskInfo, timeout=5000)
+                except asyncio.TimeoutError:
+                    self._log.error("Module {addr} did not respond to info requests after succesfull type request")
+            except asyncio.TimeoutError:
+                self._log.error("No response within timeout, module {addr} not present or unavailable")
+        # scan completed
+        self._handler.set_module_type_request(0)
 
+
+    #lgor: I think following code is obsolete ...
     async def _check_if_modules_are_loaded(self) -> None:
         """
         Task to wait until modules are loaded
