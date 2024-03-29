@@ -10,7 +10,10 @@ from velbusaio.message import Message
 COMMAND_CODE = 0x07
 
 
-@register(COMMAND_CODE, ["VMB1DM", "VMBDME", "VMB4DC", "VMBDMI", "VMBDMI-R", "VMB1LED"])
+@register(
+    COMMAND_CODE,
+    ["VMB1DM", "VMBDME", "VMB4DC", "VMBDMI", "VMBDMI-R", "VMB1LED", "VMB8DC-20"],
+)
 class SetDimmerMessage(Message):
     """
     send by:
@@ -57,7 +60,7 @@ class SetDimmerMessage(Message):
         ) + self.dimmer_transitiontime.to_bytes(2, byteorder="big", signed=False)
 
 
-@register(COMMAND_CODE, ["VMBDALI"])
+@register(COMMAND_CODE, ["VMBDALI", "VMBDALI-20"])
 class SetDimmerMessage2(SetDimmerMessage):
     """
     send by:
