@@ -581,8 +581,7 @@
           "04ED": { "ModuleName": "62" },
           "04EE": { "ModuleName": "64:Save" }
         },
-        "ModuleName": "00E3-00EF;01E3-01EF;02E3-02EF;03E3-03EF;04E3-04EE",
-        "StatusAddress": "00E3;00E4;00E5;00E6;00E7;00E8;00E9;00EA;00EB;00EC;00ED;00EE;00EF;01E3;01E4;01E5;01E6;01E7;01E8;01E9;01EA;01EB;01EC;01ED;01EE;01EF;02E3;02E4;02E5;02E6;02E7;02E8;02E9;02EA;02EB;02EC;02ED;02EE;02EF;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;04E3;04E4;04E5;04E6;04E7;04E8;04E9;04EA;04EB;04EC;04ED;04EE"
+        "ModuleName": "00E3-00EF;01E3-01EF;02E3-02EF;03E3-03EF;04E3-04EE"
       },
       "Type": "VMB4RYLD"
     },
@@ -682,8 +681,7 @@
           "04ED": { "ModuleName": "62" },
           "04EE": { "ModuleName": "64:Save" }
         },
-        "ModuleName": "00E3-00EF;01E3-01EF;02E3-02EF;03E3-03EF;04E3-04EE",
-        "StatusAddress": "00E3;00E4;00E5;00E6;00E7;00E8;00E9;00EA;00EB;00EC;00ED;00EE;00EF;01E3;01E4;01E5;01E6;01E7;01E8;01E9;01EA;01EB;01EC;01ED;01EE;01EF;02E3;02E4;02E5;02E6;02E7;02E8;02E9;02EA;02EB;02EC;02ED;02EE;02EF;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;04E3;04E4;04E5;04E6;04E7;04E8;04E9;04EA;04EB;04EC;04ED;04EE"
+        "ModuleName": "00E3-00EF;01E3-01EF;02E3-02EF;03E3-03EF;04E3-04EE"
       },
       "Type": "VMB4RYNO"
     },
@@ -746,8 +744,7 @@
           "01EE": { "ModuleName": "30" },
           "01EF": { "ModuleName": "32:Save" }
         },
-        "ModuleName": "00E0-00EF;01E0-01EF",
-        "StatusAddress": "00E0;00E1;00E2;00E3;00E4;00E5;00E6;00E7;00E8;00E9;00EA;00EB;00EC;00ED;00EE;00EF;01E0;01E1;01E2;01E3;01E4;01E5;01E6;01E7;01E8;01E9;01EA;01EB;01EC;01ED;01EE;01EF"
+        "ModuleName": "00E0-00EF;01E0-01EF"
       },
       "Type": "VMB4DC"
     },
@@ -842,8 +839,7 @@
           "00EE": { "ModuleName": "62" },
           "00EF": { "ModuleName": "64:Save" }
         },
-        "ModuleName": "00B0-00EF",
-        "StatusAddress": "00B0;00B1;00B2;00B3;00B4;00B5;00B6;00B7;00B8;00B9;00BA;00BB;00BC;00BD;00BE;00BF;00C0;00C1;00C2;00C3;00C4;00C5;00C6;00C7;00C8;00C9;00CA;00CB;00CC;00CD;00CE;00CF;00D0;00D1;00D2;00D3;00D4;00D5;00D6;00D7;00D8;00D9;00DA;00DB;00DC;00DD;00DE;00DF;00E0;00E1;00E2;00E3;00E4;00E5;00E6;00E7;00E8;00E9;00EA;00EB;00EC;00ED;00EE;00EF"
+        "ModuleName": "00B0-00EF"
       },
       "Type": "VMBDMI"
     },
@@ -962,8 +958,7 @@
           "03FE": { "ModuleName": "62" },
           "03FF": { "ModuleName": "64:Save" }
         },
-        "ModuleName": "03C0-03FF",
-        "StatusAddress": "03C0;03C1;03C2;03C3;03C4;03C5;03C6;03C7;03C8;03C9;03CA;03CB;03CC;03CD;03CE;03CF;03D0;03D1;03D2;03D3;03D4;03D5;03D6;03D7;03D8;03D9;03DA;03DB;03DC;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;03F0;03F1;03F2;03F3;03F4;03F5;03F6;03F7;03F8;03F9;03FA;03FB;03FC;03FD;03FE;03FF"
+        "ModuleName": "03C0-03FF"
       },
       "Type": "VMB8PBU"
     },
@@ -1210,8 +1205,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "03C0-03FF",
-        "StatusAddress": "03C0;03C1;03C2;03C3;03C4;03C5;03C6;03C7;03C8;03C9;03CA;03CB;03CC;03CD;03CE;03CF;03D0;03D1;03D2;03D3;03D4;03D5;03D6;03D7;03D8;03D9;03DA;03DB;03DC;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;03F0;03F1;03F2;03F3;03F4;03F5;03F6;03F7;03F8;03F9;03FA;03FB;03FC;03FD;03FE;03FF"
+        "ModuleName": "03C0-03FF"
       },
       "Type": "VMB6PBN"
     },
@@ -1458,8 +1452,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "03C0-03FF",
-        "StatusAddress": "03C0;03C1;03C2;03C3;03C4;03C5;03C6;03C7;03C8;03C9;03CA;03CB;03CC;03CD;03CE;03CF;03D0;03D1;03D2;03D3;03D4;03D5;03D6;03D7;03D8;03D9;03DA;03DB;03DC;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;03F0;03F1;03F2;03F3;03F4;03F5;03F6;03F7;03F8;03F9;03FA;03FB;03FC;03FD;03FE;03FF"
+        "ModuleName": "03C0-03FF"
       },
       "Type": "VMB2PBN"
     },
@@ -1660,8 +1653,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "02C0-02FF",
-        "StatusAddress": "02C0;02C1;02C2;02C3;02C4;02C5;02C6;02C7;02C8;02C9;02CA;02CB;02CC;02CD;02CE;02CF;02D0;02D1;02D2;02D3;02D4;02D5;02D6;02D7;02D8;02D9;02DA;02DB;02DC;02DD;02DE;02DF;02E0;02E1;02E2;02E3;02E4;02E5;02E6;02E7;02E8;02E9;02EA;02EB;02EC;02ED;02EE;02EF;02F0;02F1;02F2;02F3;02F4;02F5;02F6;02F7;02F8;02F9;02FA;02FB;02FC;02FD;02FE;02FF"
+        "ModuleName": "02C0-02FF"
       },
       "Type": "VMB4RF"
     },
@@ -1889,8 +1881,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "00E3-00EF;01E3-01EF;02E3-02EF;03E3-03EF;04E3-04EE",
-        "StatusAddress": "00E3;00E4;00E5;00E6;00E7;00E8;00E9;00EA;00EB;00EC;00ED;00EE;00EF;01E3;01E4;01E5;01E6;01E7;01E8;01E9;01EA;01EB;01EC;01ED;01EE;01EF;02E3;02E4;02E5;02E6;02E7;02E8;02E9;02EA;02EB;02EC;02ED;02EE;02EF;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;04E3;04E4;04E5;04E6;04E7;04E8;04E9;04EA;04EB;04EC;04ED;04EE"
+        "ModuleName": "00E3-00EF;01E3-01EF;02E3-02EF;03E3-03EF;04E3-04EE"
       },
       "Type": "VMB1RYNO"
     },
@@ -2101,8 +2092,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "004C-008B",
-        "StatusAddress": "004C;004D;004E;004F;0050;0051;0052;0053;0054;0055;0056;0057;0058;0059;005A;005B;005C;005D;005E;005F;0060;0061;0062;0063;0064;0065;0066;0067;0068;0069;006A;006B;006C;006D;006E;006F;0070;0071;0072;0073;0074;0075;0076;0077;0078;0079;007A;007B;007C;007D;007E;007F;0080;0081;0082;0083;0084;0085;0086;0087;0088;0089;008A;008B"
+        "ModuleName": "004C-008B"
       },
       "Type": "VMB2BLE"
     },
@@ -2395,8 +2385,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "03C0-03FF",
-        "StatusAddress": "03C0;03C1;03C2;03C3;03C4;03C5;03C6;03C7;03C8;03C9;03CA;03CB;03CC;03CD;03CE;03CF;03D0;03D1;03D2;03D3;03D4;03D5;03D6;03D7;03D8;03D9;03DA;03DB;03DC;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;03F0;03F1;03F2;03F3;03F4;03F5;03F6;03F7;03F8;03F9;03FA;03FB;03FC;03FD;03FE;03FF"
+        "ModuleName": "03C0-03FF"
       },
       "TemperatureChannel": "10",
       "ThermostatAddr": "0",
@@ -2691,8 +2680,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "03C0-03FF",
-        "StatusAddress": "03C0;03C1;03C2;03C3;03C4;03C5;03C6;03C7;03C8;03C9;03CA;03CB;03CC;03CD;03CE;03CF;03D0;03D1;03D2;03D3;03D4;03D5;03D6;03D7;03D8;03D9;03DA;03DB;03DC;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;03F0;03F1;03F2;03F3;03F4;03F5;03F6;03F7;03F8;03F9;03FA;03FB;03FC;03FD;03FE;03FF"
+        "ModuleName": "03C0-03FF"
       },
       "TemperatureChannel": "10",
       "ThermostatAddr": "0",
@@ -2794,201 +2782,72 @@
       "Info": "One, two or four touch buttons module",
       "Memory": {
         "Address": {
-          "03C0": {
-            "ModuleName": "0:Start"
-          },
-          "03C1": {
-            "ModuleName": "1"
-          },
-          "03C2": {
-            "ModuleName": "2"
-          },
-          "03C3": {
-            "ModuleName": "3"
-          },
-          "03C4": {
-            "ModuleName": "4"
-          },
-          "03C5": {
-            "ModuleName": "5"
-          },
-          "03C6": {
-            "ModuleName": "6"
-          },
-          "03C7": {
-            "ModuleName": "7"
-          },
-          "03C8": {
-            "ModuleName": "8"
-          },
-          "03C9": {
-            "ModuleName": "9"
-          },
-          "03CA": {
-            "ModuleName": "10"
-          },
-          "03CB": {
-            "ModuleName": "11"
-          },
-          "03CC": {
-            "ModuleName": "12"
-          },
-          "03CD": {
-            "ModuleName": "13"
-          },
-          "03CE": {
-            "ModuleName": "14"
-          },
-          "03CF": {
-            "ModuleName": "15"
-          },
-          "03D0": {
-            "ModuleName": "16"
-          },
-          "03D1": {
-            "ModuleName": "17"
-          },
-          "03D2": {
-            "ModuleName": "18"
-          },
-          "03D3": {
-            "ModuleName": "19"
-          },
-          "03D4": {
-            "ModuleName": "20"
-          },
-          "03D5": {
-            "ModuleName": "21"
-          },
-          "03D6": {
-            "ModuleName": "22"
-          },
-          "03D7": {
-            "ModuleName": "23"
-          },
-          "03D8": {
-            "ModuleName": "24"
-          },
-          "03D9": {
-            "ModuleName": "25"
-          },
-          "03DA": {
-            "ModuleName": "26"
-          },
-          "03DB": {
-            "ModuleName": "27"
-          },
-          "03DC": {
-            "ModuleName": "28"
-          },
-          "03DD": {
-            "ModuleName": "29"
-          },
-          "03DE": {
-            "ModuleName": "30"
-          },
-          "03DF": {
-            "ModuleName": "31"
-          },
-          "03E0": {
-            "ModuleName": "32"
-          },
-          "03E1": {
-            "ModuleName": "33"
-          },
-          "03E2": {
-            "ModuleName": "34"
-          },
-          "03E3": {
-            "ModuleName": "35"
-          },
-          "03E4": {
-            "ModuleName": "36"
-          },
-          "03E5": {
-            "ModuleName": "37"
-          },
-          "03E6": {
-            "ModuleName": "38"
-          },
-          "03E7": {
-            "ModuleName": "39"
-          },
-          "03E8": {
-            "ModuleName": "40"
-          },
-          "03E9": {
-            "ModuleName": "41"
-          },
-          "03EA": {
-            "ModuleName": "42"
-          },
-          "03EB": {
-            "ModuleName": "43"
-          },
-          "03EC": {
-            "ModuleName": "44"
-          },
-          "03ED": {
-            "ModuleName": "45"
-          },
-          "03EE": {
-            "ModuleName": "46"
-          },
-          "03EF": {
-            "ModuleName": "47"
-          },
-          "03F0": {
-            "ModuleName": "48"
-          },
-          "03F1": {
-            "ModuleName": "49"
-          },
-          "03F2": {
-            "ModuleName": "50"
-          },
-          "03F3": {
-            "ModuleName": "51"
-          },
-          "03F4": {
-            "ModuleName": "52"
-          },
-          "03F5": {
-            "ModuleName": "53"
-          },
-          "03F6": {
-            "ModuleName": "54"
-          },
-          "03F7": {
-            "ModuleName": "55"
-          },
-          "03F8": {
-            "ModuleName": "56"
-          },
-          "03F9": {
-            "ModuleName": "57"
-          },
-          "03FA": {
-            "ModuleName": "58"
-          },
-          "03FB": {
-            "ModuleName": "59"
-          },
-          "03FC": {
-            "ModuleName": "60"
-          },
-          "03FD": {
-            "ModuleName": "61"
-          },
-          "03FE": {
-            "ModuleName": "62"
-          },
-          "03FF": {
-            "ModuleName": "64:Save"
-          }
+          "03C0": { "ModuleName": "0:Start" },
+          "03C1": { "ModuleName": "1" },
+          "03C2": { "ModuleName": "2" },
+          "03C3": { "ModuleName": "3" },
+          "03C4": { "ModuleName": "4" },
+          "03C5": { "ModuleName": "5" },
+          "03C6": { "ModuleName": "6" },
+          "03C7": { "ModuleName": "7" },
+          "03C8": { "ModuleName": "8" },
+          "03C9": { "ModuleName": "9" },
+          "03CA": { "ModuleName": "10" },
+          "03CB": { "ModuleName": "11" },
+          "03CC": { "ModuleName": "12" },
+          "03CD": { "ModuleName": "13" },
+          "03CE": { "ModuleName": "14" },
+          "03CF": { "ModuleName": "15" },
+          "03D0": { "ModuleName": "16" },
+          "03D1": { "ModuleName": "17" },
+          "03D2": { "ModuleName": "18" },
+          "03D3": { "ModuleName": "19" },
+          "03D4": { "ModuleName": "20" },
+          "03D5": { "ModuleName": "21" },
+          "03D6": { "ModuleName": "22" },
+          "03D7": { "ModuleName": "23" },
+          "03D8": { "ModuleName": "24" },
+          "03D9": { "ModuleName": "25" },
+          "03DA": { "ModuleName": "26" },
+          "03DB": { "ModuleName": "27" },
+          "03DC": { "ModuleName": "28" },
+          "03DD": { "ModuleName": "29" },
+          "03DE": { "ModuleName": "30" },
+          "03DF": { "ModuleName": "31" },
+          "03E0": { "ModuleName": "32" },
+          "03E1": { "ModuleName": "33" },
+          "03E2": { "ModuleName": "34" },
+          "03E3": { "ModuleName": "35" },
+          "03E4": { "ModuleName": "36" },
+          "03E5": { "ModuleName": "37" },
+          "03E6": { "ModuleName": "38" },
+          "03E7": { "ModuleName": "39" },
+          "03E8": { "ModuleName": "40" },
+          "03E9": { "ModuleName": "41" },
+          "03EA": { "ModuleName": "42" },
+          "03EB": { "ModuleName": "43" },
+          "03EC": { "ModuleName": "44" },
+          "03ED": { "ModuleName": "45" },
+          "03EE": { "ModuleName": "46" },
+          "03EF": { "ModuleName": "47" },
+          "03F0": { "ModuleName": "48" },
+          "03F1": { "ModuleName": "49" },
+          "03F2": { "ModuleName": "50" },
+          "03F3": { "ModuleName": "51" },
+          "03F4": { "ModuleName": "52" },
+          "03F5": { "ModuleName": "53" },
+          "03F6": { "ModuleName": "54" },
+          "03F7": { "ModuleName": "55" },
+          "03F8": { "ModuleName": "56" },
+          "03F9": { "ModuleName": "57" },
+          "03FA": { "ModuleName": "58" },
+          "03FB": { "ModuleName": "59" },
+          "03FC": { "ModuleName": "60" },
+          "03FD": { "ModuleName": "61" },
+          "03FE": { "ModuleName": "62" },
+          "03FF": { "ModuleName": "64:Save" }
         },
-        "ModuleName": "03C0-03FF",
-        "StatusAddress": "03C0;03C1;03C2;03C3;03C4;03C5;03C6;03C7;03C8;03C9;03CA;03CB;03CC;03CD;03CE;03CF;03D0;03D1;03D2;03D3;03D4;03D5;03D6;03D7;03D8;03D9;03DA;03DB;03DC;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;03F0;03F1;03F2;03F3;03F4;03F5;03F6;03F7;03F8;03F9;03FA;03FB;03FC;03FD;03FE;03FF"
+        "ModuleName": "03C0-03FF"
       },
       "TemperatureChannel": "10",
       "ThermostatAddr": "0",
@@ -3214,201 +3073,72 @@
       "Info": "Touch panel with Oled display",
       "Memory": {
         "Address": {
-          "09BE": {
-            "ModuleName": "0:Start"
-          },
-          "09BF": {
-            "ModuleName": "1"
-          },
-          "09C0": {
-            "ModuleName": "2"
-          },
-          "09C1": {
-            "ModuleName": "3"
-          },
-          "09C2": {
-            "ModuleName": "4"
-          },
-          "09C3": {
-            "ModuleName": "5"
-          },
-          "09C4": {
-            "ModuleName": "6"
-          },
-          "09C5": {
-            "ModuleName": "7"
-          },
-          "09C6": {
-            "ModuleName": "8"
-          },
-          "09C7": {
-            "ModuleName": "9"
-          },
-          "09C8": {
-            "ModuleName": "10"
-          },
-          "09C9": {
-            "ModuleName": "11"
-          },
-          "09CA": {
-            "ModuleName": "12"
-          },
-          "09CB": {
-            "ModuleName": "13"
-          },
-          "09CC": {
-            "ModuleName": "14"
-          },
-          "09CD": {
-            "ModuleName": "15"
-          },
-          "09CE": {
-            "ModuleName": "16"
-          },
-          "09CF": {
-            "ModuleName": "17"
-          },
-          "09D0": {
-            "ModuleName": "18"
-          },
-          "09D1": {
-            "ModuleName": "19"
-          },
-          "09D2": {
-            "ModuleName": "20"
-          },
-          "09D3": {
-            "ModuleName": "21"
-          },
-          "09D4": {
-            "ModuleName": "22"
-          },
-          "09D5": {
-            "ModuleName": "23"
-          },
-          "09D6": {
-            "ModuleName": "24"
-          },
-          "09D7": {
-            "ModuleName": "25"
-          },
-          "09D8": {
-            "ModuleName": "26"
-          },
-          "09D9": {
-            "ModuleName": "27"
-          },
-          "09DA": {
-            "ModuleName": "28"
-          },
-          "09DB": {
-            "ModuleName": "29"
-          },
-          "09DC": {
-            "ModuleName": "30"
-          },
-          "09DD": {
-            "ModuleName": "31"
-          },
-          "09DE": {
-            "ModuleName": "32"
-          },
-          "09DF": {
-            "ModuleName": "33"
-          },
-          "09E0": {
-            "ModuleName": "34"
-          },
-          "09E1": {
-            "ModuleName": "35"
-          },
-          "09E2": {
-            "ModuleName": "36"
-          },
-          "09E3": {
-            "ModuleName": "37"
-          },
-          "09E4": {
-            "ModuleName": "38"
-          },
-          "09E5": {
-            "ModuleName": "39"
-          },
-          "09E6": {
-            "ModuleName": "40"
-          },
-          "09E7": {
-            "ModuleName": "41"
-          },
-          "09E8": {
-            "ModuleName": "42"
-          },
-          "09E9": {
-            "ModuleName": "43"
-          },
-          "09EA": {
-            "ModuleName": "44"
-          },
-          "09EB": {
-            "ModuleName": "45"
-          },
-          "09EC": {
-            "ModuleName": "46"
-          },
-          "09ED": {
-            "ModuleName": "47"
-          },
-          "09EE": {
-            "ModuleName": "48"
-          },
-          "09EF": {
-            "ModuleName": "49"
-          },
-          "09F0": {
-            "ModuleName": "50"
-          },
-          "09F1": {
-            "ModuleName": "51"
-          },
-          "09F2": {
-            "ModuleName": "52"
-          },
-          "09F3": {
-            "ModuleName": "53"
-          },
-          "09F4": {
-            "ModuleName": "54"
-          },
-          "09F5": {
-            "ModuleName": "55"
-          },
-          "09F6": {
-            "ModuleName": "56"
-          },
-          "09F7": {
-            "ModuleName": "57"
-          },
-          "09F8": {
-            "ModuleName": "58"
-          },
-          "09F9": {
-            "ModuleName": "59"
-          },
-          "09FA": {
-            "ModuleName": "60"
-          },
-          "09FB": {
-            "ModuleName": "61"
-          },
-          "09FC": {
-            "ModuleName": "62"
-          },
-          "09FD": {
-            "ModuleName": "64:Save"
-          }
+          "09BE": { "ModuleName": "0:Start" },
+          "09BF": { "ModuleName": "1" },
+          "09C0": { "ModuleName": "2" },
+          "09C1": { "ModuleName": "3" },
+          "09C2": { "ModuleName": "4" },
+          "09C3": { "ModuleName": "5" },
+          "09C4": { "ModuleName": "6" },
+          "09C5": { "ModuleName": "7" },
+          "09C6": { "ModuleName": "8" },
+          "09C7": { "ModuleName": "9" },
+          "09C8": { "ModuleName": "10" },
+          "09C9": { "ModuleName": "11" },
+          "09CA": { "ModuleName": "12" },
+          "09CB": { "ModuleName": "13" },
+          "09CC": { "ModuleName": "14" },
+          "09CD": { "ModuleName": "15" },
+          "09CE": { "ModuleName": "16" },
+          "09CF": { "ModuleName": "17" },
+          "09D0": { "ModuleName": "18" },
+          "09D1": { "ModuleName": "19" },
+          "09D2": { "ModuleName": "20" },
+          "09D3": { "ModuleName": "21" },
+          "09D4": { "ModuleName": "22" },
+          "09D5": { "ModuleName": "23" },
+          "09D6": { "ModuleName": "24" },
+          "09D7": { "ModuleName": "25" },
+          "09D8": { "ModuleName": "26" },
+          "09D9": { "ModuleName": "27" },
+          "09DA": { "ModuleName": "28" },
+          "09DB": { "ModuleName": "29" },
+          "09DC": { "ModuleName": "30" },
+          "09DD": { "ModuleName": "31" },
+          "09DE": { "ModuleName": "32" },
+          "09DF": { "ModuleName": "33" },
+          "09E0": { "ModuleName": "34" },
+          "09E1": { "ModuleName": "35" },
+          "09E2": { "ModuleName": "36" },
+          "09E3": { "ModuleName": "37" },
+          "09E4": { "ModuleName": "38" },
+          "09E5": { "ModuleName": "39" },
+          "09E6": { "ModuleName": "40" },
+          "09E7": { "ModuleName": "41" },
+          "09E8": { "ModuleName": "42" },
+          "09E9": { "ModuleName": "43" },
+          "09EA": { "ModuleName": "44" },
+          "09EB": { "ModuleName": "45" },
+          "09EC": { "ModuleName": "46" },
+          "09ED": { "ModuleName": "47" },
+          "09EE": { "ModuleName": "48" },
+          "09EF": { "ModuleName": "49" },
+          "09F0": { "ModuleName": "50" },
+          "09F1": { "ModuleName": "51" },
+          "09F2": { "ModuleName": "52" },
+          "09F3": { "ModuleName": "53" },
+          "09F4": { "ModuleName": "54" },
+          "09F5": { "ModuleName": "55" },
+          "09F6": { "ModuleName": "56" },
+          "09F7": { "ModuleName": "57" },
+          "09F8": { "ModuleName": "58" },
+          "09F9": { "ModuleName": "59" },
+          "09FA": { "ModuleName": "60" },
+          "09FB": { "ModuleName": "61" },
+          "09FC": { "ModuleName": "62" },
+          "09FD": { "ModuleName": "64:Save" }
         },
-        "ModuleName": "09BE-09FD",
-        "StatusAddress": "09BE;09BF;09C0;09C1;09C2;09C3;09C4;09C5;09C6;09C7;09C8;09C9;09CA;09CB;09CC;09CD;09CE;09CF;09D0;09D1;09D2;09D3;09D4;09D5;09D6;09D7;09D8;09D9;09DA;09DB;09DC;09DD;09DE;09DF;09E0;09E1;09E2;09E3;09E4;09E5;09E6;09E7;09E8;09E9;09EA;09EB;09EC;09ED;09EE;09EF;09F0;09F1;09F2;09F3;09F4;09F5;09F6;09F7;09F8;09F9;09FA;09FB;09FC;09FD"
+        "ModuleName": "09BE-09FD"
       },
       "TemperatureChannel": "34",
       "ThermostatAddr": "3",
@@ -3733,12 +3463,136 @@
             }
           }
         },
-        "ModuleName": "03AC-03EB",
-        "StatusAddress": "03AC;03AD;03AE;03AF;03B0;03B1;03B2;03B3;03B4;03B5;03B6;03B7;03B8;03B9;03BA;03BB;03BC;03BD;03BE;03BF;03C0;03C1;03C2;03C3;03C4;03C5;03C6;03C7;03C8;03C9;03CA;03CB;03CC;03CD;03CE;03CF;03D0;03D1;03D2;03D3;03D4;03D5;03D6;03D7;03D8;03D9;03DA;03DB;03DC;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB"
+        "ModuleName": "03AC-03EB"
       },
       "Type": "VMB7IN"
     },
     "23": {
+      "AllChannelStatus": "FF",
+      "ChannelNumbers": {
+        "Name": {
+          "Map": {
+            "01": "09"
+          }
+        }
+      },
+      "Channels": {
+        "01": {
+          "Name": "Dark output",
+          "Type": "Sensor"
+        },
+        "02": {
+          "Name": "Light output",
+          "Type": "Sensor"
+        },
+        "03": {
+          "Name": "Motion output 1",
+          "Type": "Sensor"
+        },
+        "04": {
+          "Name": "Motion output 1 (LD)",
+          "Type": "Sensor"
+        },
+        "05": {
+          "Name": "Motion output 2",
+          "Type": "Sensor"
+        },
+        "06": {
+          "Name": "Motion output 2 (LD)",
+          "Type": "Sensor"
+        },
+        "07": {
+          "Name": "Low alarm",
+          "Type": "Sensor"
+        },
+        "08": {
+          "Name": "High alarm",
+          "Type": "Sensor"
+        },
+        "09": {
+          "Editable": "yes",
+          "Name": "Temperature",
+          "Type": "Temperature"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
+        },
+        "99": {
+          "Name": "Light value",
+          "Type": "LightSensor"
+        }
+      },
+      "Memory": {
+        "Address": {
+          "00B0": { "ModuleName": "0:Start" },
+          "00B1": { "ModuleName": "1" },
+          "00B2": { "ModuleName": "2" },
+          "00B3": { "ModuleName": "3" },
+          "00B4": { "ModuleName": "4" },
+          "00B5": { "ModuleName": "5" },
+          "00B6": { "ModuleName": "6" },
+          "00B7": { "ModuleName": "7" },
+          "00B8": { "ModuleName": "8" },
+          "00B9": { "ModuleName": "9" },
+          "00BA": { "ModuleName": "10" },
+          "00BB": { "ModuleName": "11" },
+          "00BC": { "ModuleName": "12" },
+          "00BD": { "ModuleName": "13" },
+          "00BE": { "ModuleName": "14" },
+          "00BF": { "ModuleName": "15" },
+          "00C0": { "ModuleName": "16" },
+          "00C1": { "ModuleName": "17" },
+          "00C2": { "ModuleName": "18" },
+          "00C3": { "ModuleName": "19" },
+          "00C4": { "ModuleName": "20" },
+          "00C5": { "ModuleName": "21" },
+          "00C6": { "ModuleName": "22" },
+          "00C7": { "ModuleName": "23" },
+          "00C8": { "ModuleName": "24" },
+          "00C9": { "ModuleName": "25" },
+          "00CA": { "ModuleName": "26" },
+          "00CB": { "ModuleName": "27" },
+          "00CC": { "ModuleName": "28" },
+          "00CD": { "ModuleName": "29" },
+          "00CE": { "ModuleName": "30" },
+          "00CF": { "ModuleName": "31" },
+          "00D0": { "ModuleName": "32" },
+          "00D1": { "ModuleName": "33" },
+          "00D2": { "ModuleName": "34" },
+          "00D3": { "ModuleName": "35" },
+          "00D4": { "ModuleName": "36" },
+          "00D5": { "ModuleName": "37" },
+          "00D6": { "ModuleName": "38" },
+          "00D7": { "ModuleName": "39" },
+          "00D8": { "ModuleName": "40" },
+          "00D9": { "ModuleName": "41" },
+          "00DA": { "ModuleName": "42" },
+          "00DB": { "ModuleName": "43" },
+          "00DC": { "ModuleName": "44" },
+          "00DD": { "ModuleName": "45" },
+          "00DE": { "ModuleName": "46" },
+          "00DF": { "ModuleName": "47" },
+          "00E0": { "ModuleName": "48" },
+          "00E1": { "ModuleName": "49" },
+          "00E2": { "ModuleName": "50" },
+          "00E3": { "ModuleName": "51" },
+          "00E4": { "ModuleName": "52" },
+          "00E5": { "ModuleName": "53" },
+          "00E6": { "ModuleName": "54" },
+          "00E7": { "ModuleName": "55" },
+          "00E8": { "ModuleName": "56" },
+          "00E9": { "ModuleName": "57" },
+          "00EA": { "ModuleName": "58" },
+          "00EB": { "ModuleName": "59" },
+          "00EC": { "ModuleName": "60" },
+          "00ED": { "ModuleName": "61" },
+          "00EE": { "ModuleName": "62" },
+          "00EF": { "ModuleName": "64:Save" }
+        },
+        "ModuleName": "00B0-00EF"
+      },
+      "TemperatureChannel": "09",
       "Info": "Outdoor PIR detector module",
       "Type": "VMBPIRO-10"
     },
@@ -4158,8 +4012,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "09BE-09FD",
-        "StatusAddress": "09BE;09BF;09C0;09C1;09C2;09C3;09C4;09C5;09C6;09C7;09C8;09C9;09CA;09CB;09CC;09CD;09CE;09CF;09D0;09D1;09D2;09D3;09D4;09D5;09D6;09D7;09D8;09D9;09DA;09DB;09DC;09DD;09DE;09DF;09E0;09E1;09E2;09E3;09E4;09E5;09E6;09E7;09E8;09E9;09EA;09EB;09EC;09ED;09EE;09EF;09F0;09F1;09F2;09F3;09F4;09F5;09F6;09F7;09F8;09F9;09FA;09FB;09FC;09FD"
+        "ModuleName": "09BE-09FD"
       },
       "TemperatureChannel": "34",
       "ThermostatAddr": "3",
@@ -4389,8 +4242,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "00E3-00EF;01E3-01EF;02E3-02EF;03E3-03EF;04E3-04EE",
-        "StatusAddress": "00E3;00E4;00E5;00E6;00E7;00E8;00E9;00EA;00EB;00EC;00ED;00EE;00EF;01E3;01E4;01E5;01E6;01E7;01E8;01E9;01EA;01EB;01EC;01ED;01EE;01EF;02E3;02E4;02E5;02E6;02E7;02E8;02E9;02EA;02EB;02EC;02ED;02EE;02EF;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;04E3;04E4;04E5;04E6;04E7;04E8;04E9;04EA;04EB;04EC;04ED;04EE"
+        "ModuleName": "00E3-00EF;01E3-01EF;02E3-02EF;03E3-03EF;04E3-04EE"
       },
       "Type": "VMB1RYNOS"
     },
@@ -4629,8 +4481,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "00B0-00EF",
-        "StatusAddress": "00B0;00B1;00B2;00B3;00B4;00B5;00B6;00B7;00B8;00B9;00BA;00BB;00BC;00BD;00BE;00BF;00C0;00C1;00C2;00C3;00C4;00C5;00C6;00C7;00C8;00C9;00CA;00CB;00CC;00CD;00CE;00CF;00D0;00D1;00D2;00D3;00D4;00D5;00D6;00D7;00D8;00D9;00DA;00DB;00DC;00DD;00DE;00DF;00E0;00E1;00E2;00E3;00E4;00E5;00E6;00E7;00E8;00E9;00EA;00EB;00EC;00ED;00EE;00EF"
+        "ModuleName": "00B0-00EF"
       },
       "Type": "VMBPIRM"
     },
@@ -4869,8 +4720,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "00B0-00EF",
-        "StatusAddress": "00B0;00B1;00B2;00B3;00B4;00B5;00B6;00B7;00B8;00B9;00BA;00BB;00BC;00BD;00BE;00BF;00C0;00C1;00C2;00C3;00C4;00C5;00C6;00C7;00C8;00C9;00CA;00CB;00CC;00CD;00CE;00CF;00D0;00D1;00D2;00D3;00D4;00D5;00D6;00D7;00D8;00D9;00DA;00DB;00DC;00DD;00DE;00DF;00E0;00E1;00E2;00E3;00E4;00E5;00E6;00E7;00E8;00E9;00EA;00EB;00EC;00ED;00EE;00EF"
+        "ModuleName": "00B0-00EF"
       },
       "Type": "VMBPIRC"
     },
@@ -5126,8 +4976,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "00B0-00EF",
-        "StatusAddress": "00B0;00B1;00B2;00B3;00B4;00B5;00B6;00B7;00B8;00B9;00BA;00BB;00BC;00BD;00BE;00BF;00C0;00C1;00C2;00C3;00C4;00C5;00C6;00C7;00C8;00C9;00CA;00CB;00CC;00CD;00CE;00CF;00D0;00D1;00D2;00D3;00D4;00D5;00D6;00D7;00D8;00D9;00DA;00DB;00DC;00DD;00DE;00DF;00E0;00E1;00E2;00E3;00E4;00E5;00E6;00E7;00E8;00E9;00EA;00EB;00EC;00ED;00EE;00EF"
+        "ModuleName": "00B0-00EF"
       },
       "TemperatureChannel": "09",
       "Type": "VMBPIRO"
@@ -5421,8 +5270,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "03C0-03FF",
-        "StatusAddress": "03C0;03C1;03C2;03C3;03C4;03C5;03C6;03C7;03C8;03C9;03CA;03CB;03CC;03CD;03CE;03CF;03D0;03D1;03D2;03D3;03D4;03D5;03D6;03D7;03D8;03D9;03DA;03DB;03DC;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;03F0;03F1;03F2;03F3;03F4;03F5;03F6;03F7;03F8;03F9;03FA;03FB;03FC;03FD;03FE;03FF"
+        "ModuleName": "03C0-03FF"
       },
       "TemperatureChannel": "10",
       "ThermostatAddr": "0",
@@ -5636,8 +5484,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "004C-008B",
-        "StatusAddress": "004C;004D;004E;004F;0050;0051;0052;0053;0054;0055;0056;0057;0058;0059;005A;005B;005C;005D;005E;005F;0060;0061;0062;0063;0064;0065;0066;0067;0068;0069;006A;006B;006C;006D;006E;006F;0070;0071;0072;0073;0074;0075;0076;0077;0078;0079;007A;007B;007C;007D;007E;007F;0080;0081;0082;0083;0084;0085;0086;0087;0088;0089;008A;008B"
+        "ModuleName": "004C-008B"
       },
       "Type": "VMB1BLS"
     },
@@ -5845,12 +5692,53 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "00B0-00EF",
-        "StatusAddress": "00B0;00B1;00B2;00B3;00B4;00B5;00B6;00B7;00B8;00B9;00BA;00BB;00BC;00BD;00BE;00BF;00C0;00C1;00C2;00C3;00C4;00C5;00C6;00C7;00C8;00C9;00CA;00CB;00CC;00CD;00CE;00CF;00D0;00D1;00D2;00D3;00D4;00D5;00D6;00D7;00D8;00D9;00DA;00DB;00DC;00DD;00DE;00DF;00E0;00E1;00E2;00E3;00E4;00E5;00E6;00E7;00E8;00E9;00EA;00EB;00EC;00ED;00EE;00EF"
+        "ModuleName": "00B0-00EF"
       },
       "Type": "VMBDMIR"
     },
     "30": {
+      "Channels": {
+        "01": {
+          "Editable": "yes",
+          "Name": "Push button 1",
+          "Type": "Button"
+        },
+        "02": {
+          "Editable": "yes",
+          "Name": "Push button 2",
+          "Type": "Button"
+        },
+        "03": {
+          "Editable": "yes",
+          "Name": "Push button 3",
+          "Type": "Button"
+        },
+        "04": {
+          "Editable": "yes",
+          "Name": "Push button 4",
+          "Type": "Button"
+        },
+        "05": {
+          "Editable": "yes",
+          "Name": "Push button 5",
+          "Type": "Button"
+        },
+        "06": {
+          "Editable": "yes",
+          "Name": "Push button 6",
+          "Type": "Button"
+        },
+        "07": {
+          "Editable": "yes",
+          "Name": "Push button 7",
+          "Type": "Button"
+        },
+        "08": {
+          "Editable": "yes",
+          "Name": "Push button 8",
+          "Type": "Button"
+        }
+      },
       "Info": "8 channel RF receiver module",
       "Type": "VMBRFR8S"
     },
@@ -6314,8 +6202,7 @@
           "11": "00C0-00CF",
           "12": "00D0-00DF",
           "13": "00E0-00EF"
-        },
-        "StatusAddress": "03C0;03C1;03C2;03C3;03C4;03C5;03C6;03C7;03C8;03C9;03CA;03CB;03CC;03CD;03CE;03CF;03D0;03D1;03D2;03D3;03D4;03D5;03D6;03D7;03D8;03D9;03DA;03DB;03DC;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;03F0;03F1;03F2;03F3;03F4;03F5;03F6;03F7;03F8;03F9;03FA;03FB;03FC;03FD;03FE;03FF;03B0;03B1;03B2;03B3;03B4;03B5;03B6;03B7;03B8;03B9;03BA;03BB;03BC;03BD;03BE;03BF;00C0;00C1;00C2;00C3;00C4;00C5;00C6;00C7;00C8;00C9;00CA;00CB;00CC;00CD;00CE;00CF;00D0;00D1;00D2;00D3;00D4;00D5;00D6;00D7;00D8;00D9;00DA;00DB;00DC;00DD;00DE;00DF;00E0;00E1;00E2;00E3;00E4;00E5;00E6;00E7;00E8;00E9;00EA;00EB;00EC;00ED;00EE;00EF"
+        }
       },
       "TemperatureChannel": "10",
       "Type": "VMBMETEO"
@@ -6668,7 +6555,6 @@
           }
         },
         "ModuleName": "0000-003F",
-        "StatusAddress": "0000;0001;0002;0003;0004;0005;0006;0007;0008;0009;000A;000B;000C;000D;000E;000F;0010;0011;0012;0013;0014;0015;0016;0017;0018;0019;001A;001B;001C;001D;001E;001F;0020;0021;0022;0023;0024;0025;0026;0027;0028;0029;002A;002B;002C;002D;002E;002F;0030;0031;0032;0033;0034;0035;0036;0037;0038;0039;003A;003B;003C;003D;003E;003F;02E0;02E1;02E2;02E3;02E4;02E5;02E6;0412;0413;0414;0415;0416;0417;0418;0544;0545;0546;0547;0548;0549;054A;0676;0677;0678;0679;067A;067B;067C",
         "Unit": {
           "09": "02E0-02E6",
           "10": "0412-0418",
@@ -6913,8 +6799,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "00B0-00EF",
-        "StatusAddress": "00B0;00B1;00B2;00B3;00B4;00B5;00B6;00B7;00B8;00B9;00BA;00BB;00BC;00BD;00BE;00BF;00C0;00C1;00C2;00C3;00C4;00C5;00C6;00C7;00C8;00C9;00CA;00CB;00CC;00CD;00CE;00CF;00D0;00D1;00D2;00D3;00D4;00D5;00D6;00D7;00D8;00D9;00DA;00DB;00DC;00DD;00DE;00DF;00E0;00E1;00E2;00E3;00E4;00E5;00E6;00E7;00E8;00E9;00EA;00EB;00EC;00ED;00EE;00EF"
+        "ModuleName": "00B0-00EF"
       },
       "Type": "VMBVP1"
     },
@@ -7069,8 +6954,7 @@
             "ModuleName": "16:Save"
           }
         },
-        "ModuleName": "06C0-06CF",
-        "StatusAddress": "06C0;06C1;06C2;06C3;06C4;06C5;06C6;06C7;06C8;06C9;06CA;06CB;06CC;06CD;06CE;06CF"
+        "ModuleName": "06C0-06CF"
       },
       "TemperatureChannel": "09",
       "ThermostatAddr": "0",
@@ -7227,8 +7111,7 @@
             "ModuleName": "16:Save"
           }
         },
-        "ModuleName": "06C0-06CF",
-        "StatusAddress": "06C0;06C1;06C2;06C3;06C4;06C5;06C6;06C7;06C8;06C9;06CA;06CB;06CC;06CD;06CE;06CF"
+        "ModuleName": "06C0-06CF"
       },
       "TemperatureChannel": "09",
       "ThermostatAddr": "0",
@@ -7385,8 +7268,7 @@
             "ModuleName": "16:Save"
           }
         },
-        "ModuleName": "06C0-06CF",
-        "StatusAddress": "06C0;06C1;06C2;06C3;06C4;06C5;06C6;06C7;06C8;06C9;06CA;06CB;06CC;06CD;06CE;06CF"
+        "ModuleName": "06C0-06CF"
       },
       "TemperatureChannel": "09",
       "ThermostatAddr": "0",
@@ -7618,201 +7500,72 @@
       "Info": "VMBELO-20 Edge-lit touch panel with Oled",
       "Memory": {
         "Address": {
-          "0F44": {
-            "ModuleName": "0:Start"
-          },
-          "0F45": {
-            "ModuleName": "1"
-          },
-          "0F46": {
-            "ModuleName": "2"
-          },
-          "0F47": {
-            "ModuleName": "3"
-          },
-          "0F48": {
-            "ModuleName": "4"
-          },
-          "0F49": {
-            "ModuleName": "5"
-          },
-          "0F4A": {
-            "ModuleName": "6"
-          },
-          "0F4B": {
-            "ModuleName": "7"
-          },
-          "0F4C": {
-            "ModuleName": "8"
-          },
-          "0F4D": {
-            "ModuleName": "9"
-          },
-          "0F4E": {
-            "ModuleName": "10"
-          },
-          "0F4F": {
-            "ModuleName": "11"
-          },
-          "0F50": {
-            "ModuleName": "12"
-          },
-          "0F51": {
-            "ModuleName": "13"
-          },
-          "0F52": {
-            "ModuleName": "14"
-          },
-          "0F53": {
-            "ModuleName": "15"
-          },
-          "0F54": {
-            "ModuleName": "16"
-          },
-          "0F55": {
-            "ModuleName": "17"
-          },
-          "0F56": {
-            "ModuleName": "18"
-          },
-          "0F57": {
-            "ModuleName": "19"
-          },
-          "0F58": {
-            "ModuleName": "20"
-          },
-          "0F59": {
-            "ModuleName": "21"
-          },
-          "0F5A": {
-            "ModuleName": "22"
-          },
-          "0F5B": {
-            "ModuleName": "23"
-          },
-          "0F5C": {
-            "ModuleName": "24"
-          },
-          "0F5D": {
-            "ModuleName": "25"
-          },
-          "0F5E": {
-            "ModuleName": "26"
-          },
-          "0F5F": {
-            "ModuleName": "27"
-          },
-          "0F60": {
-            "ModuleName": "28"
-          },
-          "0F61": {
-            "ModuleName": "29"
-          },
-          "0F62": {
-            "ModuleName": "30"
-          },
-          "0F63": {
-            "ModuleName": "31"
-          },
-          "0F64": {
-            "ModuleName": "32"
-          },
-          "0F65": {
-            "ModuleName": "33"
-          },
-          "0F66": {
-            "ModuleName": "34"
-          },
-          "0F67": {
-            "ModuleName": "35"
-          },
-          "0F68": {
-            "ModuleName": "36"
-          },
-          "0F69": {
-            "ModuleName": "37"
-          },
-          "0F6A": {
-            "ModuleName": "38"
-          },
-          "0F6B": {
-            "ModuleName": "39"
-          },
-          "0F6C": {
-            "ModuleName": "40"
-          },
-          "0F6D": {
-            "ModuleName": "41"
-          },
-          "0F6E": {
-            "ModuleName": "42"
-          },
-          "0F6F": {
-            "ModuleName": "43"
-          },
-          "0F70": {
-            "ModuleName": "44"
-          },
-          "0F71": {
-            "ModuleName": "45"
-          },
-          "0F72": {
-            "ModuleName": "46"
-          },
-          "0F73": {
-            "ModuleName": "47"
-          },
-          "0F74": {
-            "ModuleName": "48"
-          },
-          "0F75": {
-            "ModuleName": "49"
-          },
-          "0F76": {
-            "ModuleName": "50"
-          },
-          "0F77": {
-            "ModuleName": "51"
-          },
-          "0F78": {
-            "ModuleName": "52"
-          },
-          "0F79": {
-            "ModuleName": "53"
-          },
-          "0F7A": {
-            "ModuleName": "54"
-          },
-          "0F7B": {
-            "ModuleName": "55"
-          },
-          "0F7C": {
-            "ModuleName": "56"
-          },
-          "0F7D": {
-            "ModuleName": "57"
-          },
-          "0F7E": {
-            "ModuleName": "58"
-          },
-          "0F7F": {
-            "ModuleName": "59"
-          },
-          "0F80": {
-            "ModuleName": "60"
-          },
-          "0F81": {
-            "ModuleName": "61"
-          },
-          "0F82": {
-            "ModuleName": "62"
-          },
-          "0F83": {
-            "ModuleName": "64:Save"
-          }
+          "0F44": { "ModuleName": "0:Start" },
+          "0F45": { "ModuleName": "1" },
+          "0F46": { "ModuleName": "2" },
+          "0F47": { "ModuleName": "3" },
+          "0F48": { "ModuleName": "4" },
+          "0F49": { "ModuleName": "5" },
+          "0F4A": { "ModuleName": "6" },
+          "0F4B": { "ModuleName": "7" },
+          "0F4C": { "ModuleName": "8" },
+          "0F4D": { "ModuleName": "9" },
+          "0F4E": { "ModuleName": "10" },
+          "0F4F": { "ModuleName": "11" },
+          "0F50": { "ModuleName": "12" },
+          "0F51": { "ModuleName": "13" },
+          "0F52": { "ModuleName": "14" },
+          "0F53": { "ModuleName": "15" },
+          "0F54": { "ModuleName": "16" },
+          "0F55": { "ModuleName": "17" },
+          "0F56": { "ModuleName": "18" },
+          "0F57": { "ModuleName": "19" },
+          "0F58": { "ModuleName": "20" },
+          "0F59": { "ModuleName": "21" },
+          "0F5A": { "ModuleName": "22" },
+          "0F5B": { "ModuleName": "23" },
+          "0F5C": { "ModuleName": "24" },
+          "0F5D": { "ModuleName": "25" },
+          "0F5E": { "ModuleName": "26" },
+          "0F5F": { "ModuleName": "27" },
+          "0F60": { "ModuleName": "28" },
+          "0F61": { "ModuleName": "29" },
+          "0F62": { "ModuleName": "30" },
+          "0F63": { "ModuleName": "31" },
+          "0F64": { "ModuleName": "32" },
+          "0F65": { "ModuleName": "33" },
+          "0F66": { "ModuleName": "34" },
+          "0F67": { "ModuleName": "35" },
+          "0F68": { "ModuleName": "36" },
+          "0F69": { "ModuleName": "37" },
+          "0F6A": { "ModuleName": "38" },
+          "0F6B": { "ModuleName": "39" },
+          "0F6C": { "ModuleName": "40" },
+          "0F6D": { "ModuleName": "41" },
+          "0F6E": { "ModuleName": "42" },
+          "0F6F": { "ModuleName": "43" },
+          "0F70": { "ModuleName": "44" },
+          "0F71": { "ModuleName": "45" },
+          "0F72": { "ModuleName": "46" },
+          "0F73": { "ModuleName": "47" },
+          "0F74": { "ModuleName": "48" },
+          "0F75": { "ModuleName": "49" },
+          "0F76": { "ModuleName": "50" },
+          "0F77": { "ModuleName": "51" },
+          "0F78": { "ModuleName": "52" },
+          "0F79": { "ModuleName": "53" },
+          "0F7A": { "ModuleName": "54" },
+          "0F7B": { "ModuleName": "55" },
+          "0F7C": { "ModuleName": "56" },
+          "0F7D": { "ModuleName": "57" },
+          "0F7E": { "ModuleName": "58" },
+          "0F7F": { "ModuleName": "59" },
+          "0F80": { "ModuleName": "60" },
+          "0F81": { "ModuleName": "61" },
+          "0F82": { "ModuleName": "62" },
+          "0F83": { "ModuleName": "64:Save" }
         },
-        "ModuleName": "0F44-0F83",
-        "StatusAddress": "0F44;0F45;0F46;0F47;0F48;0F49;0F4A;0F4B;0F4C;0F4D;0F4E;0F4F;0F50;0F51;0F52;0F53;0F54;0F55;0F56;0F57;0F58;0F59;0F5A;0F5B;0F5C;0F5D;0F5E;0F5F;0F60;0F61;0F62;0F63;0F64;0F65;0F66;0F67;0F68;0F69;0F6A;0F6B;0F6C;0F6D;0F6E;0F6F;0F70;0F71;0F72;0F73;0F74;0F75;0F76;0F77;0F78;0F79;0F7A;0F7B;0F7C;0F7D;0F7E;0F7F;0F80;0F81;0F82;0F83"
+        "ModuleName": "0F44-0F83"
       },
       "TemperatureChannel": "33",
       "ThermostatAddr": "3",
@@ -8213,8 +7966,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "03C0-03FF",
-        "StatusAddress": "03C0;03C1;03C2;03C3;03C4;03C5;03C6;03C7;03C8;03C9;03CA;03CB;03CC;03CD;03CE;03CF;03D0;03D1;03D2;03D3;03D4;03D5;03D6;03D7;03D8;03D9;03DA;03DB;03DC;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;03F0;03F1;03F2;03F3;03F4;03F5;03F6;03F7;03F8;03F9;03FA;03FB;03FC;03FD;03FE;03FF"
+        "ModuleName": "03C0-03FF"
       },
       "TemperatureChannel": "10",
       "ThermostatAddr": "0",
@@ -8509,8 +8261,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "03C0-03FF",
-        "StatusAddress": "03C0;03C1;03C2;03C3;03C4;03C5;03C6;03C7;03C8;03C9;03CA;03CB;03CC;03CD;03CE;03CF;03D0;03D1;03D2;03D3;03D4;03D5;03D6;03D7;03D8;03D9;03DA;03DB;03DC;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;03F0;03F1;03F2;03F3;03F4;03F5;03F6;03F7;03F8;03F9;03FA;03FB;03FC;03FD;03FE;03FF"
+        "ModuleName": "03C0-03FF"
       },
       "TemperatureChannel": "10",
       "ThermostatAddr": "0",
@@ -8805,8 +8556,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "03C0-03FF",
-        "StatusAddress": "03C0;03C1;03C2;03C3;03C4;03C5;03C6;03C7;03C8;03C9;03CA;03CB;03CC;03CD;03CE;03CF;03D0;03D1;03D2;03D3;03D4;03D5;03D6;03D7;03D8;03D9;03DA;03DB;03DC;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;03F0;03F1;03F2;03F3;03F4;03F5;03F6;03F7;03F8;03F9;03FA;03FB;03FC;03FD;03FE;03FF"
+        "ModuleName": "03C0-03FF"
       },
       "TemperatureChannel": "10",
       "ThermostatAddr": "0",
@@ -9225,8 +8975,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "09BE-09FD",
-        "StatusAddress": "09BE;09BF;09C0;09C1;09C2;09C3;09C4;09C5;09C6;09C7;09C8;09C9;09CA;09CB;09CC;09CD;09CE;09CF;09D0;09D1;09D2;09D3;09D4;09D5;09D6;09D7;09D8;09D9;09DA;09DB;09DC;09DD;09DE;09DF;09E0;09E1;09E2;09E3;09E4;09E5;09E6;09E7;09E8;09E9;09EA;09EB;09EC;09ED;09EE;09EF;09F0;09F1;09F2;09F3;09F4;09F5;09F6;09F7;09F8;09F9;09FA;09FB;09FC;09FD"
+        "ModuleName": "09BE-09FD"
       },
       "TemperatureChannel": "34",
       "ThermostatAddr": "3",
@@ -9521,8 +9270,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "03C0-03FF",
-        "StatusAddress": "03C0;03C1;03C2;03C3;03C4;03C5;03C6;03C7;03C8;03C9;03CA;03CB;03CC;03CD;03CE;03CF;03D0;03D1;03D2;03D3;03D4;03D5;03D6;03D7;03D8;03D9;03DA;03DB;03DC;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;03F0;03F1;03F2;03F3;03F4;03F5;03F6;03F7;03F8;03F9;03FA;03FB;03FC;03FD;03FE;03FF"
+        "ModuleName": "03C0-03FF"
       },
       "TemperatureChannel": "10",
       "ThermostatAddr": "0",
@@ -9765,8 +9513,7 @@
             "ModuleName": "64:Save"
           }
         },
-        "ModuleName": "00DD-00E9;01DD-01E9;02DD-02E9;03DD-03E9;04DD-04E8",
-        "StatusAddress": "00DD;00DE;00DF;00E0;00E1;00E2;00E3;00E4;00E5;00E6;00E7;00E8;00E9;01DD;01DE;01DF;01E0;01E1;01E2;01E3;01E4;01E5;01E6;01E7;01E8;01E9;02DD;02DE;02DF;02E0;02E1;02E2;02E3;02E4;02E5;02E6;02E7;02E8;02E9;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;04DD;04DE;04DF;04E0;04E1;04E2;04E3;04E4;04E5;04E6;04E7;04E8"
+        "ModuleName": "00DD-00E9;01DD-01E9;02DD-02E9;03DD-03E9;04DD-04E8"
       },
       "Type": "VMB1RYS"
     },
@@ -9775,10 +9522,39 @@
       "Type": "VMBKP"
     },
     "43": {
+      "Channels": {
+        "01": {
+          "Editable": "yes",
+          "Name": "Push button 1",
+          "Type": "Button"
+        }
+      },
       "Info": "One channel input module",
       "Type": "VMBIN"
     },
     "44": {
+      "Channels": {
+        "01": {
+          "Editable": "yes",
+          "Name": "Push button 1",
+          "Type": "Button"
+        },
+        "02": {
+          "Editable": "yes",
+          "Name": "Push button 2",
+          "Type": "Button"
+        },
+        "03": {
+          "Editable": "yes",
+          "Name": "Push button 3",
+          "Type": "Button"
+        },
+        "04": {
+          "Editable": "yes",
+          "Name": "Push button 4",
+          "Type": "Button"
+        }
+      },
       "Info": "4 button interface module",
       "Type": "VMB4PB"
     },
@@ -9814,6 +9590,75 @@
           "Type": "Relay"
         }
       },
+      "Memory": {
+        "Address": {
+          "00E3": { "ModuleName": "0:Start" },
+          "00E4": { "ModuleName": "1" },
+          "00E5": { "ModuleName": "2" },
+          "00E6": { "ModuleName": "3" },
+          "00E7": { "ModuleName": "4" },
+          "00E8": { "ModuleName": "5" },
+          "00E9": { "ModuleName": "6" },
+          "00EA": { "ModuleName": "7" },
+          "00EB": { "ModuleName": "8" },
+          "00EC": { "ModuleName": "9" },
+          "00ED": { "ModuleName": "10" },
+          "00EE": { "ModuleName": "11" },
+          "00EF": { "ModuleName": "12" },
+          "01E3": { "ModuleName": "13" },
+          "01E4": { "ModuleName": "14" },
+          "01E5": { "ModuleName": "15" },
+          "01E6": { "ModuleName": "16" },
+          "01E7": { "ModuleName": "17" },
+          "01E8": { "ModuleName": "18" },
+          "01E9": { "ModuleName": "19" },
+          "01EA": { "ModuleName": "20" },
+          "01EB": { "ModuleName": "21" },
+          "01EC": { "ModuleName": "22" },
+          "01ED": { "ModuleName": "23" },
+          "01EE": { "ModuleName": "24" },
+          "01EF": { "ModuleName": "25" },
+          "02E3": { "ModuleName": "26" },
+          "02E4": { "ModuleName": "27" },
+          "02E5": { "ModuleName": "28" },
+          "02E6": { "ModuleName": "29" },
+          "02E7": { "ModuleName": "30" },
+          "02E8": { "ModuleName": "31" },
+          "02E9": { "ModuleName": "32" },
+          "02EA": { "ModuleName": "33" },
+          "02EB": { "ModuleName": "34" },
+          "02EC": { "ModuleName": "35" },
+          "02ED": { "ModuleName": "36" },
+          "02EE": { "ModuleName": "37" },
+          "02EF": { "ModuleName": "38" },
+          "03E3": { "ModuleName": "39" },
+          "03E4": { "ModuleName": "40" },
+          "03E5": { "ModuleName": "41" },
+          "03E6": { "ModuleName": "42" },
+          "03E7": { "ModuleName": "43" },
+          "03E8": { "ModuleName": "44" },
+          "03E9": { "ModuleName": "45" },
+          "03EA": { "ModuleName": "46" },
+          "03EB": { "ModuleName": "47" },
+          "03EC": { "ModuleName": "48" },
+          "03ED": { "ModuleName": "49" },
+          "03EE": { "ModuleName": "50" },
+          "03EF": { "ModuleName": "51" },
+          "04E3": { "ModuleName": "52" },
+          "04E4": { "ModuleName": "53" },
+          "04E5": { "ModuleName": "54" },
+          "04E6": { "ModuleName": "55" },
+          "04E7": { "ModuleName": "56" },
+          "04E8": { "ModuleName": "57" },
+          "04E9": { "ModuleName": "58" },
+          "04EA": { "ModuleName": "59" },
+          "04EB": { "ModuleName": "60" },
+          "04EC": { "ModuleName": "61" },
+          "04ED": { "ModuleName": "62" },
+          "04EE": { "ModuleName": "64:Save" }
+        },
+        "ModuleName": "00E3-00EF;01E3-01EF;02E3-02EF;03E3-03EF;04E3-04EE"
+      },
       "Info": "4 channel relay module with direct load connections",
       "Type": "VMB4RYLD-10"
     },
@@ -9844,6 +9689,75 @@
           "Name": "Virtual relay",
           "Type": "Relay"
         }
+      },
+      "Memory": {
+        "Address": {
+          "00E3": { "ModuleName": "0:Start" },
+          "00E4": { "ModuleName": "1" },
+          "00E5": { "ModuleName": "2" },
+          "00E6": { "ModuleName": "3" },
+          "00E7": { "ModuleName": "4" },
+          "00E8": { "ModuleName": "5" },
+          "00E9": { "ModuleName": "6" },
+          "00EA": { "ModuleName": "7" },
+          "00EB": { "ModuleName": "8" },
+          "00EC": { "ModuleName": "9" },
+          "00ED": { "ModuleName": "10" },
+          "00EE": { "ModuleName": "11" },
+          "00EF": { "ModuleName": "12" },
+          "01E3": { "ModuleName": "13" },
+          "01E4": { "ModuleName": "14" },
+          "01E5": { "ModuleName": "15" },
+          "01E6": { "ModuleName": "16" },
+          "01E7": { "ModuleName": "17" },
+          "01E8": { "ModuleName": "18" },
+          "01E9": { "ModuleName": "19" },
+          "01EA": { "ModuleName": "20" },
+          "01EB": { "ModuleName": "21" },
+          "01EC": { "ModuleName": "22" },
+          "01ED": { "ModuleName": "23" },
+          "01EE": { "ModuleName": "24" },
+          "01EF": { "ModuleName": "25" },
+          "02E3": { "ModuleName": "26" },
+          "02E4": { "ModuleName": "27" },
+          "02E5": { "ModuleName": "28" },
+          "02E6": { "ModuleName": "29" },
+          "02E7": { "ModuleName": "30" },
+          "02E8": { "ModuleName": "31" },
+          "02E9": { "ModuleName": "32" },
+          "02EA": { "ModuleName": "33" },
+          "02EB": { "ModuleName": "34" },
+          "02EC": { "ModuleName": "35" },
+          "02ED": { "ModuleName": "36" },
+          "02EE": { "ModuleName": "37" },
+          "02EF": { "ModuleName": "38" },
+          "03E3": { "ModuleName": "39" },
+          "03E4": { "ModuleName": "40" },
+          "03E5": { "ModuleName": "41" },
+          "03E6": { "ModuleName": "42" },
+          "03E7": { "ModuleName": "43" },
+          "03E8": { "ModuleName": "44" },
+          "03E9": { "ModuleName": "45" },
+          "03EA": { "ModuleName": "46" },
+          "03EB": { "ModuleName": "47" },
+          "03EC": { "ModuleName": "48" },
+          "03ED": { "ModuleName": "49" },
+          "03EE": { "ModuleName": "50" },
+          "03EF": { "ModuleName": "51" },
+          "04E3": { "ModuleName": "52" },
+          "04E4": { "ModuleName": "53" },
+          "04E5": { "ModuleName": "54" },
+          "04E6": { "ModuleName": "55" },
+          "04E7": { "ModuleName": "56" },
+          "04E8": { "ModuleName": "57" },
+          "04E9": { "ModuleName": "58" },
+          "04EA": { "ModuleName": "59" },
+          "04EB": { "ModuleName": "60" },
+          "04EC": { "ModuleName": "61" },
+          "04ED": { "ModuleName": "62" },
+          "04EE": { "ModuleName": "64:Save" }
+        },
+        "ModuleName": "00E3-00EF;01E3-01EF;02E3-02EF;03E3-03EF;04E3-04EE"
       },
       "Info": "4 channel relay module with normal open contacts",
       "Type": "VMB4RYNO-10"
@@ -10017,8 +9931,7 @@
           "03FA": { "ModuleName": "62" },
           "03FB": { "ModuleName": "64:Save" }
         },
-        "ModuleName": "03BC-03FB",
-        "StatusAddress": "03BC;03BD;03BE;03BF;03C0;03C1;03C2;03C3;03C4;03C5;03C6;03C7;03C8;03C9;03CA;03CB;03CC;03CD;03CE;03CF;03D0;03D1;03D2;03D3;03D4;03D5;03D6;03D7;03D8;03D9;03DA;03DB;03DC;03DD;03DE;03DF;03E0;03E1;03E2;03E3;03E4;03E5;03E6;03E7;03E8;03E9;03EA;03EB;03EC;03ED;03EE;03EF;03F0;03F1;03F2;03F3;03F4;03F5;03F6;03F7;03F8;03F9;03FA;03FB"
+        "ModuleName": "03BC-03FB"
       },
       "Type": "VMB6PB-20"
     },
@@ -10491,6 +10404,224 @@
       "Type": "VMBGP4-20"
     },
     "57": {
+      "AllChannelStatus": "FF",
+      "ChannelNumbers": {
+        "Name": {
+          "Convert": "hex",
+          "Map": {
+            "21": "34"
+          }
+        }
+      },
+      "Channels": {
+        "01": {
+          "Editable": "yes",
+          "Name": "Push button 1",
+          "Type": "Button"
+        },
+        "02": {
+          "Editable": "yes",
+          "Name": "Push button 2",
+          "Type": "Button"
+        },
+        "03": {
+          "Editable": "yes",
+          "Name": "Push button 3",
+          "Type": "Button"
+        },
+        "04": {
+          "Editable": "yes",
+          "Name": "Push button 4",
+          "Type": "Button"
+        },
+        "05": {
+          "Editable": "yes",
+          "Name": "Push button 5",
+          "Type": "Button"
+        },
+        "06": {
+          "Editable": "yes",
+          "Name": "Push button 6",
+          "Type": "Button"
+        },
+        "07": {
+          "Editable": "yes",
+          "Name": "Push button 7",
+          "Type": "Button"
+        },
+        "08": {
+          "Editable": "yes",
+          "Name": "Push button 8",
+          "Type": "Button"
+        },
+        "09": {
+          "Editable": "yes",
+          "Name": "Push button 9",
+          "Type": "Button"
+        },
+        "10": {
+          "Editable": "yes",
+          "Name": "Push button 10",
+          "Type": "Button"
+        },
+        "11": {
+          "Editable": "yes",
+          "Name": "Push button 11",
+          "Type": "Button"
+        },
+        "12": {
+          "Editable": "yes",
+          "Name": "Push button 12",
+          "Type": "Button"
+        },
+        "13": {
+          "Editable": "yes",
+          "Name": "Push button 13",
+          "Type": "Button"
+        },
+        "14": {
+          "Editable": "yes",
+          "Name": "Push button 14",
+          "Type": "Button"
+        },
+        "15": {
+          "Editable": "yes",
+          "Name": "Push button 15",
+          "Type": "Button"
+        },
+        "16": {
+          "Editable": "yes",
+          "Name": "Push button 16",
+          "Type": "Button"
+        },
+        "17": {
+          "Editable": "yes",
+          "Name": "Push button 17",
+          "Type": "Button"
+        },
+        "18": {
+          "Editable": "yes",
+          "Name": "Push button 18",
+          "Type": "Button"
+        },
+        "19": {
+          "Editable": "yes",
+          "Name": "Push button 19",
+          "Type": "Button"
+        },
+        "20": {
+          "Editable": "yes",
+          "Name": "Push button 10",
+          "Type": "Button"
+        },
+        "21": {
+          "Editable": "yes",
+          "Name": "Push button 21",
+          "Type": "Button"
+        },
+        "22": {
+          "Editable": "yes",
+          "Name": "Push button 22",
+          "Type": "Button"
+        },
+        "23": {
+          "Editable": "yes",
+          "Name": "Push button 23",
+          "Type": "Button"
+        },
+        "24": {
+          "Editable": "yes",
+          "Name": "Push button 24",
+          "Type": "Button"
+        },
+        "25": {
+          "Editable": "yes",
+          "Name": "Push button 25",
+          "Type": "Button"
+        },
+        "26": {
+          "Editable": "yes",
+          "Name": "Push button 26",
+          "Type": "Button"
+        },
+        "27": {
+          "Editable": "yes",
+          "Name": "Push button 27",
+          "Type": "Button"
+        },
+        "28": {
+          "Editable": "yes",
+          "Name": "Push button 28",
+          "Type": "Button"
+        },
+        "29": {
+          "Editable": "yes",
+          "Name": "Push button 29",
+          "Type": "Button"
+        },
+        "30": {
+          "Editable": "yes",
+          "Name": "Push button 30",
+          "Type": "Button"
+        },
+        "31": {
+          "Editable": "yes",
+          "Name": "Push button 31",
+          "Type": "Button"
+        },
+        "32": {
+          "Editable": "yes",
+          "Name": "Push button 32",
+          "Type": "Button"
+        },
+        "34": {
+          "Editable": "yes",
+          "Name": "Temperature",
+          "Type": "Temperature"
+        },
+        "35": {
+          "Name": "Heater",
+          "Type": "ThermostatChannel"
+        },
+        "36": {
+          "Name": "Boost",
+          "Type": "ThermostatChannel"
+        },
+        "37": {
+          "Name": "Pump",
+          "Type": "ThermostatChannel"
+        },
+        "38": {
+          "Name": "Cooler",
+          "Type": "ThermostatChannel"
+        },
+        "39": {
+          "Name": "Alarm 1",
+          "Type": "ThermostatChannel"
+        },
+        "40": {
+          "Name": "Alarm 2",
+          "Type": "ThermostatChannel"
+        },
+        "41": {
+          "Name": "Alarm 3",
+          "Type": "ThermostatChannel"
+        },
+        "42": {
+          "Name": "Alarm 4",
+          "Type": "ThermostatChannel"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
+        },
+        "98": {
+          "Name": "Memo Text",
+          "Type": "Memo"
+        }
+      },
+      "TemperatureChannel": "34",
+      "ThermostatAddr": "3",
       "Info": "Touch panel with Oled display",
       "Type": "VMBGPO-20"
     },
