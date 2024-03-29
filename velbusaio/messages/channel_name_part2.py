@@ -82,6 +82,7 @@ class ChannelNamePart2Message(Message):
         "VMBDALI-20",
         "VMBEL4PIR-20",
         "VMBGP4PIR-20",
+        "VMB8DC-20",
     ],
 )
 class ChannelNamePart2Message2(ChannelNamePart2Message):

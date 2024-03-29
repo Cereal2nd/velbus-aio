@@ -108,6 +108,10 @@
           "Editable": "yes",
           "Name": "Push button 8",
           "Type": "Button"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "8-Channel Push Button Module",
@@ -199,6 +203,10 @@
           "Editable": "yes",
           "Name": "Dimmer 4",
           "Type": "Dimmer"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Memory": {
@@ -880,6 +888,10 @@
           "Editable": "yes",
           "Name": "Push button 8",
           "Type": "Button"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "Push button interface module",
@@ -996,6 +1008,10 @@
           "Editable": "yes",
           "Name": "Virtual button",
           "Type": "Button"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "Push button interface module for 4 or 6 NIKO push buttons",
@@ -1240,6 +1256,10 @@
           "Editable": "yes",
           "Name": "Virtual button",
           "Type": "Button"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "Push button module for 1 or 2 NIKO push buttons",
@@ -2173,6 +2193,10 @@
         "18": {
           "Name": "Alarm 4",
           "Type": "ThermostatChannel"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "One, two or four touch buttons module",
@@ -2465,6 +2489,10 @@
         "18": {
           "Name": "Alarm 4",
           "Type": "ThermostatChannel"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "One, two or four touch buttons module",
@@ -2757,6 +2785,10 @@
         "18": {
           "Name": "Alarm 4",
           "Type": "ThermostatChannel"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "One, two or four touch buttons module",
@@ -3170,6 +3202,10 @@
           "Name": "Alarm 4",
           "Type": "ThermostatChannel"
         },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
+        },
         "98": {
           "Name": "Memo Text",
           "Type": "Memo"
@@ -3419,6 +3455,10 @@
           "Editable": "yes",
           "Name": "Virtual button",
           "Type": "Button"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "7 channel input module",
@@ -3913,6 +3953,10 @@
           "Name": "Alarm 4",
           "Type": "ThermostatChannel"
         },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
+        },
         "98": {
           "Name": "Memo Text",
           "Type": "Memo"
@@ -4380,6 +4424,10 @@
           "Name": "Absence output",
           "Type": "Sensor"
         },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
+        },
         "99": {
           "Name": "Light value",
           "Type": "LightSensor"
@@ -4615,6 +4663,10 @@
         "07": {
           "Name": "Absence output",
           "Type": "Sensor"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         },
         "99": {
           "Name": "Light value",
@@ -4868,6 +4920,10 @@
           "Editable": "yes",
           "Name": "Temperature",
           "Type": "Temperature"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         },
         "99": {
           "Name": "Light value",
@@ -5160,6 +5216,10 @@
           "Name": "Alarm 4",
           "Type": "ThermostatChannel"
         },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
+        },
         "99": {
           "Name": "Light value",
           "Type": "LightSensor"
@@ -5374,6 +5434,10 @@
           "Editable": "yes",
           "Name": "Blind",
           "Type": "Blind"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "1 channel blind module",
@@ -5850,6 +5914,10 @@
         "13": {
           "Name": "Wind speed",
           "Type": "SensorNumber"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "Meteo station",
@@ -6313,6 +6381,10 @@
         "12": {
           "Name": "Sensor 4",
           "Type": "SensorNumber"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "Analog I/O module",
@@ -6639,6 +6711,10 @@
         "08": {
           "Name": "Virtual button 2",
           "Type": "Button"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "Doorbird interface module",
@@ -6932,6 +7008,10 @@
           "Name": "Output",
           "Type": "Relay"
         },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
+        },
         "97": {
           "Name": "Edge Lit",
           "Type": "EdgeLit"
@@ -7086,6 +7166,10 @@
           "Name": "Output",
           "Type": "Relay"
         },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
+        },
         "97": {
           "Name": "Edge Lit",
           "Type": "EdgeLit"
@@ -7239,6 +7323,10 @@
           "Editable": "yes",
           "Name": "Output",
           "Type": "Relay"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         },
         "97": {
           "Name": "Edge Lit",
@@ -7513,6 +7601,10 @@
           "Editable": "yes",
           "Name": "Output",
           "Type": "Relay"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         },
         "97": {
           "Name": "Edge Lit",
@@ -7810,6 +7902,10 @@
           "Name": "Output",
           "Type": "Relay"
         },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
+        },
         "97": {
           "Name": "Edge Lit",
           "Type": "EdgeLit"
@@ -7915,6 +8011,10 @@
         "18": {
           "Name": "Alarm 4",
           "Type": "ThermostatChannel"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "One, two or four touch buttons module  (ed2)",
@@ -8207,6 +8307,10 @@
         "18": {
           "Name": "Alarm 4",
           "Type": "ThermostatChannel"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "One, two or four touch buttons module  (ed2)",
@@ -8499,6 +8603,10 @@
         "18": {
           "Name": "Alarm 4",
           "Type": "ThermostatChannel"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "One, two or four touch buttons module  (ed2)",
@@ -8912,6 +9020,10 @@
           "Name": "Alarm 4",
           "Type": "ThermostatChannel"
         },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
+        },
         "98": {
           "Name": "Memo Text",
           "Type": "Memo"
@@ -9203,6 +9315,10 @@
         "18": {
           "Name": "Alarm 4",
           "Type": "ThermostatChannel"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         },
         "99": {
           "Name": "Light value",
@@ -9777,6 +9893,10 @@
           "Editable": "yes",
           "Name": "Dimmer 8",
           "Type": "Dimmer"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "8 channel 0 to 10 V dimmer control module",
@@ -9823,6 +9943,10 @@
           "Editable": "yes",
           "Name": "Virtual button 2",
           "Type": "Button"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         }
       },
       "Info": "6 button interface module",
@@ -10513,6 +10637,10 @@
         "11": {
           "Name": "Output",
           "Type": "Relay"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
         },
         "99": {
           "Name": "Light value",

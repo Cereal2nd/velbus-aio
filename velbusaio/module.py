@@ -737,17 +737,6 @@ class Module:
                     "ThermostatAddr" in self._data and self._data["ThermostatAddr"] != 0
                 ):
                     await self._update_channel(int(chan), {"thermostat": True})
-        # add extra channel for program selection which is not in the channel list of the protocol.json file,
-        # but is available in the messages list of the corresponding module.
-        if keys_exists(self._data, "Messages", "B3"):
-            self._channels[CHANNEL_SELECTED_PROGRAM] = SelectedProgram(
-                self,
-                CHANNEL_SELECTED_PROGRAM,
-                "Selected Program",
-                False,
-                self._writer,
-                self._address,
-            )
 
 
 class VmbDali(Module):
