@@ -10,7 +10,6 @@ import json
 import logging
 import re
 from typing import TYPE_CHECKING, Awaitable, Callable
-
 import pkg_resources
 
 from velbusaio.command_registry import commandRegistry

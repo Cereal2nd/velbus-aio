@@ -1012,198 +1012,70 @@
       "Info": "Push button interface module for 4 or 6 NIKO push buttons",
       "Memory": {
         "Address": {
-          "03C0": {
-            "ModuleName": "0:Start"
-          },
-          "03C1": {
-            "ModuleName": "1"
-          },
-          "03C2": {
-            "ModuleName": "2"
-          },
-          "03C3": {
-            "ModuleName": "3"
-          },
-          "03C4": {
-            "ModuleName": "4"
-          },
-          "03C5": {
-            "ModuleName": "5"
-          },
-          "03C6": {
-            "ModuleName": "6"
-          },
-          "03C7": {
-            "ModuleName": "7"
-          },
-          "03C8": {
-            "ModuleName": "8"
-          },
-          "03C9": {
-            "ModuleName": "9"
-          },
-          "03CA": {
-            "ModuleName": "10"
-          },
-          "03CB": {
-            "ModuleName": "11"
-          },
-          "03CC": {
-            "ModuleName": "12"
-          },
-          "03CD": {
-            "ModuleName": "13"
-          },
-          "03CE": {
-            "ModuleName": "14"
-          },
-          "03CF": {
-            "ModuleName": "15"
-          },
-          "03D0": {
-            "ModuleName": "16"
-          },
-          "03D1": {
-            "ModuleName": "17"
-          },
-          "03D2": {
-            "ModuleName": "18"
-          },
-          "03D3": {
-            "ModuleName": "19"
-          },
-          "03D4": {
-            "ModuleName": "20"
-          },
-          "03D5": {
-            "ModuleName": "21"
-          },
-          "03D6": {
-            "ModuleName": "22"
-          },
-          "03D7": {
-            "ModuleName": "23"
-          },
-          "03D8": {
-            "ModuleName": "24"
-          },
-          "03D9": {
-            "ModuleName": "25"
-          },
-          "03DA": {
-            "ModuleName": "26"
-          },
-          "03DB": {
-            "ModuleName": "27"
-          },
-          "03DC": {
-            "ModuleName": "28"
-          },
-          "03DD": {
-            "ModuleName": "29"
-          },
-          "03DE": {
-            "ModuleName": "30"
-          },
-          "03DF": {
-            "ModuleName": "31"
-          },
-          "03E0": {
-            "ModuleName": "32"
-          },
-          "03E1": {
-            "ModuleName": "33"
-          },
-          "03E2": {
-            "ModuleName": "34"
-          },
-          "03E3": {
-            "ModuleName": "35"
-          },
-          "03E4": {
-            "ModuleName": "36"
-          },
-          "03E5": {
-            "ModuleName": "37"
-          },
-          "03E6": {
-            "ModuleName": "38"
-          },
-          "03E7": {
-            "ModuleName": "39"
-          },
-          "03E8": {
-            "ModuleName": "40"
-          },
-          "03E9": {
-            "ModuleName": "41"
-          },
-          "03EA": {
-            "ModuleName": "42"
-          },
-          "03EB": {
-            "ModuleName": "43"
-          },
-          "03EC": {
-            "ModuleName": "44"
-          },
-          "03ED": {
-            "ModuleName": "45"
-          },
-          "03EE": {
-            "ModuleName": "46"
-          },
-          "03EF": {
-            "ModuleName": "47"
-          },
-          "03F0": {
-            "ModuleName": "48"
-          },
-          "03F1": {
-            "ModuleName": "49"
-          },
-          "03F2": {
-            "ModuleName": "50"
-          },
-          "03F3": {
-            "ModuleName": "51"
-          },
-          "03F4": {
-            "ModuleName": "52"
-          },
-          "03F5": {
-            "ModuleName": "53"
-          },
-          "03F6": {
-            "ModuleName": "54"
-          },
-          "03F7": {
-            "ModuleName": "55"
-          },
-          "03F8": {
-            "ModuleName": "56"
-          },
-          "03F9": {
-            "ModuleName": "57"
-          },
-          "03FA": {
-            "ModuleName": "58"
-          },
-          "03FB": {
-            "ModuleName": "59"
-          },
-          "03FC": {
-            "ModuleName": "60"
-          },
-          "03FD": {
-            "ModuleName": "61"
-          },
-          "03FE": {
-            "ModuleName": "62"
-          },
-          "03FF": {
-            "ModuleName": "64:Save"
-          }
+          "03C0": { "ModuleName": "0:Start" },
+          "03C1": { "ModuleName": "1" },
+          "03C2": { "ModuleName": "2" },
+          "03C3": { "ModuleName": "3" },
+          "03C4": { "ModuleName": "4" },
+          "03C5": { "ModuleName": "5" },
+          "03C6": { "ModuleName": "6" },
+          "03C7": { "ModuleName": "7" },
+          "03C8": { "ModuleName": "8" },
+          "03C9": { "ModuleName": "9" },
+          "03CA": { "ModuleName": "10" },
+          "03CB": { "ModuleName": "11" },
+          "03CC": { "ModuleName": "12" },
+          "03CD": { "ModuleName": "13" },
+          "03CE": { "ModuleName": "14" },
+          "03CF": { "ModuleName": "15" },
+          "03D0": { "ModuleName": "16" },
+          "03D1": { "ModuleName": "17" },
+          "03D2": { "ModuleName": "18" },
+          "03D3": { "ModuleName": "19" },
+          "03D4": { "ModuleName": "20" },
+          "03D5": { "ModuleName": "21" },
+          "03D6": { "ModuleName": "22" },
+          "03D7": { "ModuleName": "23" },
+          "03D8": { "ModuleName": "24" },
+          "03D9": { "ModuleName": "25" },
+          "03DA": { "ModuleName": "26" },
+          "03DB": { "ModuleName": "27" },
+          "03DC": { "ModuleName": "28" },
+          "03DD": { "ModuleName": "29" },
+          "03DE": { "ModuleName": "30" },
+          "03DF": { "ModuleName": "31" },
+          "03E0": { "ModuleName": "32" },
+          "03E1": { "ModuleName": "33" },
+          "03E2": { "ModuleName": "34" },
+          "03E3": { "ModuleName": "35" },
+          "03E4": { "ModuleName": "36" },
+          "03E5": { "ModuleName": "37" },
+          "03E6": { "ModuleName": "38" },
+          "03E7": { "ModuleName": "39" },
+          "03E8": { "ModuleName": "40" },
+          "03E9": { "ModuleName": "41" },
+          "03EA": { "ModuleName": "42" },
+          "03EB": { "ModuleName": "43" },
+          "03EC": { "ModuleName": "44" },
+          "03ED": { "ModuleName": "45" },
+          "03EE": { "ModuleName": "46" },
+          "03EF": { "ModuleName": "47" },
+          "03F0": { "ModuleName": "48" },
+          "03F1": { "ModuleName": "49" },
+          "03F2": { "ModuleName": "50" },
+          "03F3": { "ModuleName": "51" },
+          "03F4": { "ModuleName": "52" },
+          "03F5": { "ModuleName": "53" },
+          "03F6": { "ModuleName": "54" },
+          "03F7": { "ModuleName": "55" },
+          "03F8": { "ModuleName": "56" },
+          "03F9": { "ModuleName": "57" },
+          "03FA": { "ModuleName": "58" },
+          "03FB": { "ModuleName": "59" },
+          "03FC": { "ModuleName": "60" },
+          "03FD": { "ModuleName": "61" },
+          "03FE": { "ModuleName": "62" },
+          "03FF": { "ModuleName": "64:Save" }
         },
         "ModuleName": "03C0-03FF"
       },
@@ -1259,198 +1131,70 @@
       "Info": "Push button module for 1 or 2 NIKO push buttons",
       "Memory": {
         "Address": {
-          "03C0": {
-            "ModuleName": "0:Start"
-          },
-          "03C1": {
-            "ModuleName": "1"
-          },
-          "03C2": {
-            "ModuleName": "2"
-          },
-          "03C3": {
-            "ModuleName": "3"
-          },
-          "03C4": {
-            "ModuleName": "4"
-          },
-          "03C5": {
-            "ModuleName": "5"
-          },
-          "03C6": {
-            "ModuleName": "6"
-          },
-          "03C7": {
-            "ModuleName": "7"
-          },
-          "03C8": {
-            "ModuleName": "8"
-          },
-          "03C9": {
-            "ModuleName": "9"
-          },
-          "03CA": {
-            "ModuleName": "10"
-          },
-          "03CB": {
-            "ModuleName": "11"
-          },
-          "03CC": {
-            "ModuleName": "12"
-          },
-          "03CD": {
-            "ModuleName": "13"
-          },
-          "03CE": {
-            "ModuleName": "14"
-          },
-          "03CF": {
-            "ModuleName": "15"
-          },
-          "03D0": {
-            "ModuleName": "16"
-          },
-          "03D1": {
-            "ModuleName": "17"
-          },
-          "03D2": {
-            "ModuleName": "18"
-          },
-          "03D3": {
-            "ModuleName": "19"
-          },
-          "03D4": {
-            "ModuleName": "20"
-          },
-          "03D5": {
-            "ModuleName": "21"
-          },
-          "03D6": {
-            "ModuleName": "22"
-          },
-          "03D7": {
-            "ModuleName": "23"
-          },
-          "03D8": {
-            "ModuleName": "24"
-          },
-          "03D9": {
-            "ModuleName": "25"
-          },
-          "03DA": {
-            "ModuleName": "26"
-          },
-          "03DB": {
-            "ModuleName": "27"
-          },
-          "03DC": {
-            "ModuleName": "28"
-          },
-          "03DD": {
-            "ModuleName": "29"
-          },
-          "03DE": {
-            "ModuleName": "30"
-          },
-          "03DF": {
-            "ModuleName": "31"
-          },
-          "03E0": {
-            "ModuleName": "32"
-          },
-          "03E1": {
-            "ModuleName": "33"
-          },
-          "03E2": {
-            "ModuleName": "34"
-          },
-          "03E3": {
-            "ModuleName": "35"
-          },
-          "03E4": {
-            "ModuleName": "36"
-          },
-          "03E5": {
-            "ModuleName": "37"
-          },
-          "03E6": {
-            "ModuleName": "38"
-          },
-          "03E7": {
-            "ModuleName": "39"
-          },
-          "03E8": {
-            "ModuleName": "40"
-          },
-          "03E9": {
-            "ModuleName": "41"
-          },
-          "03EA": {
-            "ModuleName": "42"
-          },
-          "03EB": {
-            "ModuleName": "43"
-          },
-          "03EC": {
-            "ModuleName": "44"
-          },
-          "03ED": {
-            "ModuleName": "45"
-          },
-          "03EE": {
-            "ModuleName": "46"
-          },
-          "03EF": {
-            "ModuleName": "47"
-          },
-          "03F0": {
-            "ModuleName": "48"
-          },
-          "03F1": {
-            "ModuleName": "49"
-          },
-          "03F2": {
-            "ModuleName": "50"
-          },
-          "03F3": {
-            "ModuleName": "51"
-          },
-          "03F4": {
-            "ModuleName": "52"
-          },
-          "03F5": {
-            "ModuleName": "53"
-          },
-          "03F6": {
-            "ModuleName": "54"
-          },
-          "03F7": {
-            "ModuleName": "55"
-          },
-          "03F8": {
-            "ModuleName": "56"
-          },
-          "03F9": {
-            "ModuleName": "57"
-          },
-          "03FA": {
-            "ModuleName": "58"
-          },
-          "03FB": {
-            "ModuleName": "59"
-          },
-          "03FC": {
-            "ModuleName": "60"
-          },
-          "03FD": {
-            "ModuleName": "61"
-          },
-          "03FE": {
-            "ModuleName": "62"
-          },
-          "03FF": {
-            "ModuleName": "64:Save"
-          }
+          "03C0": { "ModuleName": "0:Start" },
+          "03C1": { "ModuleName": "1" },
+          "03C2": { "ModuleName": "2" },
+          "03C3": { "ModuleName": "3" },
+          "03C4": { "ModuleName": "4" },
+          "03C5": { "ModuleName": "5" },
+          "03C6": { "ModuleName": "6" },
+          "03C7": { "ModuleName": "7" },
+          "03C8": { "ModuleName": "8" },
+          "03C9": { "ModuleName": "9" },
+          "03CA": { "ModuleName": "10" },
+          "03CB": { "ModuleName": "11" },
+          "03CC": { "ModuleName": "12" },
+          "03CD": { "ModuleName": "13" },
+          "03CE": { "ModuleName": "14" },
+          "03CF": { "ModuleName": "15" },
+          "03D0": { "ModuleName": "16" },
+          "03D1": { "ModuleName": "17" },
+          "03D2": { "ModuleName": "18" },
+          "03D3": { "ModuleName": "19" },
+          "03D4": { "ModuleName": "20" },
+          "03D5": { "ModuleName": "21" },
+          "03D6": { "ModuleName": "22" },
+          "03D7": { "ModuleName": "23" },
+          "03D8": { "ModuleName": "24" },
+          "03D9": { "ModuleName": "25" },
+          "03DA": { "ModuleName": "26" },
+          "03DB": { "ModuleName": "27" },
+          "03DC": { "ModuleName": "28" },
+          "03DD": { "ModuleName": "29" },
+          "03DE": { "ModuleName": "30" },
+          "03DF": { "ModuleName": "31" },
+          "03E0": { "ModuleName": "32" },
+          "03E1": { "ModuleName": "33" },
+          "03E2": { "ModuleName": "34" },
+          "03E3": { "ModuleName": "35" },
+          "03E4": { "ModuleName": "36" },
+          "03E5": { "ModuleName": "37" },
+          "03E6": { "ModuleName": "38" },
+          "03E7": { "ModuleName": "39" },
+          "03E8": { "ModuleName": "40" },
+          "03E9": { "ModuleName": "41" },
+          "03EA": { "ModuleName": "42" },
+          "03EB": { "ModuleName": "43" },
+          "03EC": { "ModuleName": "44" },
+          "03ED": { "ModuleName": "45" },
+          "03EE": { "ModuleName": "46" },
+          "03EF": { "ModuleName": "47" },
+          "03F0": { "ModuleName": "48" },
+          "03F1": { "ModuleName": "49" },
+          "03F2": { "ModuleName": "50" },
+          "03F3": { "ModuleName": "51" },
+          "03F4": { "ModuleName": "52" },
+          "03F5": { "ModuleName": "53" },
+          "03F6": { "ModuleName": "54" },
+          "03F7": { "ModuleName": "55" },
+          "03F8": { "ModuleName": "56" },
+          "03F9": { "ModuleName": "57" },
+          "03FA": { "ModuleName": "58" },
+          "03FB": { "ModuleName": "59" },
+          "03FC": { "ModuleName": "60" },
+          "03FD": { "ModuleName": "61" },
+          "03FE": { "ModuleName": "62" },
+          "03FF": { "ModuleName": "64:Save" }
         },
         "ModuleName": "03C0-03FF"
       },
@@ -1460,198 +1204,70 @@
       "Info": "Wireless remote control receiver module",
       "Memory": {
         "Address": {
-          "02C0": {
-            "ModuleName": "0:Start"
-          },
-          "02C1": {
-            "ModuleName": "1"
-          },
-          "02C2": {
-            "ModuleName": "2"
-          },
-          "02C3": {
-            "ModuleName": "3"
-          },
-          "02C4": {
-            "ModuleName": "4"
-          },
-          "02C5": {
-            "ModuleName": "5"
-          },
-          "02C6": {
-            "ModuleName": "6"
-          },
-          "02C7": {
-            "ModuleName": "7"
-          },
-          "02C8": {
-            "ModuleName": "8"
-          },
-          "02C9": {
-            "ModuleName": "9"
-          },
-          "02CA": {
-            "ModuleName": "10"
-          },
-          "02CB": {
-            "ModuleName": "11"
-          },
-          "02CC": {
-            "ModuleName": "12"
-          },
-          "02CD": {
-            "ModuleName": "13"
-          },
-          "02CE": {
-            "ModuleName": "14"
-          },
-          "02CF": {
-            "ModuleName": "15"
-          },
-          "02D0": {
-            "ModuleName": "16"
-          },
-          "02D1": {
-            "ModuleName": "17"
-          },
-          "02D2": {
-            "ModuleName": "18"
-          },
-          "02D3": {
-            "ModuleName": "19"
-          },
-          "02D4": {
-            "ModuleName": "20"
-          },
-          "02D5": {
-            "ModuleName": "21"
-          },
-          "02D6": {
-            "ModuleName": "22"
-          },
-          "02D7": {
-            "ModuleName": "23"
-          },
-          "02D8": {
-            "ModuleName": "24"
-          },
-          "02D9": {
-            "ModuleName": "25"
-          },
-          "02DA": {
-            "ModuleName": "26"
-          },
-          "02DB": {
-            "ModuleName": "27"
-          },
-          "02DC": {
-            "ModuleName": "28"
-          },
-          "02DD": {
-            "ModuleName": "29"
-          },
-          "02DE": {
-            "ModuleName": "30"
-          },
-          "02DF": {
-            "ModuleName": "31"
-          },
-          "02E0": {
-            "ModuleName": "32"
-          },
-          "02E1": {
-            "ModuleName": "33"
-          },
-          "02E2": {
-            "ModuleName": "34"
-          },
-          "02E3": {
-            "ModuleName": "35"
-          },
-          "02E4": {
-            "ModuleName": "36"
-          },
-          "02E5": {
-            "ModuleName": "37"
-          },
-          "02E6": {
-            "ModuleName": "38"
-          },
-          "02E7": {
-            "ModuleName": "39"
-          },
-          "02E8": {
-            "ModuleName": "40"
-          },
-          "02E9": {
-            "ModuleName": "41"
-          },
-          "02EA": {
-            "ModuleName": "42"
-          },
-          "02EB": {
-            "ModuleName": "43"
-          },
-          "02EC": {
-            "ModuleName": "44"
-          },
-          "02ED": {
-            "ModuleName": "45"
-          },
-          "02EE": {
-            "ModuleName": "46"
-          },
-          "02EF": {
-            "ModuleName": "47"
-          },
-          "02F0": {
-            "ModuleName": "48"
-          },
-          "02F1": {
-            "ModuleName": "49"
-          },
-          "02F2": {
-            "ModuleName": "50"
-          },
-          "02F3": {
-            "ModuleName": "51"
-          },
-          "02F4": {
-            "ModuleName": "52"
-          },
-          "02F5": {
-            "ModuleName": "53"
-          },
-          "02F6": {
-            "ModuleName": "54"
-          },
-          "02F7": {
-            "ModuleName": "55"
-          },
-          "02F8": {
-            "ModuleName": "56"
-          },
-          "02F9": {
-            "ModuleName": "57"
-          },
-          "02FA": {
-            "ModuleName": "58"
-          },
-          "02FB": {
-            "ModuleName": "59"
-          },
-          "02FC": {
-            "ModuleName": "60"
-          },
-          "02FD": {
-            "ModuleName": "61"
-          },
-          "02FE": {
-            "ModuleName": "62"
-          },
-          "02FF": {
-            "ModuleName": "64:Save"
-          }
+          "02C0": { "ModuleName": "0:Start" },
+          "02C1": { "ModuleName": "1" },
+          "02C2": { "ModuleName": "2" },
+          "02C3": { "ModuleName": "3" },
+          "02C4": { "ModuleName": "4" },
+          "02C5": { "ModuleName": "5" },
+          "02C6": { "ModuleName": "6" },
+          "02C7": { "ModuleName": "7" },
+          "02C8": { "ModuleName": "8" },
+          "02C9": { "ModuleName": "9" },
+          "02CA": { "ModuleName": "10" },
+          "02CB": { "ModuleName": "11" },
+          "02CC": { "ModuleName": "12" },
+          "02CD": { "ModuleName": "13" },
+          "02CE": { "ModuleName": "14" },
+          "02CF": { "ModuleName": "15" },
+          "02D0": { "ModuleName": "16" },
+          "02D1": { "ModuleName": "17" },
+          "02D2": { "ModuleName": "18" },
+          "02D3": { "ModuleName": "19" },
+          "02D4": { "ModuleName": "20" },
+          "02D5": { "ModuleName": "21" },
+          "02D6": { "ModuleName": "22" },
+          "02D7": { "ModuleName": "23" },
+          "02D8": { "ModuleName": "24" },
+          "02D9": { "ModuleName": "25" },
+          "02DA": { "ModuleName": "26" },
+          "02DB": { "ModuleName": "27" },
+          "02DC": { "ModuleName": "28" },
+          "02DD": { "ModuleName": "29" },
+          "02DE": { "ModuleName": "30" },
+          "02DF": { "ModuleName": "31" },
+          "02E0": { "ModuleName": "32" },
+          "02E1": { "ModuleName": "33" },
+          "02E2": { "ModuleName": "34" },
+          "02E3": { "ModuleName": "35" },
+          "02E4": { "ModuleName": "36" },
+          "02E5": { "ModuleName": "37" },
+          "02E6": { "ModuleName": "38" },
+          "02E7": { "ModuleName": "39" },
+          "02E8": { "ModuleName": "40" },
+          "02E9": { "ModuleName": "41" },
+          "02EA": { "ModuleName": "42" },
+          "02EB": { "ModuleName": "43" },
+          "02EC": { "ModuleName": "44" },
+          "02ED": { "ModuleName": "45" },
+          "02EE": { "ModuleName": "46" },
+          "02EF": { "ModuleName": "47" },
+          "02F0": { "ModuleName": "48" },
+          "02F1": { "ModuleName": "49" },
+          "02F2": { "ModuleName": "50" },
+          "02F3": { "ModuleName": "51" },
+          "02F4": { "ModuleName": "52" },
+          "02F5": { "ModuleName": "53" },
+          "02F6": { "ModuleName": "54" },
+          "02F7": { "ModuleName": "55" },
+          "02F8": { "ModuleName": "56" },
+          "02F9": { "ModuleName": "57" },
+          "02FA": { "ModuleName": "58" },
+          "02FB": { "ModuleName": "59" },
+          "02FC": { "ModuleName": "60" },
+          "02FD": { "ModuleName": "61" },
+          "02FE": { "ModuleName": "62" },
+          "02FF": { "ModuleName": "64:Save" }
         },
         "ModuleName": "02C0-02FF"
       },
@@ -9936,6 +9552,130 @@
       "Type": "VMB6PB-20"
     },
     "4D": {
+      "AllChannelStatus": "FF",
+      "ChannelNumbers": {
+        "Name": {
+          "Map": {
+            "01": "09"
+          }
+        }
+      },
+      "Channels": {
+        "01": {
+          "Name": "Dark output",
+          "Type": "Sensor"
+        },
+        "02": {
+          "Name": "Light output",
+          "Type": "Sensor"
+        },
+        "03": {
+          "Name": "Motion output 1",
+          "Type": "Sensor"
+        },
+        "04": {
+          "Name": "Motion output 1 (LD)",
+          "Type": "Sensor"
+        },
+        "05": {
+          "Name": "Motion output 2",
+          "Type": "Sensor"
+        },
+        "06": {
+          "Name": "Motion output 2 (LD)",
+          "Type": "Sensor"
+        },
+        "07": {
+          "Name": "Low alarm",
+          "Type": "Sensor"
+        },
+        "08": {
+          "Name": "High alarm",
+          "Type": "Sensor"
+        },
+        "09": {
+          "Editable": "yes",
+          "Name": "Temperature",
+          "Type": "Temperature"
+        },
+        "96": {
+          "Name": "SelectedProgram",
+          "Type": "SelectedProgram"
+        },
+        "99": {
+          "Name": "Light value",
+          "Type": "LightSensor"
+        }
+      },
+      "Memory": {
+        "Address": {
+          "03BC": { "ModuleName": "0:Start" },
+          "03BD": { "ModuleName": "1" },
+          "03BE": { "ModuleName": "2" },
+          "03BF": { "ModuleName": "3" },
+          "03C0": { "ModuleName": "4" },
+          "03C1": { "ModuleName": "5" },
+          "03C2": { "ModuleName": "6" },
+          "03C3": { "ModuleName": "7" },
+          "03C4": { "ModuleName": "8" },
+          "03C5": { "ModuleName": "9" },
+          "03C6": { "ModuleName": "10" },
+          "03C7": { "ModuleName": "11" },
+          "03C8": { "ModuleName": "12" },
+          "03C9": { "ModuleName": "13" },
+          "03CA": { "ModuleName": "14" },
+          "03CB": { "ModuleName": "15" },
+          "03CC": { "ModuleName": "16" },
+          "03CD": { "ModuleName": "17" },
+          "03CE": { "ModuleName": "18" },
+          "03CF": { "ModuleName": "19" },
+          "03D0": { "ModuleName": "20" },
+          "03D1": { "ModuleName": "21" },
+          "03D2": { "ModuleName": "22" },
+          "03D3": { "ModuleName": "23" },
+          "03D4": { "ModuleName": "24" },
+          "03D5": { "ModuleName": "25" },
+          "03D6": { "ModuleName": "26" },
+          "03D7": { "ModuleName": "27" },
+          "03D8": { "ModuleName": "28" },
+          "03D9": { "ModuleName": "29" },
+          "03DA": { "ModuleName": "30" },
+          "03DB": { "ModuleName": "31" },
+          "03DC": { "ModuleName": "32" },
+          "03DD": { "ModuleName": "33" },
+          "03DE": { "ModuleName": "34" },
+          "03DF": { "ModuleName": "35" },
+          "03E0": { "ModuleName": "36" },
+          "03E1": { "ModuleName": "37" },
+          "03E2": { "ModuleName": "38" },
+          "03E3": { "ModuleName": "39" },
+          "03E4": { "ModuleName": "40" },
+          "03E5": { "ModuleName": "41" },
+          "03E6": { "ModuleName": "42" },
+          "03E7": { "ModuleName": "43" },
+          "03E8": { "ModuleName": "44" },
+          "03E9": { "ModuleName": "45" },
+          "03EA": { "ModuleName": "46" },
+          "03EB": { "ModuleName": "47" },
+          "03EC": { "ModuleName": "48" },
+          "03ED": { "ModuleName": "49" },
+          "03EE": { "ModuleName": "50" },
+          "03EF": { "ModuleName": "51" },
+          "03F0": { "ModuleName": "52" },
+          "03F1": { "ModuleName": "53" },
+          "03F2": { "ModuleName": "54" },
+          "03F3": { "ModuleName": "55" },
+          "03F4": { "ModuleName": "56" },
+          "03F5": { "ModuleName": "57" },
+          "03F6": { "ModuleName": "58" },
+          "03F7": { "ModuleName": "59" },
+          "03F8": { "ModuleName": "60" },
+          "03F9": { "ModuleName": "61" },
+          "03FA": { "ModuleName": "62" },
+          "03FB": { "ModuleName": "64:Save" }
+        },
+        "ModuleName": "03BC-03FB"
+      },
       "Info": "Mini PIR detector module",
       "Type": "VMBPIR-20"
     },
