@@ -87,21 +87,22 @@ class PacketHandler:
                 if command_value == 0xFF:                                                   #lgor type response message 
                     _moduletyperesponsemsg = ModuleTypeMessage()                            #lgor
                     _moduletyperesponsemsg.populate(priority, address, rtr, data)           #lgor
-            else:
-                msg = ModuleSubTypeMessage()
-                msg.populate(priority, address, rtr, data)
-
-                if command_value == 0xB0:
-                    msg.sub_address_offset = 0
-                elif command_value == 0xA7:
-                    msg.sub_address_offset = 4
-                elif command_value == 0xA6:
-                    msg.sub_address_offset = 8
+                    self._log.debug(f"Module type received {msg}")
                 else:
-                    raise RuntimeError("Unreachable code reached => bug here")
+                    msg = ModuleSubTypeMessage()
+                    msg.populate(priority, address, rtr, data)
     
-                self._log.debug(f"Received {msg}")
-                await self._handle_module_subtype(msg)
+                    if command_value == 0xB0:
+                        msg.sub_address_offset = 0
+                    elif command_value == 0xA7:
+                        msg.sub_address_offset = 4
+                    elif command_value == 0xA6:
+                        msg.sub_address_offset = 8
+                    else:
+                        raise RuntimeError("Unreachable code reached => bug here")
+        
+                    self._log.debug(f"Received {msg}")
+                    await self._handle_module_subtype(msg)
         elif command_value in self.pdata["MessagesBroadCast"]:
             self._log.debug(
                 "Received broadcast message {} from {}, ignoring".format(
