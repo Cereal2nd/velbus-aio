@@ -9169,13 +9169,6 @@
     },
     "4D": {
       "AllChannelStatus": "FF",
-      "ChannelNumbers": {
-        "Name": {
-          "Map": {
-            "01": "09"
-          }
-        }
-      },
       "Channels": {
         "01": {
           "Name": "Dark output",
