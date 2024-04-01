@@ -1,4 +1,5 @@
 ![CI](https://github.com/Cereal2nd/velbus-aio/actions/workflows/main.yml/badge.svg)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Cereal2nd/velbus-aio/master.svg)](https://results.pre-commit.ci/latest/github/Cereal2nd/velbus-aio/master)
 
 # velbus-aio
 

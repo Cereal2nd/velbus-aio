@@ -130,12 +130,12 @@ def _trim_buffer_garbage(rawmessage: bytearray) -> bytearray:
     if rawmessage and rawmessage[0] != START_BYTE:
         start_index = rawmessage.find(START_BYTE)
         if start_index > -1:
-            logging.debug(
-                "Trimming leading garbage from buffer content: {buffer} becomes {new_buffer}".format(
-                    buffer=binascii.hexlify(rawmessage),
-                    new_buffer=binascii.hexlify(rawmessage[start_index:]),
-                )
-            )
+            #           logging.debug(
+            #                "Trimming leading garbage from buffer content: {buffer} becomes {new_buffer}".format(
+            #                    buffer=binascii.hexlify(rawmessage),
+            #                    new_buffer=binascii.hexlify(rawmessage[start_index:]),
+            #                )
+            #            )
             return rawmessage[start_index:]
         else:
             logging.debug(

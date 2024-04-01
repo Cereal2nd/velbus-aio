@@ -10,7 +10,10 @@ from velbusaio.message import Message
 COMMAND_CODE = 0x11
 
 
-@register(COMMAND_CODE, ["VMB1DM", "VMBDME", "VMBDMI-R", "VMBDMI", "VMB1LED", "VMB4DC"])
+@register(
+    COMMAND_CODE,
+    ["VMB1DM", "VMBDME", "VMBDMI-R", "VMBDMI", "VMB1LED", "VMB4DC", "VMB8DC-20"],
+)
 class RestoreDimmerMessage(Message):
     """
     send by:
@@ -54,7 +57,7 @@ class RestoreDimmerMessage(Message):
         ) + self.dimmer_transitiontime.to_bytes(2, byteorder="big", signed=False)
 
 
-@register(COMMAND_CODE, ["VMBDALI"])
+@register(COMMAND_CODE, ["VMBDALI", "VMBDALI-20"])
 class RestoreDimmerMessage2(RestoreDimmerMessage):
     def byte_to_channels(self, byte: int) -> list[int]:
         return [byte]

@@ -76,6 +76,17 @@ class ModuleStatusMessage(Message):
         "VMBGPOD-2",
         "VMBELO",
         "VMB7IN",
+        "VMB6PB-20",
+        "VMBEL1-20",
+        "VMBEL2-20",
+        "VMBEL4-20",
+        "VMBELO-20",
+        "VMBGP1-20",
+        "VMBGP2-20",
+        "VMBGP4-20",
+        "VMBGPO-20",
+        "VMBEL4PIR-20",
+        "VMBGP4PIR-20",
     ],
 )
 class ModuleStatusMessage2(Message):

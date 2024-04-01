@@ -10,7 +10,6 @@ import json
 import logging
 import re
 from typing import TYPE_CHECKING, Awaitable, Callable
-
 import pkg_resources
 
 from velbusaio.command_registry import commandRegistry
@@ -37,32 +36,32 @@ class PacketHandler:
         self._log = logging.getLogger("velbus-packet")
         self._writer = writer
         self._velbus = velbus
-        self._active_modulescan_address = 0     #lgor
-        self._moduletyperesponsemsg = None      #lgor received type response message
+        self._active_modulescan_address = 0  # lgor
+        self._moduletyperesponsemsg = None  # lgor received type response message
         self.scan_complete = False
         # lgor self._scan_complete_event = asyncio.Event()
         with open(
-            pkg_resources.resource_filename(__name__, "moduleprotocol/protocol.json")
+            pkg_resources.resource_filename(__name__, "protocol.json")
         ) as protocol_file:
             self.pdata = json.load(protocol_file)
 
-    #lgor added for initiating single module type scan
-    def set_module_type_request(self, address : byte) -> None:  #lgor
-        _moduletyperesponsemsg = None                           #lgor
-        self._active_modulescan_address = address               #lgor
+    # lgor added for initiating single module type scan
+    def set_module_type_request(self, address: int) -> None:  # lgor
+        self._moduletyperesponsemsg = None  # lgor
+        self._active_modulescan_address = address  # lgor
 
-    #lgor added for test received module type message 
-    def is_module_typerespons_ok(self) -> bool:                 #lgor
-        return is self._moduletyperesponsemsg not None          #lgor
+    # lgor added for test received module type message
+    def is_module_typerespons_ok(self) -> bool:  # lgor
+        return self._moduletyperesponsemsg is not None  # lgor
 
-    #lgor removed: no global scan start / completion required
-    #def scan_finished(self) -> None:
+    # lgor removed: no global scan start / completion required
+    # def scan_finished(self) -> None:
     #    self._scan_complete = True
     #    self._scan_complete_event.set()
     #    self._log.debug("Scan complete")
 
-    #lgor removed: no global scan start / completion required
-    #def scan_started(self) -> None:
+    # lgor removed: no global scan start / completion required
+    # def scan_started(self) -> None:
     #    self._scan_complete = False
     #    self._scan_complete_event.clear()
 
@@ -81,12 +80,16 @@ class PacketHandler:
         command_value = rawmsg.command
         data = rawmsg.data_only
 
-        #lgor handle config related messages
-        if command_value in (0xxFF, 0xB0, 0xA7, 0xA6):                                      #lgor
-            if  active_modulescan_address == address:                                       #lgor only respond to requested module (VelbusLink might interfere otherwise)
-                if command_value == 0xFF:                                                   #lgor type response message 
-                    _moduletyperesponsemsg = ModuleTypeMessage()                            #lgor
-                    _moduletyperesponsemsg.populate(priority, address, rtr, data)           #lgor
+        # lgor handle config related messages
+        if command_value in (0xFF, 0xB0, 0xA7, 0xA6):  # lgor
+            if (
+                self.active_modulescan_address == address
+            ):  # lgor only respond to requested module (VelbusLink might interfere otherwise)
+                if command_value == 0xFF:  # lgor type response message
+                    self._moduletyperesponsemsg = ModuleTypeMessage()  # lgor
+                    self._moduletyperesponsemsg.populate(
+                        priority, address, rtr, data
+                    )  # lgor
             else:
                 msg = ModuleSubTypeMessage()
                 msg.populate(priority, address, rtr, data)
@@ -99,7 +102,7 @@ class PacketHandler:
                     msg.sub_address_offset = 8
                 else:
                     raise RuntimeError("Unreachable code reached => bug here")
-    
+
                 self._log.debug(f"Received {msg}")
                 await self._handle_module_subtype(msg)
         elif command_value in self.pdata["MessagesBroadCast"]:
@@ -133,70 +136,12 @@ class PacketHandler:
                 )
             )
 
-    # def _handle_message(self, rawMsg: RawMessage) -> None:
-    #    module_type = self._velbus.get_module(rawMsg.address).get_type()
-    #    this_msg = keys_exists(
-    #        self.pdata, "ModuleTypes", h2(module_type), "Messages", h2(rawMsg.command), "Data"
-    #    )
-    #    if this_msg and "PerByte" in this_msg:
-    #        self._per_byte(this_msg["PerByte"], rawMsg)
-
-    # def _per_byte(self, cmsg, rawMsg: RawMessage) -> dict:
-    #    result = {}
-    #    byte_index = 0
-    #    for byte in rawMsg.data:
-    #        num = str(byte_index)
-    #        # only do something if its defined
-    #        if num not in cmsg:
-    #            continue
-    #        # check if we can do a binary match
-    #        for mat in cmsg[num]["Match"]:
-    #            if (
-    #                (mat.startswith("%") and re.match(mat[1:], f"{byte:08b}"))
-    #                or mat == f"{byte:08b}"
-    #                or mat == f"{byte:02x}"
-    #            ):
-    #                result = self._per_byte_handle(
-    #                    result, cmsg[num]["Match"][mat], byte
-    #                )
-    #        byte_index += 1
-    #    return result
-
-    # def _per_byte_handle(self, result: dict, todo: dict, byte: int) -> dict:
-    #    if "Channel" in todo:
-    #        result["Channel"] = todo["Channel"]
-    #    if "Value" in todo:
-    #        result["Value"] = todo["Value"]
-    #    if "Convert" in todo:
-    #        result["ValueList"] = []
-    #        if todo["Convert"] == "Decimal":
-    #            result["ValueList"].append(int(byte))
-    #        elif todo["Convert"] == "Counter":
-    #            result["ValueList"].append(f"{byte:02x}")
-    #        elif todo["Convert"] == "Temperature":
-    #            print("CONVERT temperature")
-    #        elif todo["Convert"] == "Divider":
-    #            bin_str = f"{byte:08b}"
-    #            chan = bin_str[6:]
-    #            val = bin_str[:5]
-    #            print(f"CONVERT Divider {chan} {val}")
-    #        elif todo["Convert"] == "Channel":
-    #            print("CONVERT Channel")
-    #        elif todo["Convert"] == "ChannelBit":
-    #            print("CONVERT ChannelBit")
-    #        elif todo["Convert"].startswith("ChannelBitStatus"):
-    #            print("CONVERT ChannelBitStatus")
-    #        else:
-    #            self._log.error("UNKNOWN convert requested: {}".format(todo["Convert"]))
-    #    return result
-
-    #lgor: _ removed from name (function is not local anymore)
-    async def handle_module_type(self) -> None:         #lgor (signature changed)
+    async def _handle_module_type(self, msg: Message) -> None:
         """
         load the module data
         """
-        msg = _moduletyperesponsemsg                    #lgor
-        if msg is not None :                            #lgor
+        msg = self._moduletyperesponsemsg  # lgor
+        if msg is not None:  # lgor
             data = keys_exists(self.pdata, "ModuleTypes", h2(msg.module_type))
             if not data:
                 self._log.warning(f"Module not recognized: {msg.module_type}")
@@ -210,7 +155,7 @@ class PacketHandler:
                 build_year=msg.build_year,
                 build_week=msg.build_week,
                 serial=msg.serial,
-            )   
+            )
 
     async def _handle_module_subtype(self, msg: Message) -> None:
         if msg.address not in self._velbus.get_modules():

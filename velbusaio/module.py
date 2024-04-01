@@ -587,7 +587,11 @@ class Module:
         addr = "{high:02X}{low:02X}".format(
             high=message.high_address, low=message.low_address
         )
-        mdata = self._data["Memory"]["1"]["Address"][addr]
+        if "Memory" not in self._data:
+            return
+        if "Address" not in self._data["Memory"]:
+            return
+        mdata = self._data["Memory"]["Address"][addr]
         if "ModuleName" in mdata and isinstance(self._name, dict):
             # if self._name is a dict we are still loading
             # if its a string it was already complete
@@ -703,9 +707,10 @@ class Module:
             self._name = None
             return
 
-        for _memory_key, memory_part in self._data["Memory"].items():
-            if "Address" in memory_part:
-                for addr_int in memory_part["Address"].keys():
+        for memory_key, memory_part in self._data["Memory"].items():
+
+            if memory_key == "Address":
+                for addr_int in memory_part.keys():
                     addr = struct.unpack(
                         ">BB", struct.pack(">h", int("0x" + addr_int, 0))
                     )
@@ -732,17 +737,6 @@ class Module:
                     "ThermostatAddr" in self._data and self._data["ThermostatAddr"] != 0
                 ):
                     await self._update_channel(int(chan), {"thermostat": True})
-        # add extra channel for program selection which is not in the channel list of the protocol.json file,
-        # but is available in the messages list of the corresponding module.
-        if keys_exists(self._data, "Messages", "B3"):
-            self._channels[CHANNEL_SELECTED_PROGRAM] = SelectedProgram(
-                self,
-                CHANNEL_SELECTED_PROGRAM,
-                "Selected Program",
-                False,
-                self._writer,
-                self._address,
-            )
 
 
 class VmbDali(Module):
