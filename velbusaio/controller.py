@@ -86,12 +86,12 @@ class Velbus:
         """
         mod = self._load_module_from_cache(self._cache_dir, addr)
         if mod is not None:
-            self._log.info(f"Load module from CACHE: {addr}")
+            self._log.info(f"Load module from CACHE: address:{addr}")
             self._modules[addr] = mod
             self._modules[addr].initialize(self.send)
             await self._modules[addr].load(True)
         else:
-            self._log.info(f"Load NEW module: {typ} @ {addr}")
+            self._log.info(f"Load NEW module: type:{typ} address:{addr}")
             self._modules[addr] = Module.factory(
                 addr,
                 typ,

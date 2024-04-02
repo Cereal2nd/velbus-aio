@@ -201,15 +201,13 @@ class Module:
         self.__dict__ = state
 
     def __repr__(self) -> str:
-        return (
-            "<{}: {{{}}} @ {{{}}} loaded:{{{}}} loading:{{{}}} channels{{:{}}}>".format(
-                self._name,
-                self._type,
-                self._address,
-                self.loaded,
-                self._is_loading,
-                self._channels,
-            )
+        return "<{}: address:{{{}}} type:{{{}}} loaded:{{{}}} loading:{{{}}} channels{{:{}}}>".format(
+            self._name,
+            self._type,
+            self._address,
+            self.loaded,
+            self._is_loading,
+            self._channels,
         )
 
     def __str__(self) -> str:
