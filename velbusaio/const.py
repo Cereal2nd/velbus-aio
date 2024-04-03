@@ -1,4 +1,5 @@
-"""
+"""Constant for velbusaio.
+
 Author: Maikel Punie <maikel.punie@gmail.com>
 """
 

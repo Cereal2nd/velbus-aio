@@ -1,4 +1,5 @@
-"""
+"""Command registry.
+
 :author: Maikel Punie <maikel.punie@gmail.com> and Thomas Delaet <thomas@delaet.org>
 """
 
@@ -87,7 +88,10 @@ MODULE_DIRECTORY = {
 
 
 class CommandRegistry:
+    """Command registry class."""
+
     def __init__(self, module_directory: dict) -> None:
+        """Init method."""
         self._module_directory = module_directory
         self._default_commands = {}
         self._overrides = {}
@@ -95,6 +99,7 @@ class CommandRegistry:
     def register_command(
         self, command_value: int, command_class: type, module_name: str | None = None
     ) -> None:
+        """Register a command."""
         if command_value < 0 or command_value > 255:
             raise ValueError("Command_value should be >=0 and <=255")
         if module_name and module_name not in self._module_directory.values():
@@ -115,6 +120,7 @@ class CommandRegistry:
     def _register_override(
         self, command_value: int, command_class: type, module_type: str
     ) -> None:
+        """Register and override."""
         if module_type not in self._overrides:
             self._overrides[module_type] = {}
         if command_value not in self._overrides[module_type]:
@@ -125,12 +131,14 @@ class CommandRegistry:
             )
 
     def _register_default(self, command_value: int, command_class: type) -> None:
+        """Register a default command."""
         if command_value not in self._default_commands:
             self._default_commands[command_value] = command_class
         else:
             raise Exception("double registration in command registry")
 
     def has_command(self, command_value: int, module_type: int = 0) -> bool:
+        """Find a command."""
         if module_type in self._overrides:
             if command_value in self._overrides[module_type]:
                 return True
@@ -139,6 +147,7 @@ class CommandRegistry:
         return False
 
     def get_command(self, command_value: int, module_type: int = 0) -> None | type:
+        """Search a command in the registry."""
         if module_type in self._overrides:
             if command_value in self._overrides[module_type]:
                 return self._overrides[module_type][command_value]
@@ -151,6 +160,8 @@ commandRegistry = CommandRegistry(MODULE_DIRECTORY)
 
 
 def register(command_value: int, module_types: list[str] | None = None):
+    """Register decorator."""
+
     def inner_register(command_class):
         if module_types:
             for module_type in module_types:
