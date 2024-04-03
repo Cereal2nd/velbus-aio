@@ -8,7 +8,6 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
-import re
 from typing import TYPE_CHECKING, Awaitable, Callable
 import pkg_resources
 
@@ -107,14 +106,14 @@ class PacketHandler:
                     "NOT FOUND IN command_registry: addr={} cmd={} packet={}".format(
                         address,
                         command_value,
-                        ":".join(format(str(x), "02x") for x in data),
+                        ":".join(format(x, "02x") for x in data),
                     )
                 )
         elif self._scan_complete:
             # this should only happen once the scan is complete, of its not complete suspended the error message
             self._log.warning(
                 "UNKNOWN module, you should initialize a full new velbus scan: packet={}, address={}, modules={}".format(
-                    ":".join(format(str(x), "02x") for x in data),
+                    ":".join(format(x, "02x") for x in data),
                     address,
                     self._velbus.get_modules().keys(),
                 )

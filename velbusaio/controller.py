@@ -7,7 +7,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import pathlib
-import pickle
+import json
 import re
 import ssl
 from urllib.parse import urlparse
@@ -84,26 +84,19 @@ class Velbus:
         """
         Add a found module to the module cache
         """
-        mod = self._load_module_from_cache(self._cache_dir, addr)
-        if mod is not None:
-            self._log.info(f"Load module from CACHE: address:{addr}")
-            self._modules[addr] = mod
-            self._modules[addr].initialize(self.send)
-            await self._modules[addr].load(True)
-        else:
-            self._log.info(f"Load NEW module: type:{typ} address:{addr}")
-            self._modules[addr] = Module.factory(
-                addr,
-                typ,
-                data,
-                serial=serial,
-                build_year=build_year,
-                build_week=build_week,
-                memorymap=memorymap,
-                cache_dir=self._cache_dir,
-            )
-            self._modules[addr].initialize(self.send)
-            await self._modules[addr].load()
+        self._log.info(f"Load NEW module: type:{typ} address:{addr}")
+        self._modules[addr] = Module.factory(
+            addr,
+            typ,
+            data,
+            serial=serial,
+            build_year=build_year,
+            build_week=build_week,
+            memorymap=memorymap,
+            cache_dir=self._cache_dir,
+        )
+        self._modules[addr].initialize(self.send)
+        await self._modules[addr].load()
 
     async def add_submodules(self, addr: int, subList: dict[int, int]) -> None:
         for sub_num, sub_addr in subList.items():
@@ -113,17 +106,6 @@ class Velbus:
             self._modules[addr]._sub_address[sub_num] = sub_addr
             self._modules[sub_addr] = self._modules[addr]
         self._modules[addr].cleanupSubChannels()
-
-    def _load_module_from_cache(self, cache_dir: str, address: int) -> None | Module:
-        try:
-            cfile = pathlib.Path(f"{cache_dir}/{address}.p")
-            with cfile.open("rb") as fl:
-                o = pickle.load(fl)
-                if isinstance(o, Module):
-                    return o
-        except OSError:
-            pass
-        return None
 
     def get_modules(self) -> dict:
         """

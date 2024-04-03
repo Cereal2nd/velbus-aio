@@ -5,7 +5,6 @@ The velbus abstract message class
 from __future__ import annotations
 
 import json
-from typing import Optional
 
 from velbusaio.const import PRIORITY_FIRMWARE, PRIORITY_HIGH, PRIORITY_LOW
 

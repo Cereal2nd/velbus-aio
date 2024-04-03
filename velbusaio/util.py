@@ -1,3 +1,7 @@
+"""
+Some common utils.
+"""
+
 from typing import Union
 
 from velbusaio.const import MAXIMUM_MESSAGE_SIZE, MINIMUM_MESSAGE_SIZE
