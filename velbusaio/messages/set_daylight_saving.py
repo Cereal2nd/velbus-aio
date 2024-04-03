@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-import time
-
 from velbusaio.command_registry import register
 from velbusaio.message import Message
 
@@ -18,9 +16,9 @@ class SetDaylightSaving(Message):
     received by all modules
     """
 
-    def __init__(self, address=0x00) -> None:
+    def __init__(self, address=0x00, ds=None) -> None:
         Message.__init__(self)
-        self._ds = None
+        self._ds = ds
         self.set_defaults(address)
 
     def set_defaults(self, address) -> None:
@@ -28,8 +26,6 @@ class SetDaylightSaving(Message):
             self.set_address(address)
         self.set_low_priority()
         self.set_no_rtr()
-        lclt = time.localtime()
-        self._ds = not lclt[8]
 
     def populate(self, priority, address, rtr, data) -> None:
         """

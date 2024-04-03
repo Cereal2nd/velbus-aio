@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-import time
-
 from velbusaio.command_registry import register
 from velbusaio.message import Message
 
@@ -18,11 +16,11 @@ class SetRealtimeClock(Message):
     received by all modules
     """
 
-    def __init__(self, address=0x00) -> None:
+    def __init__(self, address=0x00, wday=None, hour=None, min=None) -> None:
         Message.__init__(self)
-        self._wday = None
-        self._hour = None
-        self._min = None
+        self._wday = wday
+        self._hour = hour
+        self._min = min
         self.set_defaults(address)
 
     def set_defaults(self, address) -> None:
@@ -30,10 +28,6 @@ class SetRealtimeClock(Message):
             self.set_address(address)
         self.set_low_priority()
         self.set_no_rtr()
-        lclt = time.localtime()
-        self._wday = lclt[6]
-        self._hour = lclt[3]
-        self._min = lclt[4]
 
     def populate(self, priority, address, rtr, data) -> None:
         """

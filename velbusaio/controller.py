@@ -7,6 +7,7 @@ import logging
 import pathlib
 import re
 import ssl
+import time
 from urllib.parse import urlparse
 
 import serial
@@ -241,6 +242,7 @@ class Velbus:
 
     async def sync_clock(self) -> None:
         """Will send all the needed messages to sync the clock."""
-        await self.send(SetRealtimeClock())
-        await self.send(SetDate())
-        await self.send(SetDaylightSaving())
+        lclt = time.localtime()
+        await self.send(SetRealtimeClock(wday=lclt[6], hour=lclt[3], min=lclt[4]))
+        await self.send(SetDate(day=lclt[2], mon=lclt[1], year=lclt[0]))
+        await self.send(SetDaylightSaving(ds=not lclt[8]))
