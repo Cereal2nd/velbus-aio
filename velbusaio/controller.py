@@ -1,13 +1,10 @@
-"""
-Main interface for the velbusaio lib
-"""
+"""Main interface for the velbusaio lib."""
 
 from __future__ import annotations
 
 import asyncio
 import logging
 import pathlib
-import json
 import re
 import ssl
 from urllib.parse import urlparse
@@ -31,15 +28,14 @@ from velbusaio.raw_message import RawMessage
 
 
 class Velbus:
-    """
-    A velbus controller
-    """
+    """A velbus controller."""
 
     def __init__(
         self,
         dsn: str,
         cache_dir: str = get_cache_dir(),
     ) -> None:
+        """Init the Velbus controller."""
         self._log = logging.getLogger("velbus")
 
         self._protocol = VelbusProtocol(
@@ -60,6 +56,7 @@ class Velbus:
         pathlib.Path(self._cache_dir).mkdir(parents=True, exist_ok=True)
 
     async def _on_message_received(self, msg: RawMessage) -> None:
+        """On message received function."""
         await self._handler.handle(msg)
 
     def _on_connection_lost(self, exc: Exception) -> None:
@@ -69,6 +66,7 @@ class Velbus:
             asyncio.ensure_future(self.connect())
 
     def _on_end_of_scan(self) -> None:
+        """Notify the scan failure."""
         self._handler.scan_finished()
 
     async def add_module(
@@ -81,10 +79,8 @@ class Velbus:
         build_year: int | None = None,
         build_week: int | None = None,
     ) -> None:
-        """
-        Add a found module to the module cache
-        """
-        self._log.info(f"Load NEW module: type:{typ} address:{addr}")
+        """Add a found module to the module cache."""
+        self._log.info(f"Found module: type:{typ} address:{addr}")
         self._modules[addr] = Module.factory(
             addr,
             typ,
@@ -99,6 +95,7 @@ class Velbus:
         await self._modules[addr].load()
 
     async def add_submodules(self, addr: int, subList: dict[int, int]) -> None:
+        """Add submodules address to module."""
         for sub_num, sub_addr in subList.items():
             if sub_addr == 0xFF:
                 continue
@@ -108,36 +105,29 @@ class Velbus:
         self._modules[addr].cleanupSubChannels()
 
     def get_modules(self) -> dict:
-        """
-        Return the module cache
-        """
+        """Return the module cache."""
         return self._modules
 
     def get_module(self, addr: str) -> None | Module:
-        """
-        Get a module on an address
-        """
-        if addr in self._modules.keys():
+        """Get a module on an address."""
+        if addr in self._modules:
             return self._modules[addr]
         return None
 
     def get_channels(self, addr: str) -> None | dict:
-        """
-        Get the channels for an address
-        """
+        """Get the channels for an address."""
         if addr in self._modules:
             return (self._modules[addr]).get_channels()
         return None
 
     async def stop(self) -> None:
+        """Stop the controller."""
         self._closing = True
         self._auto_reconnect = False
         self._protocol.close()
 
     async def connect(self, test_connect: bool = False) -> None:
-        """
-        Connect to the bus and load all the data
-        """
+        """Connect to the bus and load all the data."""
         auth = None
         # connect to the bus
         if ":" in self._dsn:
@@ -164,7 +154,7 @@ class Velbus:
                 )
 
             except (ConnectionRefusedError, OSError) as err:
-                raise VelbusConnectionFailed() from err
+                raise VelbusConnectionFailed from err
         else:
             # serial port
             try:
@@ -180,7 +170,7 @@ class Velbus:
                     rtscts=1,
                 )
             except (FileNotFoundError, serial.SerialException) as err:
-                raise VelbusConnectionFailed() from err
+                raise VelbusConnectionFailed from err
         if test_connect:
             return
         # if auth is required send the auth key
@@ -191,6 +181,7 @@ class Velbus:
         await self.scan()
 
     async def scan(self) -> None:
+        """Scan the bus."""
         self._handler.scan_started()
         for addr in range(1, 256):
             msg = ModuleTypeRequestMessage(addr)
@@ -212,9 +203,7 @@ class Velbus:
             )
 
     async def _check_if_modules_are_loaded(self) -> None:
-        """
-        Task to wait until modules are loaded
-        """
+        """Task to wait until modules are loaded."""
         while True:
             mods_loaded = 0
             for mod in (self.get_modules()).values():
@@ -229,9 +218,7 @@ class Velbus:
             await asyncio.sleep(15)
 
     async def send(self, msg: Message) -> None:
-        """
-        Send a packet
-        """
+        """Send a packet."""
         await self._protocol.send_message(
             RawMessage(
                 priority=msg.priority,
@@ -242,6 +229,7 @@ class Velbus:
         )
 
     def get_all(self, class_name: str) -> list[Channel]:
+        """Get all channels."""
         lst = []
         for addr, mod in (self.get_modules()).items():
             if addr in self._submodules:
@@ -252,9 +240,7 @@ class Velbus:
         return lst
 
     async def sync_clock(self) -> None:
-        """
-        This will send all the needed messages to sync the clock
-        """
+        """Will send all the needed messages to sync the clock."""
         await self.send(SetRealtimeClock())
         await self.send(SetDate())
         await self.send(SetDaylightSaving())
