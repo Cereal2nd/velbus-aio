@@ -539,9 +539,12 @@ class Module:
         # start the loading
         self._is_loading = True
         # see if we have a cache
-        cfile = pathlib.Path(f"{self._cache_dir}/{self._address}.json")
-        with cfile.open("r") as fl:
-            cache = json.load(fl)
+        try:
+            cfile = pathlib.Path(f"{self._cache_dir}/{self._address}.json")
+            with cfile.open("r") as fl:
+                cache = json.load(fl)
+        except OSError:
+            cache = {}
         # load default channels
         await self.__load_default_channels()
         # load the data from memory ( the stuff that we need)
