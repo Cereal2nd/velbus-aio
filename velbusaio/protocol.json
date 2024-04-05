@@ -9361,7 +9361,8 @@
         }
       },
       "TemperatureChannel": "09",
-      "ThermostatAddr": "0"
+      "ThermostatAddr": "0",
+      "Type": "VMBEL1-20"
     },
     "50": {
       "AllChannelStatus": "FF",
@@ -9449,7 +9450,8 @@
         }
       },
       "TemperatureChannel": "09",
-      "ThermostatAddr": "0"
+      "ThermostatAddr": "0",
+      "Type": "VMBEL2-20"
     },
     "51": {
       "AllChannelStatus": "FF",
@@ -9537,7 +9539,8 @@
         }
       },
       "TemperatureChannel": "09",
-      "ThermostatAddr": "0"
+      "ThermostatAddr": "0",
+      "Type": "VMBEL4-20"
     },
     "52": {
       "AllChannelStatus": "FF",
@@ -9725,7 +9728,8 @@
         }
       },
       "TemperatureChannel": "33",
-      "ThermostatAddr": "3"
+      "ThermostatAddr": "3",
+      "Type": "VMBELO-20"
     },
     "54": {
       "Info": "1 Button Touch panel",
