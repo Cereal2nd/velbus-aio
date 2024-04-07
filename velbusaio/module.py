@@ -226,7 +226,9 @@ class Module:
         return self._type
 
     def get_type_name(self) -> str:
-        return self._data["Type"]
+        if "Type" in self._data:
+            return self._data["Type"]
+        return "UNKNOWN"
 
     def get_serial(self) -> str | None:
         return self.serial
