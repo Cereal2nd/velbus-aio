@@ -5,11 +5,10 @@ This represents a velbus module
 from __future__ import annotations
 
 import logging
-import os
 import pathlib
-import pickle
 import struct
 import sys
+import json
 from typing import Awaitable, Callable
 
 from velbusaio.channels import (
@@ -37,7 +36,7 @@ from velbusaio.const import (
 )
 from velbusaio.helpers import handle_match, keys_exists
 from velbusaio.message import Message
-from velbusaio.messages import DaliDeviceSettingMsg
+from velbusaio.messages.dali_device_settings import DaliDeviceSettingMsg
 from velbusaio.messages.blind_status import BlindStatusMessage, BlindStatusNgMessage
 from velbusaio.messages.channel_name_part1 import (
     ChannelNamePart1Message,
@@ -81,8 +80,6 @@ from velbusaio.messages.module_status import (
     ModuleStatusPirMessage,
 )
 from velbusaio.messages.module_status_request import ModuleStatusRequestMessage
-from velbusaio.messages.module_subtype import ModuleSubTypeMessage
-from velbusaio.messages.module_type import ModuleTypeMessage, ModuleType2Message
 from velbusaio.messages.push_button_status import PushButtonStatusMessage
 from velbusaio.messages.read_data_from_memory import ReadDataFromMemoryMessage
 from velbusaio.messages.relay_status import RelayStatusMessage, RelayStatusMessage2
@@ -188,9 +185,9 @@ class Module:
                         del self._channels[i]
 
     def _cache(self) -> None:
-        cfile = pathlib.Path(f"{self._cache_dir}/{self._address}.p")
-        with cfile.open("wb") as fl:
-            pickle.dump(self, fl)
+        cfile = pathlib.Path(f"{self._cache_dir}/{self._address}.json")
+        with cfile.open("w") as fl:
+            json.dump(self.to_cache(), fl, indent=4)
 
     def __getstate__(self) -> dict:
         d = self.__dict__
@@ -201,19 +198,16 @@ class Module:
         self.__dict__ = state
 
     def __repr__(self) -> str:
-        return (
-            "<{}: {{{}}} @ {{{}}} loaded:{{{}}} loading:{{{}}} channels{{:{}}}>".format(
-                self._name,
-                self._type,
-                self._address,
-                self.loaded,
-                self._is_loading,
-                self._channels,
-            )
-        )
+        return f"<{self._name} type:{self._type} address:{self._address} loaded:{self.loaded} loading:{self._is_loading} channels: {self._channels}>"
 
     def __str__(self) -> str:
         return self.__repr__()
+
+    def to_cache(self) -> dict:
+        d = {"name": self._name, "channels": {}}
+        for num, chan in self._channels.items():
+            d["channels"][num] = chan.to_cache()
+        return d
 
     def get_addresses(self) -> list:
         """
@@ -232,7 +226,9 @@ class Module:
         return self._type
 
     def get_type_name(self) -> str:
-        return self._data["Type"]
+        if "Type" in self._data:
+            return self._data["Type"]
+        return "UNKNOWN"
 
     def get_serial(self) -> str | None:
         return self.serial
@@ -241,12 +237,7 @@ class Module:
         return self._name
 
     def get_sw_version(self) -> str:
-        return "{}-{}.{}.{}".format(
-            self.serial,
-            self.memory_map_version,
-            self.build_year,
-            self.build_week,
-        )
+        return f"{self.serial}-{self.memory_map_version}.{self.build_year}.{self.build_week}"
 
     def calc_channel_offset(self, address: int) -> int:
         _channel_offset = 0
@@ -549,14 +540,29 @@ class Module:
         self._log.info("Load Module")
         # start the loading
         self._is_loading = True
+        # see if we have a cache
+        try:
+            cfile = pathlib.Path(f"{self._cache_dir}/{self._address}.json")
+            with cfile.open("r") as fl:
+                cache = json.load(fl)
+        except OSError:
+            cache = {}
         # load default channels
         await self.__load_default_channels()
         # load the data from memory ( the stuff that we need)
-        await self.__load_memory()
+        if "name" in cache and cache["name"] != "":
+            self._name = cache["name"]
+        else:
+            await self.__load_memory()
         # load the module status
         await self._request_module_status()
         # load the channel names
-        await self._request_channel_name()
+        if "channels" in cache and from_cache:              #lgor
+            for num, chan in cache["channels"].items():
+                self._channels[int(num)]._name = chan["name"]
+                self._channels[int(num)]._is_loaded = True
+        else:
+            await self._request_channel_name()
         # load the module specific stuff
         self._load()
         # stop the loading
@@ -587,7 +593,11 @@ class Module:
         addr = "{high:02X}{low:02X}".format(
             high=message.high_address, low=message.low_address
         )
-        mdata = self._data["Memory"]["1"]["Address"][addr]
+        if "Memory" not in self._data:
+            return
+        if "Address" not in self._data["Memory"]:
+            return
+        mdata = self._data["Memory"]["Address"][addr]
         if "ModuleName" in mdata and isinstance(self._name, dict):
             # if self._name is a dict we are still loading
             # if its a string it was already complete
@@ -703,9 +713,10 @@ class Module:
             self._name = None
             return
 
-        for _memory_key, memory_part in self._data["Memory"].items():
-            if "Address" in memory_part:
-                for addr_int in memory_part["Address"].keys():
+        for memory_key, memory_part in self._data["Memory"].items():
+
+            if memory_key == "Address":
+                for addr_int in memory_part.keys():
                     addr = struct.unpack(
                         ">BB", struct.pack(">h", int("0x" + addr_int, 0))
                     )
@@ -732,17 +743,6 @@ class Module:
                     "ThermostatAddr" in self._data and self._data["ThermostatAddr"] != 0
                 ):
                     await self._update_channel(int(chan), {"thermostat": True})
-        # add extra channel for program selection which is not in the channel list of the protocol.json file,
-        # but is available in the messages list of the corresponding module.
-        if keys_exists(self._data, "Messages", "B3"):
-            self._channels[CHANNEL_SELECTED_PROGRAM] = SelectedProgram(
-                self,
-                CHANNEL_SELECTED_PROGRAM,
-                "Selected Program",
-                False,
-                self._writer,
-                self._address,
-            )
 
 
 class VmbDali(Module):
