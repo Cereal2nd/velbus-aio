@@ -1,4 +1,5 @@
-"""
+"""Constant for velbusaio.
+
 Author: Maikel Punie <maikel.punie@gmail.com>
 """
 
@@ -37,7 +38,11 @@ RTR: Final = 0x40
 NO_RTR: Final = 0x00
 
 CACHEDIR: Final = ".velbuscache"
-LOAD_TIMEOUT: Final = 600
+
+# Module scan timeout values (in mSec)
+SCAN_MODULETYPE_TIMEOUT : Final = 500           # time to wait for ModuleTypeRequest 
+SCAN_MODULEINFO_TIMEOUT : Final = 500           # time to wait for first info (status)
+SCAN_MODULEINFO_COMPLETION_TIME : Final = 350   # time to wait for info completion (timeout is restarted at each received info message)
 
 DEVICE_CLASS_ILLUMINANCE: Final = "illuminance"
 DEVICE_CLASS_TEMPERATURE: Final = "temperature"
