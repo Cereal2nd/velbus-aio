@@ -1,22 +1,20 @@
-"""
-Main interface for the velbusaio lib
-"""
+"""Main interface for the velbusaio lib."""
 
 from __future__ import annotations
 
 import asyncio
 import logging
 import pathlib
-import pickle
 import re
 import ssl
+import time
+
 from urllib.parse import urlparse
 
 import serial
 import serial_asyncio
 
 from velbusaio.channels import Channel
-from velbusaio.const import LOAD_TIMEOUT
 from velbusaio.exceptions import VelbusConnectionFailed
 from velbusaio.handler import PacketHandler
 from velbusaio.helpers import get_cache_dir
@@ -31,15 +29,14 @@ from velbusaio.raw_message import RawMessage
 
 
 class Velbus:
-    """
-    A velbus controller
-    """
+    """A velbus controller."""
 
     def __init__(
         self,
         dsn: str,
         cache_dir: str = get_cache_dir(),
     ) -> None:
+        """Init the Velbus controller."""
         self._log = logging.getLogger("velbus")
 
         self._protocol = VelbusProtocol(
@@ -56,10 +53,14 @@ class Velbus:
         self._submodules: list[int] = []
         self._send_queue = asyncio.Queue()
         self._cache_dir = cache_dir
+        
+        self.testCount = 0
+        
         # make sure the cachedir exists
         pathlib.Path(self._cache_dir).mkdir(parents=True, exist_ok=True)
 
     async def _on_message_received(self, msg: RawMessage) -> None:
+        """On message received function."""
         await self._handler.handle(msg)
 
     def _on_connection_lost(self, exc: Exception) -> None:
@@ -69,9 +70,10 @@ class Velbus:
             asyncio.ensure_future(self.connect())
 
     def _on_end_of_scan(self) -> None:
+        """Notify the scan failure."""
         self._handler.scan_finished()
-
-    async def add_module(
+    
+    def add_module(
         self,
         addr: int,
         typ: int,
@@ -81,81 +83,56 @@ class Velbus:
         build_year: int | None = None,
         build_week: int | None = None,
     ) -> None:
-        """
-        Add a found module to the module cache
-        """
-        mod = self._load_module_from_cache(self._cache_dir, addr)
-        if mod is not None:
-            self._log.info(f"Load module from CACHE: {addr}")
-            self._modules[addr] = mod
-            self._modules[addr].initialize(self.send)
-            await self._modules[addr].load(True)
-        else:
-            self._log.info(f"Load NEW module: {typ} @ {addr}")
-            self._modules[addr] = Module.factory(
-                addr,
-                typ,
-                data,
-                serial=serial,
-                build_year=build_year,
-                build_week=build_week,
-                memorymap=memorymap,
-                cache_dir=self._cache_dir,
-            )
-            self._modules[addr].initialize(self.send)
-            await self._modules[addr].load()
+        """Add a found module to the module cache."""
 
-    async def add_submodules(self, addr: int, subList: dict[int, int]) -> None:
+        module = Module.factory(
+            addr,
+            typ,
+            data,
+            serial=serial,
+            build_year=build_year,
+            build_week=build_week,
+            memorymap=memorymap,
+            cache_dir=self._cache_dir,
+        )
+        module.initialize(self.send)
+        self._modules[addr] = module
+        self._log.info(f"Found module {addr}: {module}")
+
+    def add_submodules(self, module: Module, subList: dict[int, int]) -> None:
+        """Add submodules address to module."""
         for sub_num, sub_addr in subList.items():
             if sub_addr == 0xFF:
                 continue
             self._submodules.append(sub_addr)
-            self._modules[addr]._sub_address[sub_num] = sub_addr
-            self._modules[sub_addr] = self._modules[addr]
-        self._modules[addr].cleanupSubChannels()
-
-    def _load_module_from_cache(self, cache_dir: str, address: int) -> None | Module:
-        try:
-            cfile = pathlib.Path(f"{cache_dir}/{address}.p")
-            with cfile.open("rb") as fl:
-                o = pickle.load(fl)
-                if isinstance(o, Module):
-                    return o
-        except OSError:
-            pass
-        return None
+            module._sub_address[sub_num] = sub_addr
+            self._modules[sub_addr] = module
+        module.cleanupSubChannels()
 
     def get_modules(self) -> dict:
-        """
-        Return the module cache
-        """
+        """Return the module cache."""
         return self._modules
 
     def get_module(self, addr: str) -> None | Module:
-        """
-        Get a module on an address
-        """
-        if addr in self._modules.keys():
+        """Get a module on an address."""
+        if addr in self._modules:
             return self._modules[addr]
         return None
 
     def get_channels(self, addr: str) -> None | dict:
-        """
-        Get the channels for an address
-        """
+        """Get the channels for an address."""
         if addr in self._modules:
             return (self._modules[addr]).get_channels()
         return None
 
     async def stop(self) -> None:
+        """Stop the controller."""
         self._closing = True
         self._auto_reconnect = False
         self._protocol.close()
 
     async def connect(self, test_connect: bool = False) -> None:
-        """
-        Connect to the bus and load all the data
-        """
+        """Connect to the bus and load all the data."""
         auth = None
         # connect to the bus
         if ":" in self._dsn:
@@ -182,7 +159,7 @@ class Velbus:
                 )
 
             except (ConnectionRefusedError, OSError) as err:
-                raise VelbusConnectionFailed() from err
+                raise VelbusConnectionFailed from err
         else:
             # serial port
             try:
@@ -198,7 +175,7 @@ class Velbus:
                     rtscts=1,
                 )
             except (FileNotFoundError, serial.SerialException) as err:
-                raise VelbusConnectionFailed() from err
+                raise VelbusConnectionFailed from err
         if test_connect:
             return
         # if auth is required send the auth key
@@ -206,79 +183,30 @@ class Velbus:
             await self._protocol.write_auth_key(auth)
 
         # scan the bus
-        await self.scan()
+        await self._handler.scan()
 
-    # lgor original scan 
-    #async def scan(self) -> None:
-    #    self._handler.scan_started()
-    #    for addr in range(1, 256):
-    #        msg = ModuleTypeRequestMessage(addr)
-    #        await self.send(msg)
-    #    await self._handler._scan_complete_event.wait()
-    #    # calculate how long to wait
-    #    calc_timeout = len(self._modules) * 30
-    #    if calc_timeout < LOAD_TIMEOUT:
-    #        timeout = calc_timeout
-    #    else:
-    #        timeout = LOAD_TIMEOUT
-    #    # create a task to wait until we have all modules loaded
-    #    tsk = asyncio.Task(self._check_if_modules_are_loaded())
-    #    try:
-    #        await asyncio.wait_for(tsk, timeout=timeout)
-    #    except asyncio.TimeoutError:
-    #        self._log.error(
-    #            f"Not all modules are loaded within a timeout of {LOAD_TIMEOUT} seconds, continuing with the loaded modules"
-    #        )
-
-    #lgor: scan refactered
-    async def scan(self) -> None:
-        for addr in range(1, 254):
-            #initiate module type request 
-            self._handler.set_module_type_request(addr)
-            msg = ModuleTypeRequestMessage(addr)
-            await self.send(msg)
-           
-            # create a task to wait for the requested module type response message
-            tsk = asyncio.Task(self._handler.is_module_typerespons_ok())
-            
-            # wait for the reception of the type response message
-            try:
-                await asyncio.wait_for(tsk, timeout=200)    #lgor 200mSec should do it (we should not set timeout to small because there might be other traffic on the bus)
-                # module type response message received: we are now sure the module is present
-                # we can now request module and channel info (garded by long timeout which we should never meet)
-                tskInfo = asyncio.Task(self._handler.handle_module_type())
-                try:
-                    await asyncio.wait_for(tskInfo, timeout=5000)
-                except asyncio.TimeoutError:
-                    self._log.error("Module {addr} did not respond to info requests after succesfull type request")
-            except asyncio.TimeoutError:
-                self._log.error("No response within timeout, module {addr} not present or unavailable")
-        # scan completed
-        self._handler.set_module_type_request(0)
-
+    async def sendTypeRequestMessage(self, address : byte) -> None:
+        msg = ModuleTypeRequestMessage(address)
+        await self.send(msg)
 
     #lgor: I think following code is obsolete ...
-    async def _check_if_modules_are_loaded(self) -> None:
-        """
-        Task to wait until modules are loaded
-        """
-        while True:
-            mods_loaded = 0
-            for mod in (self.get_modules()).values():
-                if mod.is_loaded():
-                    mods_loaded += 1
-                else:
-                    self._log.warning(f"Waiting for module {mod._address}")
-            if mods_loaded == len(self.get_modules()):
-                self._log.info("All modules loaded")
-                return
-            self._log.info("Not all modules loaded yet, waiting 15 seconds")
-            await asyncio.sleep(15)
+    #async def _check_if_modules_are_loaded(self) -> None:
+    #    """Task to wait until modules are loaded."""
+    #    while True:
+    #        mods_loaded = 0
+    #        for mod in (self.get_modules()).values():
+    #            if mod.is_loaded():
+    #                mods_loaded += 1
+    #            else:
+    #                self._log.warning(f"Waiting for module {mod._address}")
+    #        if mods_loaded == len(self.get_modules()):
+    #            self._log.info("All modules loaded")
+    #            return
+    #        self._log.info("Not all modules loaded yet, waiting 15 seconds")
+    #        await asyncio.sleep(15)
 
     async def send(self, msg: Message) -> None:
-        """
-        Send a packet
-        """
+        """Send a packet."""
         await self._protocol.send_message(
             RawMessage(
                 priority=msg.priority,
@@ -289,6 +217,7 @@ class Velbus:
         )
 
     def get_all(self, class_name: str) -> list[Channel]:
+        """Get all channels."""
         lst = []
         for addr, mod in (self.get_modules()).items():
             if addr in self._submodules:
@@ -299,9 +228,8 @@ class Velbus:
         return lst
 
     async def sync_clock(self) -> None:
-        """
-        This will send all the needed messages to sync the clock
-        """
-        await self.send(SetRealtimeClock())
-        await self.send(SetDate())
-        await self.send(SetDaylightSaving())
+        """Will send all the needed messages to sync the clock."""
+        lclt = time.localtime()
+        await self.send(SetRealtimeClock(wday=lclt[6], hour=lclt[3], min=lclt[4]))
+        await self.send(SetDate(day=lclt[2], mon=lclt[1], year=lclt[0]))
+        await self.send(SetDaylightSaving(ds=not lclt[8]))
