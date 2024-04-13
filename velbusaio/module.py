@@ -557,7 +557,7 @@ class Module:
         # load the module status
         await self._request_module_status()
         # load the channel names
-        if "channels" in cache and from_cache:              #lgor
+        if "channels" in cache and from_cache:
             for num, chan in cache["channels"].items():
                 self._channels[int(num)]._name = chan["name"]
                 self._channels[int(num)]._is_loaded = True

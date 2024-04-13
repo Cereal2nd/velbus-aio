@@ -3,7 +3,6 @@ This test checks if with an incoming temp_sensor_status message the thermostat o
 sleep_timer values are correctly stored into the module's temperature channel.
 """
 
-import logging
 import pathlib
 
 import pytest
@@ -12,7 +11,7 @@ from velbusaio.channels import Temperature
 from velbusaio.controller import Velbus
 from velbusaio.handler import PacketHandler
 from velbusaio.helpers import get_cache_dir
-from velbusaio.messages import TempSensorStatusMessage
+from velbusaio.messages.temp_sensor_status import TempSensorStatusMessage
 from velbusaio.messages.temp_sensor_status import DSTATUS
 from velbusaio.module import Module
 

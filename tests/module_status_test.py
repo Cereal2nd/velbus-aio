@@ -13,7 +13,6 @@ from velbusaio.const import (
     CHANNEL_SELECTED_PROGRAM,
     NO_RTR,
     PRIORITY_LOW,
-    RTR,
 )
 from velbusaio.controller import Velbus
 from velbusaio.handler import PacketHandler
@@ -24,7 +23,6 @@ from velbusaio.messages.module_status import (
     ModuleStatusMessage2,
     ModuleStatusPirMessage,
 )
-from velbusaio.messages.select_program import SelectProgramMessage
 from velbusaio.module import Module
 
 # some modules to test

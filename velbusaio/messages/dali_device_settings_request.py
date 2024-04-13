@@ -18,7 +18,7 @@ class DataSource(enum.Enum):
     FromDaliDevice = 1
 
 
-@register(COMMAND_CODE, ["VMBDALI"])
+@register(COMMAND_CODE, ["VMBDALI", "VMBDALI-20"])
 class DaliDeviceSettingsRequest(Message):
     """
     send by:

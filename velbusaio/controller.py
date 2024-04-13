@@ -8,7 +8,6 @@ import pathlib
 import re
 import ssl
 import time
-
 from urllib.parse import urlparse
 
 import serial
@@ -53,9 +52,9 @@ class Velbus:
         self._submodules: list[int] = []
         self._send_queue = asyncio.Queue()
         self._cache_dir = cache_dir
-        
+
         self.testCount = 0
-        
+
         # make sure the cachedir exists
         pathlib.Path(self._cache_dir).mkdir(parents=True, exist_ok=True)
 
@@ -72,7 +71,7 @@ class Velbus:
     def _on_end_of_scan(self) -> None:
         """Notify the scan failure."""
         self._handler.scan_finished()
-    
+
     def add_module(
         self,
         addr: int,
@@ -84,7 +83,7 @@ class Velbus:
         build_week: int | None = None,
     ) -> None:
         """Add a found module to the module cache."""
-
+        self._log.info(f"Found module: type:{typ} address:{addr}")
         module = Module.factory(
             addr,
             typ,
@@ -97,7 +96,6 @@ class Velbus:
         )
         module.initialize(self.send)
         self._modules[addr] = module
-        self._log.info(f"Found module {addr}: {module}")
 
     def add_submodules(self, module: Module, subList: dict[int, int]) -> None:
         """Add submodules address to module."""
@@ -185,25 +183,9 @@ class Velbus:
         # scan the bus
         await self._handler.scan()
 
-    async def sendTypeRequestMessage(self, address : byte) -> None:
+    async def sendTypeRequestMessage(self, address: int) -> None:
         msg = ModuleTypeRequestMessage(address)
         await self.send(msg)
-
-    #lgor: I think following code is obsolete ...
-    #async def _check_if_modules_are_loaded(self) -> None:
-    #    """Task to wait until modules are loaded."""
-    #    while True:
-    #        mods_loaded = 0
-    #        for mod in (self.get_modules()).values():
-    #            if mod.is_loaded():
-    #                mods_loaded += 1
-    #            else:
-    #                self._log.warning(f"Waiting for module {mod._address}")
-    #        if mods_loaded == len(self.get_modules()):
-    #            self._log.info("All modules loaded")
-    #            return
-    #        self._log.info("Not all modules loaded yet, waiting 15 seconds")
-    #        await asyncio.sleep(15)
 
     async def send(self, msg: Message) -> None:
         """Send a packet."""

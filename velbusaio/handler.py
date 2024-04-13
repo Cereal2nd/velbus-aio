@@ -65,24 +65,34 @@ class PacketHandler:
                 try:
                     self._typeResponseReceived.clear()
                     await self._velbus.sendTypeRequestMessage(address)
-                    await asyncio.wait_for(self._typeResponseReceived.wait(), SCAN_MODULETYPE_TIMEOUT / 1000.)
+                    await asyncio.wait_for(
+                        self._typeResponseReceived.wait(),
+                        SCAN_MODULETYPE_TIMEOUT / 1000.0,
+                    )
                     with self._scanLock:
                         module = self._velbus.get_module(address)
                 except asyncio.TimeoutError:
-                    self._log.info(f"Scan module {address} failed: not present or unavailable")
-            if not module is None:
+                    self._log.info(
+                        f"Scan module {address} failed: not present or unavailable"
+                    )
+            if module is not None:
                 if not module.is_loaded():
                     try:
                         self._log.debug(f"Module {address} detected: start loading")
-                        await asyncio.wait_for(module.load(from_cache=True), SCAN_MODULEINFO_TIMEOUT / 1000.)
+                        await asyncio.wait_for(
+                            module.load(from_cache=True),
+                            SCAN_MODULEINFO_TIMEOUT / 1000.0,
+                        )
                         self._scan_delay_msec = SCAN_MODULEINFO_COMPLETION_TIME
                         while self._scan_delay_msec > 10:
                             self._scan_delay_msec = self._scan_delay_msec - 10
-                            #self._log.debug(f"\t... waiting {self._scan_delay_msec}")
+                            # self._log.debug(f"\t... waiting {self._scan_delay_msec}")
                             await asyncio.sleep(0.01)
                         self._log.info(f"Scan module {address} completed")
                     except asyncio.TimeoutError:
-                        self._log.error(f"Module {address} did not respond to info requests after succesfull type request")
+                        self._log.error(
+                            f"Module {address} did not respond to info requests after successful type request"
+                        )
         self._scan_complete = True
         self._log.info("Module scan completed")
 
@@ -104,14 +114,16 @@ class PacketHandler:
         # handle module type response message
         if command_value == 0xFF:
             if not self._scan_complete:
-                msg = ModuleTypeMessage() 
+                msg = ModuleTypeMessage()
                 msg.populate(priority, address, rtr, data)
                 with self._scanLock:
                     self._handle_module_type(msg)
-                    if (address == self._modulescan_address):
+                    if address == self._modulescan_address:
                         self._typeResponseReceived.set()
                     elif address < self._modulescan_address:
-                        self._log.debug(f"Resetting scan address from {self._modulescan_address} to {address}")
+                        self._log.debug(
+                            f"Resetting scan address from {self._modulescan_address} to {address}"
+                        )
                         self._modulescan_address = address
                 self._typeResponseReceived.set()
 
@@ -137,29 +149,34 @@ class PacketHandler:
                     self.pdata["MessageBroadCast"][command_value.upper()], address
                 )
             )
-
         # handle other messages for modules that are already scanned
         else:
             module = None
             with self._scanLock:
                 module = self._velbus.get_module(address)
-            if not module is None:
+            if module is not None:
                 module_type = module.get_type()
                 if commandRegistry.has_command(int(command_value), module_type):
                     command = commandRegistry.get_command(command_value, module_type)
                     msg = command()
                     msg.populate(priority, address, rtr, data)
                     # restart the info completion time when info message received
-                    if command_value in (0xF0, 0xF1, 0xF2, 0xFB, 0xFE, 0xCC):     # names, memory data, memory block 
+                    if command_value in (
+                        0xF0,
+                        0xF1,
+                        0xF2,
+                        0xFB,
+                        0xFE,
+                        0xCC,
+                    ):  # names, memory data, memory block
                         self._scan_delay_msec = SCAN_MODULEINFO_COMPLETION_TIME
-                        #self._log.debug(f"Restart timeout {msg}")
+                        # self._log.debug(f"Restart timeout {msg}")
                     # send the message to the modules
                     await self._velbus.get_module(msg.address).on_message(msg)
                 else:
                     self._log.warning(f"NOT FOUND IN command_registry: {rawmsg}")
 
-
-    def _handle_module_type(self, msg: Message) -> None:
+    async def _handle_module_type(self, msg: Message) -> None:
         """
         load the module data
         """
@@ -180,15 +197,16 @@ class PacketHandler:
                     serial=msg.serial,
                 )
             else:
-                self._log.debug(f"***Module already exists scanAddr={self._modulescan_address} addr={msg.address} {msg}")
-                
-        #else:
-        #    self._log.debug("*** handle_module_type called without response message")
+                self._log.debug(
+                    f"***Module already exists scanAddr={self._modulescan_address} addr={msg.address} {msg}"
+                )
 
+        # else:
+        #    self._log.debug("*** handle_module_type called without response message")
 
     def _handle_module_subtype(self, msg: Message) -> None:
         module = self._velbus.get_module(msg.address)
-        if not module is None:
+        if module is not None:
             addrList = {
                 (msg.sub_address_offset + 1): msg.sub_address_1,
                 (msg.sub_address_offset + 2): msg.sub_address_2,

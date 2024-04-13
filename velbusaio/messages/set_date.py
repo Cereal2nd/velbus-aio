@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-import time
-
 from velbusaio.command_registry import register
 from velbusaio.message import Message
 
@@ -18,11 +16,11 @@ class SetDate(Message):
     received by all modules
     """
 
-    def __init__(self, address=0x00) -> None:
+    def __init__(self, address=0x00, day=None, mon=None, year=None) -> None:
         Message.__init__(self)
-        self._day = None
-        self._mon = None
-        self._year = None
+        self._day = day
+        self._mon = mon
+        self._year = year
         self.set_defaults(address)
 
     def set_defaults(self, address) -> None:
@@ -30,10 +28,6 @@ class SetDate(Message):
             self.set_address(address)
         self.set_low_priority()
         self.set_no_rtr()
-        lclt = time.localtime()
-        self._day = lclt[2]
-        self._mon = lclt[1]
-        self._year = lclt[0]
 
     def populate(self, priority, address, rtr, data) -> None:
         """

@@ -3,7 +3,7 @@ import logging
 import pytest
 
 from velbusaio.handler import PacketHandler
-from velbusaio.messages import MemoryDataMessage
+from velbusaio.messages.memory_data import MemoryDataMessage
 from velbusaio.module import Module
 
 
