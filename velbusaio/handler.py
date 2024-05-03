@@ -117,7 +117,7 @@ class PacketHandler:
                 msg = ModuleTypeMessage()
                 msg.populate(priority, address, rtr, data)
                 with self._scanLock:
-                    self._handle_module_type(msg)
+                    await self._handle_module_type(msg)
                     if address == self._modulescan_address:
                         self._typeResponseReceived.set()
                     elif address < self._modulescan_address:
