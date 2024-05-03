@@ -137,7 +137,10 @@ class Channel:
         }
 
     def to_cache(self) -> dict:
-        return {"name": self._name, "type": type(self).__name__}
+        dst = {"name": self._name, "type": type(self).__name__}
+        if hasattr(self, "_Unit"):
+            dst["Unit"] = self._Unit
+        return dst
 
     def __setstate__(self, state):
         self.__dict__.update(state)

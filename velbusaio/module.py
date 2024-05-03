@@ -560,6 +560,8 @@ class Module:
         if "channels" in cache:
             for num, chan in cache["channels"].items():
                 self._channels[int(num)]._name = chan["name"]
+                if "Unit" in chan:
+                    self._channels[int(num)]._Unit = chan["Unit"]
                 self._channels[int(num)]._is_loaded = True
         else:
             await self._request_channel_name()
