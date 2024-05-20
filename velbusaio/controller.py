@@ -159,16 +159,18 @@ class Velbus:
         else:
             # serial port
             try:
-                _transport, _protocol = await serial_asyncio_fast.create_serial_connection(
-                    asyncio.get_event_loop(),
-                    lambda: self._protocol,
-                    url=self._dsn,
-                    baudrate=38400,
-                    bytesize=serial.EIGHTBITS,
-                    parity=serial.PARITY_NONE,
-                    stopbits=serial.STOPBITS_ONE,
-                    xonxoff=0,
-                    rtscts=1,
+                _transport, _protocol = (
+                    await serial_asyncio_fast.create_serial_connection(
+                        asyncio.get_event_loop(),
+                        lambda: self._protocol,
+                        url=self._dsn,
+                        baudrate=38400,
+                        bytesize=serial.EIGHTBITS,
+                        parity=serial.PARITY_NONE,
+                        stopbits=serial.STOPBITS_ONE,
+                        xonxoff=0,
+                        rtscts=1,
+                    )
                 )
             except (FileNotFoundError, serial.SerialException) as err:
                 raise VelbusConnectionFailed from err
