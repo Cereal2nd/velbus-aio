@@ -11,7 +11,7 @@ import time
 from urllib.parse import urlparse
 
 import serial
-import serial_asyncio
+import serial_asyncio_fast
 
 from velbusaio.channels import Channel
 from velbusaio.const import LOAD_TIMEOUT
@@ -159,7 +159,7 @@ class Velbus:
         else:
             # serial port
             try:
-                _transport, _protocol = await serial_asyncio.create_serial_connection(
+                _transport, _protocol = await serial_asyncio_fast.create_serial_connection(
                     asyncio.get_event_loop(),
                     lambda: self._protocol,
                     url=self._dsn,
