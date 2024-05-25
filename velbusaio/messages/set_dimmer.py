@@ -1,5 +1,4 @@
-"""
-:author: Frank van Breugel
+""":author: Frank van Breugel
 """
 
 from __future__ import annotations
@@ -12,10 +11,10 @@ COMMAND_CODE = 0x07
 
 @register(
     COMMAND_CODE,
-    ["VMB1DM", "VMBDME", "VMB4DC", "VMBDMI", "VMBDMI-R", "VMB1LED", "VMB8DC-20"],
+    ["VMB1DM", "VMBDME", "VMB4DC", "VMB1LED"],
 )
 class SetDimmerMessage(Message):
-    """
+    """with this message the channel numbering is a bitnumber
     send by:
     received by: VMBDME, VMB4DC
     """
@@ -34,9 +33,7 @@ class SetDimmerMessage(Message):
         self.set_no_rtr()
 
     def populate(self, priority, address, rtr, data):
-        """
-        :return: None
-        """
+        """:return: None"""
         self.needs_high_priority(priority)
         self.needs_no_rtr(rtr)
         self.needs_data(data, 4)
@@ -48,9 +45,7 @@ class SetDimmerMessage(Message):
         )
 
     def data_to_binary(self):
-        """
-        :return: bytes
-        """
+        """:return: bytes"""
         return bytes(
             [
                 COMMAND_CODE,
@@ -60,9 +55,9 @@ class SetDimmerMessage(Message):
         ) + self.dimmer_transitiontime.to_bytes(2, byteorder="big", signed=False)
 
 
-@register(COMMAND_CODE, ["VMBDALI", "VMBDALI-20"])
+@register(COMMAND_CODE, ["VMBDALI", "VMBDALI-20", "VMBDMI", "VMBDMI-R", "VMB8DC-20"])
 class SetDimmerMessage2(SetDimmerMessage):
-    """
+    """This with this message the channel numbering is an integer
     send by:
     received by: VMBDALI
     """
