@@ -548,7 +548,7 @@ class Module:
         except OSError:
             cache = {}
         # load default channels
-        await self.__load_default_channels()
+        await self._load_default_channels()
         # load the data from memory ( the stuff that we need)
         if "name" in cache and cache["name"] != "":
             self._name = cache["name"]
@@ -728,7 +728,7 @@ class Module:
                     msg.low_address = addr[1]
                     await self._writer(msg)
 
-    async def __load_default_channels(self) -> None:
+    async def _load_default_channels(self) -> None:
         if "Channels" not in self._data:
             return
 
@@ -776,19 +776,15 @@ class VmbDali(Module):
         )
         self.group_members: dict[int, set[int]] = {}
 
-    async def load(self, from_cache: bool = False) -> None:
-        await super().load(from_cache)
-
-        if not from_cache:
-            for chan in range(1, 64 + 1):
-                self._channels[chan] = Channel(
-                    self, chan, "placeholder", True, self._writer, self._address
-                )
-                # Placeholders will keep this module loading
-                # Until the DaliDeviceSettings messages either delete or replace these placeholder's
-                # with actual channels
-
-            await self._request_dali_channels()
+    async def _load_default_channels(self) -> None:
+        for chan in range(1, 64 + 1):
+            self._channels[chan] = Channel(
+                self, chan, "placeholder", True, self._writer, self._address
+            )
+            # Placeholders will keep this module loading
+            # Until the DaliDeviceSettings messages either delete or replace these placeholder's
+            # with actual channels
+        await self._request_dali_channels()
 
     async def _request_dali_channels(self):
         msg_type = commandRegistry.get_command(
