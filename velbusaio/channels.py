@@ -508,6 +508,7 @@ class Temperature(Channel):
     _min = None
     _target = 0
     _cmode = None
+    _coolmode = None
     _cstatus = None
     _thermostat = False
     _sleep_timer = 0
