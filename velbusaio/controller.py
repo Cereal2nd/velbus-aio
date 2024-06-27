@@ -50,7 +50,7 @@ class Velbus:
         self._handler = PacketHandler(self.send, self)
         self._modules: dict[int, Module] = {}
         self._submodules: list[int] = []
-        self._send_queue: asyncio.Queue  = asyncio.Queue()
+        self._send_queue: asyncio.Queue = asyncio.Queue()
         self._cache_dir: str = cache_dir
         # make sure the cachedir exists
         pathlib.Path(self._cache_dir).mkdir(parents=True, exist_ok=True)

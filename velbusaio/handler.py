@@ -199,7 +199,7 @@ class PacketHandler:
                 else:
                     self._log.warning(f"NOT FOUND IN command_registry: {rawmsg}")
 
-    def _handle_module_type(self, msg: ModuleTypeMessage | ModuleType2Message ) -> None:
+    def _handle_module_type(self, msg: ModuleTypeMessage | ModuleType2Message) -> None:
         """
         load the module data
         """
