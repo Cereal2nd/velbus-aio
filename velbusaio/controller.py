@@ -94,7 +94,7 @@ class Velbus:
         self._modules[addr] = module
         self._log.info(f"Found module {addr}: {module}")
 
-    def add_submodules(self, addr: int, subList: dict[int, int]) -> None:
+    def add_submodules(self, module: Module, subList: dict[int, int]) -> None:
         """Add submodules address to module."""
         for sub_num, sub_addr in subList.items():
             if sub_addr == 0xFF:
