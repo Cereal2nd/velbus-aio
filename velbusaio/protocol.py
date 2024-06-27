@@ -15,9 +15,7 @@ from velbusaio.raw_message import create as create_message_info
 
 def _on_write_backoff(details):
     logging.debug(
-        "Transport is not open, waiting {wait} seconds after {tries}",
-        wait=details.wait,
-        tries=details.tries,
+        f"Transport is not open, waiting {details.wait} seconds after {details.tries}"
     )
 
 
@@ -31,13 +29,11 @@ class VelbusProtocol(asyncio.BufferedProtocol):
         self,
         message_received_callback: t.Callable[[RawMessage], t.Awaitable[None]],
         connection_lost_callback=None,
-        end_of_scan_callback=None,
     ) -> None:
         super().__init__()
         self._log = logging.getLogger("velbus-protocol")
         self._message_received_callback = message_received_callback
         self._connection_lost_callback = connection_lost_callback
-        self._end_of_scan_callback = end_of_scan_callback
 
         # everything for reading from Velbus
         self._buffer = bytearray(MAXIMUM_MESSAGE_SIZE)
@@ -63,14 +59,14 @@ class VelbusProtocol(asyncio.BufferedProtocol):
         self._restart_writer = True
         self.restart_writing()
 
-    async def pause_writing(self):
+    async def pause_writing(self) -> None:
         """Pause writing."""
         self._restart_writer = False
         if self._writer_task:
             self._send_queue.put_nowait(None)
         await asyncio.sleep(0.1)
 
-    def restart_writing(self):
+    def restart_writing(self) -> None:
         """Resume writing."""
         if self._restart_writer and not self._write_transport_lock.locked():
             self._writer_task = asyncio.ensure_future(
@@ -78,7 +74,7 @@ class VelbusProtocol(asyncio.BufferedProtocol):
             )
             self._writer_task.add_done_callback(lambda _future: self.restart_writing())
 
-    def close(self):
+    def close(self) -> None:
         self._closing = True
         self._restart_writer = False
         if self.transport:
@@ -197,8 +193,6 @@ class VelbusProtocol(asyncio.BufferedProtocol):
                     queue_sleep_time = SLEEP_TIME * 33
                 else:
                     queue_sleep_time = SLEEP_TIME
-                if msg_info.rtr and msg_info.address == 0xFF:
-                    self._end_of_scan_callback()
                 await asyncio.sleep(queue_sleep_time)
             except (asyncio.CancelledError, GeneratorExit) as exc:
                 if not self._closing:

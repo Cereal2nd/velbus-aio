@@ -20,19 +20,19 @@ class Message:
     Base Velbus message
     """
 
-    def __init__(self, address: int = None) -> None:
+    def __init__(self, address: int = 0) -> None:
         self.priority = PRIORITY_LOW
-        self.address = None
-        self.rtr = False
+        self.address: int = 0
+        self.rtr: bool = False
         self.data = bytearray()
         self.set_defaults(address)
 
-    def set_attributes(self, priority: int, address: int, rtr: int) -> None:
+    def set_attributes(self, priority: int, address: int, rtr: bool) -> None:
         self.priority = priority
         self.address = address
         self.rtr = rtr
 
-    def populate(self, priority: int, address: int, rtr: int, data: int) -> None:
+    def populate(self, priority: int, address: int, rtr: bool, data: int) -> None:
         raise NotImplementedError
 
     def set_defaults(self, address: int | None) -> None:
@@ -66,7 +66,7 @@ class Message:
             if callable(getattr(self, key)) or key.startswith("__"):
                 del me[key]
             if isinstance(me[key], (bytes, bytearray)):
-                me[key] = str(me[key], "utf-8")
+                me[key] = str(me[key])
         return me
 
     def to_json(self) -> str:

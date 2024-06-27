@@ -14,7 +14,6 @@ import serial
 import serial_asyncio_fast
 
 from velbusaio.channels import Channel
-from velbusaio.const import LOAD_TIMEOUT
 from velbusaio.exceptions import VelbusConnectionFailed
 from velbusaio.handler import PacketHandler
 from velbusaio.helpers import get_cache_dir
@@ -42,7 +41,6 @@ class Velbus:
         self._protocol = VelbusProtocol(
             message_received_callback=self._on_message_received,
             connection_lost_callback=self._on_connection_lost,
-            end_of_scan_callback=self._on_end_of_scan,
         )
         self._closing = False
         self._auto_reconnect = True
@@ -51,8 +49,8 @@ class Velbus:
         self._handler = PacketHandler(self.send, self)
         self._modules: dict[int, Module] = {}
         self._submodules: list[int] = []
-        self._send_queue = asyncio.Queue()
-        self._cache_dir = cache_dir
+        self._send_queue: asyncio.Queue = asyncio.Queue()
+        self._cache_dir: str = cache_dir
         # make sure the cachedir exists
         pathlib.Path(self._cache_dir).mkdir(parents=True, exist_ok=True)
 
@@ -66,11 +64,7 @@ class Velbus:
             self._log.debug("Reconnecting to transport")
             asyncio.ensure_future(self.connect())
 
-    def _on_end_of_scan(self) -> None:
-        """Notify the scan failure."""
-        self._handler.scan_finished()
-
-    async def add_module(
+    def add_module(
         self,
         addr: int,
         typ: int,
@@ -81,8 +75,7 @@ class Velbus:
         build_week: int | None = None,
     ) -> None:
         """Add a found module to the module cache."""
-        self._log.info(f"Found module: type:{typ} address:{addr}")
-        self._modules[addr] = Module.factory(
+        module = Module.factory(
             addr,
             typ,
             data,
@@ -92,30 +85,31 @@ class Velbus:
             memorymap=memorymap,
             cache_dir=self._cache_dir,
         )
-        self._modules[addr].initialize(self.send)
-        await self._modules[addr].load()
+        module.initialize(self.send)
+        self._modules[addr] = module
+        self._log.info(f"Found module {addr}: {module}")
 
-    async def add_submodules(self, addr: int, subList: dict[int, int]) -> None:
+    def add_submodules(self, module: Module, subList: dict[int, int]) -> None:
         """Add submodules address to module."""
         for sub_num, sub_addr in subList.items():
             if sub_addr == 0xFF:
                 continue
             self._submodules.append(sub_addr)
-            self._modules[addr]._sub_address[sub_num] = sub_addr
-            self._modules[sub_addr] = self._modules[addr]
-        self._modules[addr].cleanupSubChannels()
+            module._sub_address[sub_num] = sub_addr
+            self._modules[sub_addr] = module
+        module.cleanupSubChannels()
 
     def get_modules(self) -> dict:
         """Return the module cache."""
         return self._modules
 
-    def get_module(self, addr: str) -> None | Module:
+    def get_module(self, addr: int) -> None | Module:
         """Get a module on an address."""
         if addr in self._modules:
             return self._modules[addr]
         return None
 
-    def get_channels(self, addr: str) -> None | dict:
+    def get_channels(self, addr: int) -> None | dict:
         """Get the channels for an address."""
         if addr in self._modules:
             return (self._modules[addr]).get_channels()
@@ -181,44 +175,11 @@ class Velbus:
             await self._protocol.write_auth_key(auth)
 
         # scan the bus
-        await self.scan()
+        await self._handler.scan()
 
-    async def scan(self) -> None:
-        """Scan the bus."""
-        self._handler.scan_started()
-        for addr in range(1, 256):
-            msg = ModuleTypeRequestMessage(addr)
-            await self.send(msg)
-        await self._handler._scan_complete_event.wait()
-        # calculate how long to wait
-        calc_timeout = len(self._modules) * 30
-        if calc_timeout < LOAD_TIMEOUT:
-            timeout = calc_timeout
-        else:
-            timeout = LOAD_TIMEOUT
-        # create a task to wait until we have all modules loaded
-        tsk = asyncio.Task(self._check_if_modules_are_loaded())
-        try:
-            await asyncio.wait_for(tsk, timeout=timeout)
-        except asyncio.TimeoutError:
-            self._log.error(
-                f"Not all modules are loaded within a timeout of {LOAD_TIMEOUT} seconds, continuing with the loaded modules"
-            )
-
-    async def _check_if_modules_are_loaded(self) -> None:
-        """Task to wait until modules are loaded."""
-        while True:
-            mods_loaded = 0
-            for mod in (self.get_modules()).values():
-                if mod.is_loaded():
-                    mods_loaded += 1
-                else:
-                    self._log.warning(f"Waiting for module {mod._address}")
-            if mods_loaded == len(self.get_modules()):
-                self._log.info("All modules loaded")
-                return
-            self._log.info("Not all modules loaded yet, waiting 15 seconds")
-            await asyncio.sleep(15)
+    async def sendTypeRequestMessage(self, address: int) -> None:
+        msg = ModuleTypeRequestMessage(address)
+        await self.send(msg)
 
     async def send(self, msg: Message) -> None:
         """Send a packet."""

@@ -98,7 +98,7 @@ class ModuleTypeMessage(Message):
 
     # pylint: disable-msg=R0902
 
-    def __init__(self, address=None):
+    def __init__(self, address=None) -> None:
         Message.__init__(self)
         self.module_type = 0x00
         self.led_on = []
@@ -110,13 +110,13 @@ class ModuleTypeMessage(Message):
         self.build_week = 0
         self.set_defaults(address)
 
-    def module_name(self):
+    def module_name(self) -> str:
         """
         :return: str
         """
         return "Unknown"
 
-    def populate(self, priority, address, rtr, data):
+    def populate(self, priority, address, rtr, data) -> None:
         """
         :return: None
         """
@@ -151,7 +151,7 @@ class ModuleTypeMessage(Message):
     ],
 )
 class ModuleType2Message(Message):
-    def __init__(self, address=None):
+    def __init__(self, address=None) -> None:
         Message.__init__(self)
         self.module_type = 0x00
         self.led_on = []
@@ -164,7 +164,7 @@ class ModuleType2Message(Message):
         self.term = 0
         self.set_defaults(address)
 
-    def module_name(self):
+    def module_name(self) -> str:
         """
         :return: str
         """
