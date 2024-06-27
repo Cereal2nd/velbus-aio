@@ -50,8 +50,8 @@ class Velbus:
         self._handler = PacketHandler(self.send, self)
         self._modules: dict[int, Module] = {}
         self._submodules: list[int] = []
-        self._send_queue = asyncio.Queue()
-        self._cache_dir = cache_dir
+        self._send_queue: asyncio.Queue  = asyncio.Queue()
+        self._cache_dir: str = cache_dir
         # make sure the cachedir exists
         pathlib.Path(self._cache_dir).mkdir(parents=True, exist_ok=True)
 
@@ -108,13 +108,13 @@ class Velbus:
         """Return the module cache."""
         return self._modules
 
-    def get_module(self, addr: str) -> None | Module:
+    def get_module(self, addr: int) -> None | Module:
         """Get a module on an address."""
         if addr in self._modules:
             return self._modules[addr]
         return None
 
-    def get_channels(self, addr: str) -> None | dict:
+    def get_channels(self, addr: int) -> None | dict:
         """Get the channels for an address."""
         if addr in self._modules:
             return (self._modules[addr]).get_channels()
@@ -182,7 +182,7 @@ class Velbus:
         # scan the bus
         await self._handler.scan()
 
-    async def sendTypeRequestMessage(self, address: byte) -> None:
+    async def sendTypeRequestMessage(self, address: int) -> None:
         msg = ModuleTypeRequestMessage(address)
         await self.send(msg)
 

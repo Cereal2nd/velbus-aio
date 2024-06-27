@@ -20,9 +20,9 @@ class Message:
     Base Velbus message
     """
 
-    def __init__(self, address: int = None) -> None:
+    def __init__(self, address: int = 0) -> None:
         self.priority = PRIORITY_LOW
-        self.address = None
+        self.address: int = 0
         self.rtr = False
         self.data = bytearray()
         self.set_defaults(address)

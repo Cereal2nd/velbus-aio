@@ -25,7 +25,7 @@ class ModuleSubTypeMessage(Message):
 
     # pylint: disable-msg=R0902
 
-    def __init__(self, address=None, sub_address_offset: int = 0):
+    def __init__(self, address=None, sub_address_offset: int = 0) -> None:
         Message.__init__(self)
         self.module_type = 0x00
         self.sub_address_1 = 0xFF
@@ -36,13 +36,13 @@ class ModuleSubTypeMessage(Message):
         self.serial = 0
         self.sub_address_offset = sub_address_offset
 
-    def module_name(self):
+    def module_name(self) -> str:
         """
         :return: str
         """
         return "Unknown"
 
-    def populate(self, priority, address, rtr, data):
+    def populate(self, priority, address, rtr, data) -> None:
         """
         :return: None
         """

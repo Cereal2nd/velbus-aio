@@ -23,7 +23,7 @@ from velbusaio.command_registry import commandRegistry
 from velbusaio.helpers import h2, keys_exists
 from velbusaio.message import Message
 from velbusaio.messages.module_subtype import ModuleSubTypeMessage
-from velbusaio.messages.module_type import ModuleTypeMessage
+from velbusaio.messages.module_type import ModuleTypeMessage, ModuleType2Message
 from velbusaio.raw_message import RawMessage
 from velbusaio.helpers import get_cache_dir
 
@@ -92,7 +92,7 @@ class PacketHandler:
                     self._log.info(
                         f"Scan module {address} failed: not present or unavailable"
                     )
-                if not module is None:
+                if module is not None:
                     try:
                         self._log.debug(f"Module {address} detected: start loading")
                         await asyncio.wait_for(
@@ -111,7 +111,7 @@ class PacketHandler:
                         )
                     except asyncio.TimeoutError:
                         self._log.error(
-                            f"Module {address} did not respond to info requests after succesfull type request"
+                            f"Module {address} did not respond to info requests after successful type request"
                         )
 
         self._scan_complete = True
@@ -135,10 +135,10 @@ class PacketHandler:
         # handle module type response message
         if command_value == 0xFF:
             if not self._scan_complete:
-                msg = ModuleTypeMessage()
-                msg.populate(priority, address, rtr, data)
+                tmsg: ModuleTypeMessage = ModuleTypeMessage()
+                tmsg.populate(priority, address, rtr, data)
                 with self._scanLock:
-                    self._handle_module_type(msg)
+                    self._handle_module_type(tmsg)
                     if address == self._modulescan_address:
                         self._typeResponseReceived.set()
                     else:
@@ -152,7 +152,7 @@ class PacketHandler:
         # handle module subtype response message
         elif command_value in (0xB0, 0xA7, 0xA6):
             if not self._scan_complete:
-                msg = ModuleSubTypeMessage()
+                msg: ModuleSubTypeMessage = ModuleSubTypeMessage()
                 msg.populate(priority, address, rtr, data)
                 if command_value == 0xB0:
                     msg.sub_address_offset = 0
@@ -177,7 +177,7 @@ class PacketHandler:
             module = None
             with self._scanLock:
                 module = self._velbus.get_module(address)
-            if not module is None:
+            if module is not None:
                 module_type = module.get_type()
                 if commandRegistry.has_command(int(command_value), module_type):
                     command = commandRegistry.get_command(command_value, module_type)
@@ -199,7 +199,7 @@ class PacketHandler:
                 else:
                     self._log.warning(f"NOT FOUND IN command_registry: {rawmsg}")
 
-    def _handle_module_type(self, msg: Message) -> None:
+    def _handle_module_type(self, msg: ModuleTypeMessage | ModuleType2Message ) -> None:
         """
         load the module data
         """
@@ -227,9 +227,9 @@ class PacketHandler:
         # else:
         #    self._log.debug("*** handle_module_type called without response message")
 
-    def _handle_module_subtype(self, msg: Message) -> None:
+    def _handle_module_subtype(self, msg: ModuleSubTypeMessage) -> None:
         module = self._velbus.get_module(msg.address)
-        if not module is None:
+        if module is not None:
             addrList = {
                 (msg.sub_address_offset + 1): msg.sub_address_1,
                 (msg.sub_address_offset + 2): msg.sub_address_2,

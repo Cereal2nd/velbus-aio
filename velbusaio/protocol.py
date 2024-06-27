@@ -78,7 +78,7 @@ class VelbusProtocol(asyncio.BufferedProtocol):
             )
             self._writer_task.add_done_callback(lambda _future: self.restart_writing())
 
-    def close(self):
+    def close(self) -> None:
         self._closing = True
         self._restart_writer = False
         if self.transport:
