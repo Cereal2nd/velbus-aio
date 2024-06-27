@@ -9,6 +9,7 @@ import pathlib
 import struct
 import sys
 import json
+import os
 from typing import Awaitable, Callable
 
 from velbusaio.channels import (
@@ -515,7 +516,7 @@ class Module:
         try:
             await self._channels[channel].update(updates)
         except KeyError:
-            self._log.error(
+            self._log.info(
                 f"channel {channel} does not exist for module @ address {self}"
             )
 
@@ -526,18 +527,6 @@ class Module:
         return self._channels
 
     async def load(self, from_cache: bool = False) -> None:
-        """
-        Retrieve names of channels
-        """
-        # did we already start the loading?
-        # this is needed for the submodules,
-        # as the submodule address maps to the main module
-        # this method can be called multiple times
-        if self._is_loading or self.loaded:
-            if from_cache:
-                await self._request_module_status()
-            return
-        self._log.info("Load Module")
         # start the loading
         self._is_loading = True
         # see if we have a cache
@@ -548,14 +537,15 @@ class Module:
         except OSError:
             cache = {}
         # load default channels
-        await self._load_default_channels()
+        await self.__load_default_channels()
+
         # load the data from memory ( the stuff that we need)
         if "name" in cache and cache["name"] != "":
             self._name = cache["name"]
         else:
             await self.__load_memory()
         # load the module status
-        await self._request_module_status()
+        #await self._request_module_status()
         # load the channel names
         if "channels" in cache:
             for num, chan in cache["channels"].items():
@@ -569,6 +559,8 @@ class Module:
         self._load()
         # stop the loading
         self._is_loading = False
+        await self._request_module_status()
+
 
     def _load(self) -> None:
         """
@@ -674,6 +666,8 @@ class Module:
         if "Channels" not in self._data:
             # some modules have no channels
             return
+        self._log.info(f"Request module status {self._address}")
+
         mod_stat_req_msg = ModuleStatusRequestMessage(self._address)
         counter_msg = None
         for chan, chan_data in self._data["Channels"].items():
@@ -728,7 +722,7 @@ class Module:
                     msg.low_address = addr[1]
                     await self._writer(msg)
 
-    async def _load_default_channels(self) -> None:
+    async def __load_default_channels(self) -> None:
         if "Channels" not in self._data:
             return
 
@@ -777,6 +771,7 @@ class VmbDali(Module):
         self.group_members: dict[int, set[int]] = {}
 
     async def _load_default_channels(self) -> None:
+        await super().load()
         for chan in range(1, 64 + 1):
             self._channels[chan] = Channel(
                 self, chan, "placeholder", True, self._writer, self._address
