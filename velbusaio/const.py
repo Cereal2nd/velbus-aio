@@ -38,7 +38,11 @@ RTR: Final = 0x40
 NO_RTR: Final = 0x00
 
 CACHEDIR: Final = ".velbuscache"
-LOAD_TIMEOUT: Final = 600
+
+# Module scan timeout values (in mSec)
+SCAN_MODULETYPE_TIMEOUT : Final = 2000           # time to wait for ModuleTypeRequest 
+SCAN_MODULEINFO_TIMEOUT_INITIAL : Final = 1000   # time to wait for first info (status)
+SCAN_MODULEINFO_TIMEOUT_INTERVAL : Final = 150   # time to wait for info interval (between next message)
 
 DEVICE_CLASS_ILLUMINANCE: Final = "illuminance"
 DEVICE_CLASS_TEMPERATURE: Final = "temperature"
