@@ -168,7 +168,7 @@ class PacketHandler:
         elif command_value in self.pdata["MessagesBroadCast"]:
             self._log.debug(
                 "Received broadcast message {} from {}, ignoring".format(
-                    self.pdata["MessageBroadCast"][command_value.upper()], address
+                    self.pdata["MessageBroadCast"][str(command_value).upper()], address
                 )
             )
 

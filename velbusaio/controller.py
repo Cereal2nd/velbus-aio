@@ -41,7 +41,6 @@ class Velbus:
         self._protocol = VelbusProtocol(
             message_received_callback=self._on_message_received,
             connection_lost_callback=self._on_connection_lost,
-            end_of_scan_callback=self._on_end_of_scan,
         )
         self._closing = False
         self._auto_reconnect = True
@@ -64,10 +63,6 @@ class Velbus:
         if self._auto_reconnect and not self._closing:
             self._log.debug("Reconnecting to transport")
             asyncio.ensure_future(self.connect())
-
-    def _on_end_of_scan(self) -> None:
-        """Notify the scan failure."""
-        self._handler.scan_finished()
 
     def add_module(
         self,
