@@ -49,14 +49,16 @@ class PacketHandler:
         self._scanLock = threading.Lock()
         self._modulescan_address = 0
         self._scan_complete = False
-        self._scan_delay_msec = 0        
+        self._scan_delay_msec = 0
         with open(
             pkg_resources.resource_filename(__name__, "protocol.json")
         ) as protocol_file:
             self.pdata = json.load(protocol_file)
 
     async def scan(self) -> None:
-        reload_cache = not os.path.isfile(pathlib.Path(f"{get_cache_dir()}/usecache.yes"))
+        reload_cache = not os.path.isfile(
+            pathlib.Path(f"{get_cache_dir()}/usecache.yes")
+        )
         self._log.info(f"Start module scan, reload cache {reload_cache}")
         while self._modulescan_address < 254:
             address = 0
@@ -80,23 +82,37 @@ class PacketHandler:
                     self._log.info(f"Starting scan {address}")
                     self._typeResponseReceived.clear()
                     await self._velbus.sendTypeRequestMessage(address)
-                    await asyncio.wait_for(self._typeResponseReceived.wait(), SCAN_MODULETYPE_TIMEOUT / 1000.)
+                    await asyncio.wait_for(
+                        self._typeResponseReceived.wait(),
+                        SCAN_MODULETYPE_TIMEOUT / 1000.0,
+                    )
                     with self._scanLock:
                         module = self._velbus.get_module(address)
                 except asyncio.TimeoutError:
-                    self._log.info(f"Scan module {address} failed: not present or unavailable")
+                    self._log.info(
+                        f"Scan module {address} failed: not present or unavailable"
+                    )
                 if not module is None:
                     try:
                         self._log.debug(f"Module {address} detected: start loading")
-                        await asyncio.wait_for(module.load(from_cache=True), SCAN_MODULEINFO_TIMEOUT_INITIAL / 1000.)
+                        await asyncio.wait_for(
+                            module.load(from_cache=True),
+                            SCAN_MODULEINFO_TIMEOUT_INITIAL / 1000.0,
+                        )
                         self._scan_delay_msec = SCAN_MODULEINFO_TIMEOUT_INITIAL
                         while self._scan_delay_msec > 50 and not module.is_loaded():
-                            self._log.debug(f"\t... waiting {self._scan_delay_msec} is_loaded={module.is_loaded()}")
+                            self._log.debug(
+                                f"\t... waiting {self._scan_delay_msec} is_loaded={module.is_loaded()}"
+                            )
                             self._scan_delay_msec = self._scan_delay_msec - 50
                             await asyncio.sleep(0.05)
-                        self._log.info(f"Scan module {address} completed, module loaded={module.is_loaded()}")
+                        self._log.info(
+                            f"Scan module {address} completed, module loaded={module.is_loaded()}"
+                        )
                     except asyncio.TimeoutError:
-                        self._log.error(f"Module {address} did not respond to info requests after succesfull type request")
+                        self._log.error(
+                            f"Module {address} did not respond to info requests after succesfull type request"
+                        )
 
         self._scan_complete = True
         self._log.info("Module scan completed")
@@ -119,14 +135,16 @@ class PacketHandler:
         # handle module type response message
         if command_value == 0xFF:
             if not self._scan_complete:
-                msg = ModuleTypeMessage() 
+                msg = ModuleTypeMessage()
                 msg.populate(priority, address, rtr, data)
                 with self._scanLock:
                     self._handle_module_type(msg)
-                    if (address == self._modulescan_address):
+                    if address == self._modulescan_address:
                         self._typeResponseReceived.set()
                     else:
-                        self._log.debug(f"Unexpected module type message module address {address}, Velbuslink scan?")
+                        self._log.debug(
+                            f"Unexpected module type message module address {address}, Velbuslink scan?"
+                        )
                         self._modulescan_address = address - 1
 
                 self._typeResponseReceived.set()
@@ -166,14 +184,21 @@ class PacketHandler:
                     msg = command()
                     msg.populate(priority, address, rtr, data)
                     # restart the info completion time when info message received
-                    if command_value in (0xF0, 0xF1, 0xF2, 0xFB, 0xFE, 0xCC):     # names, memory data, memory block 
+                    if command_value in (
+                        0xF0,
+                        0xF1,
+                        0xF2,
+                        0xFB,
+                        0xFE,
+                        0xCC,
+                    ):  # names, memory data, memory block
                         self._scan_delay_msec = SCAN_MODULEINFO_TIMEOUT_INTERVAL
-                        #self._log.debug(f"Restart timeout {msg}")
+                        # self._log.debug(f"Restart timeout {msg}")
                     # send the message to the modules
                     await self._velbus.get_module(msg.address).on_message(msg)
                 else:
                     self._log.warning(f"NOT FOUND IN command_registry: {rawmsg}")
-    
+
     def _handle_module_type(self, msg: Message) -> None:
         """
         load the module data
@@ -195,9 +220,11 @@ class PacketHandler:
                     serial=msg.serial,
                 )
             else:
-                self._log.debug(f"***Module already exists scanAddr={self._modulescan_address} addr={msg.address} {msg}")
-                
-        #else:
+                self._log.debug(
+                    f"***Module already exists scanAddr={self._modulescan_address} addr={msg.address} {msg}"
+                )
+
+        # else:
         #    self._log.debug("*** handle_module_type called without response message")
 
     def _handle_module_subtype(self, msg: Message) -> None:

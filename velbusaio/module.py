@@ -545,7 +545,7 @@ class Module:
         else:
             await self.__load_memory()
         # load the module status
-        #await self._request_module_status()
+        # await self._request_module_status()
         # load the channel names
         if "channels" in cache:
             for num, chan in cache["channels"].items():
@@ -560,7 +560,6 @@ class Module:
         # stop the loading
         self._is_loading = False
         await self._request_module_status()
-
 
     def _load(self) -> None:
         """

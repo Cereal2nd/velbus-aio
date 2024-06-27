@@ -182,7 +182,7 @@ class Velbus:
         # scan the bus
         await self._handler.scan()
 
-    async def sendTypeRequestMessage(self, address : byte) -> None:
+    async def sendTypeRequestMessage(self, address: byte) -> None:
         msg = ModuleTypeRequestMessage(address)
         await self.send(msg)
 
