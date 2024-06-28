@@ -253,6 +253,7 @@ class Module:
         """
         Process received message
         """
+        self._log.debug(f"RX: {message}")
         _channel_offset = self.calc_channel_offset(message.address)
 
         if isinstance(

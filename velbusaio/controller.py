@@ -46,7 +46,7 @@ class Velbus:
         self._auto_reconnect = True
 
         self._dsn = dsn
-        self._handler = PacketHandler(self.send, self)
+        self._handler = PacketHandler(self)
         self._modules: dict[int, Module] = {}
         self._submodules: list[int] = []
         self._send_queue: asyncio.Queue = asyncio.Queue()

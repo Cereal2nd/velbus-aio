@@ -39,11 +39,10 @@ class PacketHandler:
 
     def __init__(
         self,
-        writer: Callable[[Message], Awaitable[None]],
         velbus: Velbus,
     ) -> None:
-        self._log = logging.getLogger("velbus-packet")
-        self._writer = writer
+        self._log = logging.getLogger("velbus-handler")
+        self._log.setLevel(logging.DEBUG)
         self._velbus = velbus
         self._typeResponseReceived = asyncio.Event()
         self._scanLock = threading.Lock()
@@ -101,9 +100,9 @@ class PacketHandler:
                         )
                         self._scan_delay_msec = SCAN_MODULEINFO_TIMEOUT_INITIAL
                         while self._scan_delay_msec > 50 and not module.is_loaded():
-                            self._log.debug(
-                                f"\t... waiting {self._scan_delay_msec} is_loaded={module.is_loaded()}"
-                            )
+                            # self._log.debug(
+                            #    f"\t... waiting {self._scan_delay_msec} is_loaded={module.is_loaded()}"
+                            # )
                             self._scan_delay_msec = self._scan_delay_msec - 50
                             await asyncio.sleep(0.05)
                         self._log.info(
@@ -113,7 +112,6 @@ class PacketHandler:
                         self._log.error(
                             f"Module {address} did not respond to info requests after successful type request"
                         )
-
         self._scan_complete = True
         self._log.info("Module scan completed")
 
@@ -181,6 +179,8 @@ class PacketHandler:
                 module_type = module.get_type()
                 if commandRegistry.has_command(int(command_value), module_type):
                     command = commandRegistry.get_command(command_value, module_type)
+                    if not command:
+                        return
                     msg = command()
                     msg.populate(priority, address, rtr, data)
                     # restart the info completion time when info message received
@@ -238,15 +238,16 @@ class PacketHandler:
             }
             self._velbus.add_submodules(module, addrList)
 
-    def _channel_convert(self, module: str, channel: str, ctype: str) -> None | int:
-        data = keys_exists(
-            self.pdata, "ModuleTypes", h2(module), "ChannelNumbers", ctype
-        )
-        if data and "Map" in data and h2(channel) in data["Map"]:
-            return data["Map"][h2(channel)]
-        if data and "Convert" in data:
-            return int(channel)
-        for offset in range(0, 8):
-            if channel & (1 << offset):
-                return offset + 1
-        return None
+
+#    def _channel_convert(self, module: str, channel: str, ctype: str) -> None | int:
+#        data = keys_exists(
+#            self.pdata, "ModuleTypes", h2(module), "ChannelNumbers", ctype
+#        )
+#        if data and "Map" in data and h2(channel) in data["Map"]:
+#            return data["Map"][h2(channel)]
+#        if data and "Convert" in data:
+#            return int(channel)
+#        for offset in range(0, 8):
+#            if channel & (1 << offset):
+#                return offset + 1
+#        return None
