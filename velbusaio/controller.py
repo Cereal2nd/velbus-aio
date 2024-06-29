@@ -123,6 +123,7 @@ class Velbus:
 
     async def connect(self, test_connect: bool = False) -> None:
         """Connect to the bus and load all the data."""
+        await self._handler.read_protocol_data()
         auth = None
         # connect to the bus
         if ":" in self._dsn:

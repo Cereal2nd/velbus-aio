@@ -16,6 +16,8 @@ import threading
 import os
 import pathlib
 
+from aiofile import async_open
+
 from typing import TYPE_CHECKING, Awaitable, Callable
 import pkg_resources
 
@@ -49,15 +51,14 @@ class PacketHandler:
         self._modulescan_address = 0
         self._scan_complete = False
         self._scan_delay_msec = 0
-        with open(
+
+    async def read_protocol_data(self):
+        async with async_open(
             pkg_resources.resource_filename(__name__, "protocol.json")
         ) as protocol_file:
-            self.pdata = json.load(protocol_file)
+            self.pdata = json.loads(await protocol_file.read())
 
-    async def scan(self) -> None:
-        reload_cache = not os.path.isfile(
-            pathlib.Path(f"{get_cache_dir()}/usecache.yes")
-        )
+    async def scan(self, reload_cache: bool = False) -> None:
         self._log.info(f"Start module scan, reload cache {reload_cache}")
         while self._modulescan_address < 254:
             address = 0
