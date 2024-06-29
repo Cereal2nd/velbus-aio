@@ -178,6 +178,10 @@ class Velbus:
         # scan the bus
         await self._handler.scan()
 
+    async def scan(self) -> None:
+        """Service endpoint to restart the scan"""
+        await self._handler.scan(True)
+
     async def sendTypeRequestMessage(self, address: int) -> None:
         msg = ModuleTypeRequestMessage(address)
         await self.send(msg)
