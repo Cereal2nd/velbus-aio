@@ -59,6 +59,9 @@ class PacketHandler:
             self.pdata = json.loads(await protocol_file.read())
 
     async def scan(self, reload_cache: bool = False) -> None:
+        if reload_cache:
+            self._modulescan_address = 0
+            self._scan_complete = False
         self._log.info(f"Start module scan, reload cache {reload_cache}")
         while self._modulescan_address < 254:
             address = 0
@@ -196,7 +199,7 @@ class PacketHandler:
                         self._scan_delay_msec = SCAN_MODULEINFO_TIMEOUT_INTERVAL
                         # self._log.debug(f"Restart timeout {msg}")
                     # send the message to the modules
-                    await self._velbus.get_module(msg.address).on_message(msg)
+                    await module.on_message(msg)
                 else:
                     self._log.warning(f"NOT FOUND IN command_registry: {rawmsg}")
 
