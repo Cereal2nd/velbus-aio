@@ -1,6 +1,7 @@
 import logging
 
 import pytest
+from unittest.mock import MagicMock
 
 from velbusaio.handler import PacketHandler
 from velbusaio.messages.memory_data import MemoryDataMessage
@@ -25,7 +26,9 @@ async def test_module_name(name):
     for i, c in enumerate(name):
         memory[0xF0 + i] = ord(c)
 
-    ph = PacketHandler(None, None)
+    velbus = MagicMock()
+    ph = PacketHandler(velbus)
+    await ph.read_protocol_data()
     m = Module(
         module_address, module_type, ph.pdata["ModuleTypes"][f"{module_type:02X}"]
     )

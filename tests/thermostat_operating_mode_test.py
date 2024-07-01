@@ -6,6 +6,7 @@ sleep_timer values are correctly stored into the module's temperature channel.
 import pathlib
 
 import pytest
+from unittest.mock import MagicMock
 
 from velbusaio.channels import Temperature
 from velbusaio.controller import Velbus
@@ -32,7 +33,10 @@ async def test_thermostat_operating_mode(mode, sleep_timer):
     cache_dir = get_cache_dir()
     pathlib.Path(cache_dir).mkdir(parents=True, exist_ok=True)
 
-    ph = PacketHandler(None, None)
+    velbus = MagicMock()
+    ph = PacketHandler(velbus)
+    await ph.read_protocol_data()
+
     m = Module(
         module_address,
         module_type,

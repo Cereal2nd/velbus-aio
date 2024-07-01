@@ -6,6 +6,7 @@ is correctly stored into the module.
 import pathlib
 
 import pytest
+from unittest.mock import MagicMock
 
 from velbusaio.channels import Channel, LightSensor, SelectedProgram
 from velbusaio.const import (
@@ -51,7 +52,9 @@ async def test_module_status_selected_program(module_type):
     cache_dir = get_cache_dir()
     pathlib.Path(cache_dir).mkdir(parents=True, exist_ok=True)
 
-    ph = PacketHandler(None, None)
+    velbus = MagicMock()
+    ph = PacketHandler(velbus)
+    await ph.read_protocol_data()
     m = Module(
         module_address,
         module_type,
