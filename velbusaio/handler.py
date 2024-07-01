@@ -58,11 +58,30 @@ class PacketHandler:
         ) as protocol_file:
             self.pdata = json.loads(await protocol_file.read())
 
+    def empty_cache(self) -> bool:
+        if (
+            len(
+                [
+                    name
+                    for name in os.listdir(f"{get_cache_dir()}")
+                    if os.path.isfile(f"{get_cache_dir()}/{name}")
+                ]
+            )
+            == 0
+        ):
+            return True
+        return False
+
     async def scan(self, reload_cache: bool = False) -> None:
         if reload_cache:
             self._modulescan_address = 0
             self._scan_complete = False
-        self._log.info(f"Start module scan, reload cache {reload_cache}")
+        # non-blocking check to see if the cache_dir is empty
+        loop = asyncio.get_running_loop()
+        if not reload_cache and await loop.run_in_executor(None, self.empty_cache):
+            self._log.info("No cache yet, so forcing a bus scan")
+            reload_cache = True
+        self._log.info("Start module scan")
         while self._modulescan_address < 254:
             address = 0
             module = None
@@ -74,10 +93,10 @@ class PacketHandler:
             self._log.info(f"Starting handling scan {address}")
 
             cfile = pathlib.Path(f"{get_cache_dir()}/{address}.json")
+            # cleanup the old module cache if needed
             scanModule = reload_cache
-            if scanModule:
-                if os.path.isfile(cfile):
-                    os.remove(cfile)
+            if scanModule and os.path.isfile(cfile):
+                os.remove(cfile)
             elif os.path.isfile(cfile):
                 scanModule = os.path.isfile(cfile)
             if scanModule:
