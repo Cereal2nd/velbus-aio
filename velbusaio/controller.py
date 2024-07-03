@@ -54,6 +54,9 @@ class Velbus:
         # make sure the cachedir exists
         pathlib.Path(self._cache_dir).mkdir(parents=True, exist_ok=True)
 
+    def get_cache_dir(self) -> str:
+        return self._cache_dir
+
     async def _on_message_received(self, msg: RawMessage) -> None:
         """On message received function."""
         await self._handler.handle(msg)

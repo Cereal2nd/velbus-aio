@@ -27,7 +27,6 @@ from velbusaio.message import Message
 from velbusaio.messages.module_subtype import ModuleSubTypeMessage
 from velbusaio.messages.module_type import ModuleTypeMessage, ModuleType2Message
 from velbusaio.raw_message import RawMessage
-from velbusaio.helpers import get_cache_dir
 
 
 if TYPE_CHECKING:
@@ -63,8 +62,8 @@ class PacketHandler:
             len(
                 [
                     name
-                    for name in os.listdir(f"{get_cache_dir()}")
-                    if os.path.isfile(f"{get_cache_dir()}/{name}")
+                    for name in os.listdir(f"{self._velbus.get_cache_dir()}")
+                    if os.path.isfile(f"{self._velbus.get_cache_dir()}/{name}")
                 ]
             )
             == 0
@@ -78,6 +77,8 @@ class PacketHandler:
             self._scan_complete = False
         # non-blocking check to see if the cache_dir is empty
         loop = asyncio.get_running_loop()
+        print(self._velbus.get_cache_dir())
+        print(await loop.run_in_executor(None, self.empty_cache))
         if not reload_cache and await loop.run_in_executor(None, self.empty_cache):
             self._log.info("No cache yet, so forcing a bus scan")
             reload_cache = True
@@ -92,7 +93,7 @@ class PacketHandler:
 
             self._log.info(f"Starting handling scan {address}")
 
-            cfile = pathlib.Path(f"{get_cache_dir()}/{address}.json")
+            cfile = pathlib.Path(f"{self._velbus.get_cache_dir()}/{address}.json")
             # cleanup the old module cache if needed
             scanModule = reload_cache
             if scanModule and os.path.isfile(cfile):
