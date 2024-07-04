@@ -32,6 +32,7 @@ dependencies = [
     "pyserial>=3.5.0",
     "pyserial-asyncio_fast>=0.11",
     "backoff>=1.10.0",
+    "aifiles",
 ]
 
 [project.urls]
