@@ -4,7 +4,7 @@ requires = ["setuptools", "wheel"]
 [project]
 name = "velbus-aio"
 license = {text = "MIT"}
-version = "2024.7.5"
+version = "2024.7.6"
 description = "Open-source home automation platform running on Python 3."
 readme = "README.md"
 authors = [
@@ -51,7 +51,7 @@ exclude_dirs = ["tests"]
 skips = ["B301", "B403", "B323", "B104", "B110"]
 
 [tool.bumpver]
-current_version = "2024.7.5"
+current_version = "2024.7.6"
 version_pattern = "YYYY.MM.INC0"
 commit_message = "bump version {old_version} -> {new_version}"
 commit = true
