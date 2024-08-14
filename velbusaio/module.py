@@ -265,6 +265,7 @@ class Module:
             ),
         ):
             self._process_channel_name_message(1, message)
+            self._cache()
         elif isinstance(
             message,
             (
@@ -274,6 +275,7 @@ class Module:
             ),
         ):
             self._process_channel_name_message(2, message)
+            self._cache()
         elif isinstance(
             message,
             (
@@ -283,6 +285,7 @@ class Module:
             ),
         ):
             self._process_channel_name_message(3, message)
+            self._cache()
         elif isinstance(message, MemoryDataMessage):
             await self._process_memory_data_message(message)
         elif isinstance(message, (RelayStatusMessage, RelayStatusMessage2)):
@@ -511,8 +514,6 @@ class Module:
                 message.sensor, {"cur": message.value, "unit": message.unit}
             )
 
-        self._cache()
-
     async def _update_channel(self, channel: int, updates: dict):
         try:
             await self._channels[channel].update(updates)
@@ -538,7 +539,7 @@ class Module:
         except OSError:
             cache = {}
         # load default channels
-        await self._load_default_channels()
+        await self.__load_default_channels()
 
         # load the data from memory ( the stuff that we need)
         if "name" in cache and cache["name"] != "":
@@ -722,7 +723,7 @@ class Module:
                     msg.low_address = addr[1]
                     await self._writer(msg)
 
-    async def _load_default_channels(self) -> None:
+    async def __load_default_channels(self) -> None:
         if "Channels" not in self._data:
             return
 
@@ -771,6 +772,7 @@ class VmbDali(Module):
         self.group_members: dict[int, set[int]] = {}
 
     async def _load_default_channels(self) -> None:
+        await super().load()
         for chan in range(1, 64 + 1):
             self._channels[chan] = Channel(
                 self, chan, "placeholder", True, self._writer, self._address
